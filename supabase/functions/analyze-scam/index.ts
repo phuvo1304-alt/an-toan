@@ -187,6 +187,41 @@ function sanitizeResult(raw: any, lang: "vi" | "en") {
   };
 }
 
+// ---- Call Gemini, retrying when it is busy ----------------------------------
+// Gemini often answers 503 ("high demand") or 429 ("too many requests") for a
+// moment and then works again. So on those two codes we wait a little and
+// try again. Any other error (bad key, bad request...) is not retried,
+// because trying again would give the same answer.
+const RETRY_DELAYS_MS = [500, 1500]; // wait before attempt 2 and attempt 3
+const RETRYABLE_STATUS = [429, 503];
+const TOTAL_TIMEOUT_MS = 45_000; // whole budget for all attempts together
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function callGeminiWithRetry(url: string, body: string): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TOTAL_TIMEOUT_MS);
+  try {
+    for (let attempt = 0; ; attempt++) {
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": GEMINI_API_KEY },
+        body,
+        signal: controller.signal,
+      });
+      const canRetry = RETRYABLE_STATUS.includes(resp.status) && attempt < RETRY_DELAYS_MS.length;
+      if (!canRetry) return resp;
+
+      // Log on the server, empty the body (frees the connection), then wait.
+      console.warn(`Gemini ${resp.status}, retry ${attempt + 1}/${RETRY_DELAYS_MS.length}`);
+      await resp.body?.cancel();
+      await sleep(RETRY_DELAYS_MS[attempt]);
+    }
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 // ---- Handler ---------------------------------------------------------------
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -243,15 +278,7 @@ Deno.serve(async (req) => {
   };
 
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 45_000);
-    const resp = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": GEMINI_API_KEY },
-      body: JSON.stringify(payload),
-      signal: controller.signal,
-    });
-    clearTimeout(timer);
+    const resp = await callGeminiWithRetry(url, JSON.stringify(payload));
 
     if (!resp.ok) {
       // Log details on the server only. Never send them to the client.
@@ -277,6 +304,11 @@ Deno.serve(async (req) => {
     const result = sanitizeResult(parsed, lang);
     return json(result);
   } catch (e) {
+    // Gemini took longer than TOTAL_TIMEOUT_MS (all attempts together).
+    if (e instanceof DOMException && e.name === "AbortError") {
+      console.error("Gemini timed out after", TOTAL_TIMEOUT_MS, "ms");
+      return json({ error: "upstream_error" }, 504);
+    }
     console.error("analyze-scam failed", e);
     return json({ error: "server_error" }, 500);
   }
