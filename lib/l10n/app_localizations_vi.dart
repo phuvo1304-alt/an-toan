@@ -161,4 +161,86 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get officialHelpBody =>
       'Nếu bạn đã bị lừa, hãy báo ngay cho gia đình, ngân hàng của bạn và cơ quan công an địa phương. Hãy kiểm tra số liên hệ chính thức mới nhất trên cổng thông tin của cơ quan chức năng.';
+
+  @override
+  String get quizTitle => 'Đố vui';
+
+  @override
+  String get quizIntro =>
+      'Đọc từng tin nhắn và đoán xem đó có phải lừa đảo không. Sau mỗi câu, bạn sẽ thấy lời giải thích.';
+
+  @override
+  String get quizStart => 'Bắt đầu';
+
+  @override
+  String quizQuestionProgress(int current, int total) {
+    return 'Câu $current/$total';
+  }
+
+  @override
+  String get quizPrompt => 'Tin nhắn này có phải lừa đảo không?';
+
+  @override
+  String get quizAnswerScam => 'Lừa đảo';
+
+  @override
+  String get quizAnswerNotScam => 'Không phải lừa đảo';
+
+  @override
+  String get quizCorrect => 'Chính xác!';
+
+  @override
+  String get quizWrong => 'Chưa đúng';
+
+  @override
+  String get quizItWasScam => 'Đây là tin nhắn lừa đảo.';
+
+  @override
+  String get quizItWasNotScam => 'Đây là tin nhắn bình thường.';
+
+  @override
+  String get quizNext => 'Câu tiếp theo';
+
+  @override
+  String get quizSeeResults => 'Xem kết quả';
+
+  @override
+  String quizScore(int correct, int total) {
+    return 'Điểm: $correct/$total';
+  }
+
+  @override
+  String quizStreak(int count) {
+    return 'Chuỗi đúng: $count';
+  }
+
+  @override
+  String get quizSummaryTitle => 'Hoàn thành!';
+
+  @override
+  String quizRoundBestStreak(int count) {
+    return 'Chuỗi đúng dài nhất lượt này: $count';
+  }
+
+  @override
+  String quizBest(int correct, int total) {
+    return 'Kỷ lục: $correct/$total';
+  }
+
+  @override
+  String quizBestStreak(int count) {
+    return 'Chuỗi đúng kỷ lục: $count';
+  }
+
+  @override
+  String get quizNoBestYet => 'Chưa có kỷ lục. Hãy chơi lượt đầu tiên!';
+
+  @override
+  String get quizNewRecord => 'Kỷ lục mới!';
+
+  @override
+  String get quizPlayAgain => 'Chơi lại';
+
+  @override
+  String get quizBackHome => 'Về trang chủ';
 }

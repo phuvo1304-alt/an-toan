@@ -385,6 +385,144 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Nếu bạn đã bị lừa, hãy báo ngay cho gia đình, ngân hàng của bạn và cơ quan công an địa phương. Hãy kiểm tra số liên hệ chính thức mới nhất trên cổng thông tin của cơ quan chức năng.'**
   String get officialHelpBody;
+
+  /// No description provided for @quizTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đố vui'**
+  String get quizTitle;
+
+  /// No description provided for @quizIntro.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đọc từng tin nhắn và đoán xem đó có phải lừa đảo không. Sau mỗi câu, bạn sẽ thấy lời giải thích.'**
+  String get quizIntro;
+
+  /// No description provided for @quizStart.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bắt đầu'**
+  String get quizStart;
+
+  /// No description provided for @quizQuestionProgress.
+  ///
+  /// In vi, this message translates to:
+  /// **'Câu {current}/{total}'**
+  String quizQuestionProgress(int current, int total);
+
+  /// No description provided for @quizPrompt.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tin nhắn này có phải lừa đảo không?'**
+  String get quizPrompt;
+
+  /// No description provided for @quizAnswerScam.
+  ///
+  /// In vi, this message translates to:
+  /// **'Lừa đảo'**
+  String get quizAnswerScam;
+
+  /// No description provided for @quizAnswerNotScam.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không phải lừa đảo'**
+  String get quizAnswerNotScam;
+
+  /// No description provided for @quizCorrect.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chính xác!'**
+  String get quizCorrect;
+
+  /// No description provided for @quizWrong.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa đúng'**
+  String get quizWrong;
+
+  /// No description provided for @quizItWasScam.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đây là tin nhắn lừa đảo.'**
+  String get quizItWasScam;
+
+  /// No description provided for @quizItWasNotScam.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đây là tin nhắn bình thường.'**
+  String get quizItWasNotScam;
+
+  /// No description provided for @quizNext.
+  ///
+  /// In vi, this message translates to:
+  /// **'Câu tiếp theo'**
+  String get quizNext;
+
+  /// No description provided for @quizSeeResults.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xem kết quả'**
+  String get quizSeeResults;
+
+  /// No description provided for @quizScore.
+  ///
+  /// In vi, this message translates to:
+  /// **'Điểm: {correct}/{total}'**
+  String quizScore(int correct, int total);
+
+  /// No description provided for @quizStreak.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chuỗi đúng: {count}'**
+  String quizStreak(int count);
+
+  /// No description provided for @quizSummaryTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hoàn thành!'**
+  String get quizSummaryTitle;
+
+  /// No description provided for @quizRoundBestStreak.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chuỗi đúng dài nhất lượt này: {count}'**
+  String quizRoundBestStreak(int count);
+
+  /// No description provided for @quizBest.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kỷ lục: {correct}/{total}'**
+  String quizBest(int correct, int total);
+
+  /// No description provided for @quizBestStreak.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chuỗi đúng kỷ lục: {count}'**
+  String quizBestStreak(int count);
+
+  /// No description provided for @quizNoBestYet.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có kỷ lục. Hãy chơi lượt đầu tiên!'**
+  String get quizNoBestYet;
+
+  /// No description provided for @quizNewRecord.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kỷ lục mới!'**
+  String get quizNewRecord;
+
+  /// No description provided for @quizPlayAgain.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chơi lại'**
+  String get quizPlayAgain;
+
+  /// No description provided for @quizBackHome.
+  ///
+  /// In vi, this message translates to:
+  /// **'Về trang chủ'**
+  String get quizBackHome;
 }
 
 class _AppLocalizationsDelegate

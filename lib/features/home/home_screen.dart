@@ -55,7 +55,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.quiz_outlined,
               title: t.cardQuiz,
               subtitle: t.cardQuizDesc,
-              onTap: comingSoon,
+              onTap: () => context.push('/quiz'),
             ),
           ],
         ),

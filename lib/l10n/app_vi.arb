@@ -47,5 +47,79 @@
   "errorNotConfigured": "Ứng dụng chưa được cấu hình máy chủ (thiếu SUPABASE_URL).",
   "retry": "Thử lại",
   "officialHelpTitle": "Cần giúp đỡ?",
-  "officialHelpBody": "Nếu bạn đã bị lừa, hãy báo ngay cho gia đình, ngân hàng của bạn và cơ quan công an địa phương. Hãy kiểm tra số liên hệ chính thức mới nhất trên cổng thông tin của cơ quan chức năng."
+  "officialHelpBody": "Nếu bạn đã bị lừa, hãy báo ngay cho gia đình, ngân hàng của bạn và cơ quan công an địa phương. Hãy kiểm tra số liên hệ chính thức mới nhất trên cổng thông tin của cơ quan chức năng.",
+  "quizTitle": "Đố vui",
+  "quizIntro": "Đọc từng tin nhắn và đoán xem đó có phải lừa đảo không. Sau mỗi câu, bạn sẽ thấy lời giải thích.",
+  "quizStart": "Bắt đầu",
+  "quizQuestionProgress": "Câu {current}/{total}",
+  "@quizQuestionProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "quizPrompt": "Tin nhắn này có phải lừa đảo không?",
+  "quizAnswerScam": "Lừa đảo",
+  "quizAnswerNotScam": "Không phải lừa đảo",
+  "quizCorrect": "Chính xác!",
+  "quizWrong": "Chưa đúng",
+  "quizItWasScam": "Đây là tin nhắn lừa đảo.",
+  "quizItWasNotScam": "Đây là tin nhắn bình thường.",
+  "quizNext": "Câu tiếp theo",
+  "quizSeeResults": "Xem kết quả",
+  "quizScore": "Điểm: {correct}/{total}",
+  "@quizScore": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "quizStreak": "Chuỗi đúng: {count}",
+  "@quizStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "quizSummaryTitle": "Hoàn thành!",
+  "quizRoundBestStreak": "Chuỗi đúng dài nhất lượt này: {count}",
+  "@quizRoundBestStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "quizBest": "Kỷ lục: {correct}/{total}",
+  "@quizBest": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "quizBestStreak": "Chuỗi đúng kỷ lục: {count}",
+  "@quizBestStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "quizNoBestYet": "Chưa có kỷ lục. Hãy chơi lượt đầu tiên!",
+  "quizNewRecord": "Kỷ lục mới!",
+  "quizPlayAgain": "Chơi lại",
+  "quizBackHome": "Về trang chủ"
 }

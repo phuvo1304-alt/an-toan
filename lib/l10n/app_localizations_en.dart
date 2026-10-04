@@ -161,4 +161,86 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get officialHelpBody =>
       'If you have been scammed, tell your family, your bank and your local police right away. Check the latest official contact numbers on the authorities\' official websites.';
+
+  @override
+  String get quizTitle => 'Quiz';
+
+  @override
+  String get quizIntro =>
+      'Read each message and decide whether it is a scam. After each answer you will see an explanation.';
+
+  @override
+  String get quizStart => 'Start';
+
+  @override
+  String quizQuestionProgress(int current, int total) {
+    return 'Question $current of $total';
+  }
+
+  @override
+  String get quizPrompt => 'Is this message a scam?';
+
+  @override
+  String get quizAnswerScam => 'Scam';
+
+  @override
+  String get quizAnswerNotScam => 'Not a scam';
+
+  @override
+  String get quizCorrect => 'Correct!';
+
+  @override
+  String get quizWrong => 'Not quite';
+
+  @override
+  String get quizItWasScam => 'This message is a scam.';
+
+  @override
+  String get quizItWasNotScam => 'This is a normal message.';
+
+  @override
+  String get quizNext => 'Next';
+
+  @override
+  String get quizSeeResults => 'See results';
+
+  @override
+  String quizScore(int correct, int total) {
+    return 'Score: $correct/$total';
+  }
+
+  @override
+  String quizStreak(int count) {
+    return 'Streak: $count';
+  }
+
+  @override
+  String get quizSummaryTitle => 'Finished!';
+
+  @override
+  String quizRoundBestStreak(int count) {
+    return 'Longest streak this round: $count';
+  }
+
+  @override
+  String quizBest(int correct, int total) {
+    return 'Best: $correct/$total';
+  }
+
+  @override
+  String quizBestStreak(int count) {
+    return 'Best streak: $count';
+  }
+
+  @override
+  String get quizNoBestYet => 'No best score yet. Play your first round!';
+
+  @override
+  String get quizNewRecord => 'New record!';
+
+  @override
+  String get quizPlayAgain => 'Play again';
+
+  @override
+  String get quizBackHome => 'Back to home';
 }
