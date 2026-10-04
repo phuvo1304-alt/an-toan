@@ -1,0 +1,50 @@
+# ---- Secrets: NEVER commit these ----
+.env
+.env.*
+*.jks
+*.keystore
+key.properties
+**/key.properties
+supabase/.env
+supabase/.temp/
+*.p12
+*.mobileprovision
+*.p8
+*.pem
+*service-account*.json
+*-credentials.json
+google-services.json
+GoogleService-Info.plist
+
+# ---- Flutter / Dart ----
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+**/generated_plugin_registrant.*
+pubspec.lock.bak
+
+# ---- Android ----
+android/.gradle/
+android/local.properties
+android/app/debug/
+android/app/profile/
+android/app/release/
+**/gradle-wrapper.jar
+
+# ---- iOS ----
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/ephemeral/
+ios/Flutter/flutter_export_environment.sh
+
+# ---- IDE / OS ----
+.idea/
+*.iml
+.vscode/*.local.json
+.DS_Store
+Thumbs.db
