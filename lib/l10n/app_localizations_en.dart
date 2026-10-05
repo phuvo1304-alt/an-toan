@@ -243,4 +243,111 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quizBackHome => 'Back to home';
+
+  @override
+  String get phoneTitle => 'Check a phone number';
+
+  @override
+  String get phoneCommunityNote =>
+      'This information is reported by users, not verified. A number with no reports is not necessarily safe.';
+
+  @override
+  String get phoneNumberLabel => 'Phone number';
+
+  @override
+  String get phoneNumberHint => 'e.g. 0901 234 567';
+
+  @override
+  String get phoneCheck => 'Check';
+
+  @override
+  String get phoneInvalid =>
+      'Invalid number. Enter a Vietnamese mobile number, e.g. 0901 234 567 or +84 901 234 567.';
+
+  @override
+  String get phoneNoReports => 'No reports yet';
+
+  @override
+  String get phoneNoReportsNote =>
+      'Nobody has reported this number. That does not guarantee it is safe, so stay careful.';
+
+  @override
+  String phoneReportedBy(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Reported by $count users',
+      one: 'Reported by 1 user',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String phoneCategoryCount(String category, int count) {
+    return '$category: $count';
+  }
+
+  @override
+  String phoneLastReported(String date) {
+    return 'Last reported: $date';
+  }
+
+  @override
+  String get phoneReportsNote =>
+      'These are user reports and can be wrong. A report does not prove who owns this number.';
+
+  @override
+  String get phoneReportTitle => 'Report this number';
+
+  @override
+  String get phoneReportIntro =>
+      'If this number called or texted you with a scam, report it to warn others. Do not include names, addresses or personal details.';
+
+  @override
+  String get phoneCategoryLabel => 'Type of scam';
+
+  @override
+  String get phoneCategoryRequired => 'Please choose a type of scam.';
+
+  @override
+  String get phoneDescriptionLabel => 'Short description (optional)';
+
+  @override
+  String get phoneDescriptionTooLong =>
+      'The description is too long (max 300 characters).';
+
+  @override
+  String get phoneSubmit => 'Send report';
+
+  @override
+  String get phoneReportSuccess =>
+      'Report sent. Thank you for helping warn others!';
+
+  @override
+  String get phoneReportRateLimited =>
+      'You have sent too many reports. Please try again in an hour.';
+
+  @override
+  String get phoneCatImpersonation => 'Pretending to be police or officials';
+
+  @override
+  String get phoneCatFakeBank => 'Pretending to be a bank or e-wallet';
+
+  @override
+  String get phoneCatFakeJob => 'Fake job, easy money tasks';
+
+  @override
+  String get phoneCatInvestment => 'Investment, crypto';
+
+  @override
+  String get phoneCatLoan => 'Loans';
+
+  @override
+  String get phoneCatShopping => 'Shopping, delivery';
+
+  @override
+  String get phoneCatSpam => 'Ads, nuisance calls';
+
+  @override
+  String get phoneCatOther => 'Other';
 }

@@ -121,5 +121,58 @@
   "quizNoBestYet": "Chưa có kỷ lục. Hãy chơi lượt đầu tiên!",
   "quizNewRecord": "Kỷ lục mới!",
   "quizPlayAgain": "Chơi lại",
-  "quizBackHome": "Về trang chủ"
+  "quizBackHome": "Về trang chủ",
+  "phoneTitle": "Kiểm tra số điện thoại",
+  "phoneCommunityNote": "Thông tin ở đây do người dùng báo cáo, không phải kết quả xác minh. Một số chưa có báo cáo không có nghĩa là an toàn.",
+  "phoneNumberLabel": "Số điện thoại",
+  "phoneNumberHint": "Ví dụ: 0901 234 567",
+  "phoneCheck": "Kiểm tra",
+  "phoneInvalid": "Số không hợp lệ. Hãy nhập số di động Việt Nam, ví dụ 0901 234 567 hoặc +84 901 234 567.",
+  "phoneNoReports": "Chưa có báo cáo nào",
+  "phoneNoReportsNote": "Chưa ai báo cáo số này. Điều đó không đảm bảo số này an toàn, hãy luôn cẩn thận.",
+  "phoneReportedBy": "{count, plural, other{Được {count} người dùng báo cáo}}",
+  "@phoneReportedBy": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "phoneCategoryCount": "{category}: {count}",
+  "@phoneCategoryCount": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "phoneLastReported": "Báo cáo gần nhất: {date}",
+  "@phoneLastReported": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "phoneReportsNote": "Đây là báo cáo của người dùng, có thể sai. Báo cáo không chứng minh ai là chủ của số này.",
+  "phoneReportTitle": "Báo cáo số này",
+  "phoneReportIntro": "Nếu số trên đã gọi hoặc nhắn tin lừa đảo bạn, hãy báo cáo để cảnh báo người khác. Không ghi tên, địa chỉ hay thông tin cá nhân.",
+  "phoneCategoryLabel": "Loại lừa đảo",
+  "phoneCategoryRequired": "Hãy chọn loại lừa đảo.",
+  "phoneDescriptionLabel": "Mô tả ngắn (không bắt buộc)",
+  "phoneDescriptionTooLong": "Mô tả quá dài (tối đa 300 ký tự).",
+  "phoneSubmit": "Gửi báo cáo",
+  "phoneReportSuccess": "Đã gửi báo cáo. Cảm ơn bạn đã giúp cảnh báo mọi người!",
+  "phoneReportRateLimited": "Bạn đã gửi quá nhiều báo cáo. Vui lòng thử lại sau một giờ.",
+  "phoneCatImpersonation": "Giả danh công an, cơ quan nhà nước",
+  "phoneCatFakeBank": "Giả danh ngân hàng, ví điện tử",
+  "phoneCatFakeJob": "Việc làm giả, việc nhẹ lương cao",
+  "phoneCatInvestment": "Đầu tư, tiền ảo",
+  "phoneCatLoan": "Vay tiền",
+  "phoneCatShopping": "Mua bán, giao hàng",
+  "phoneCatSpam": "Quảng cáo, làm phiền",
+  "phoneCatOther": "Khác"
 }

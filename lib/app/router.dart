@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import '../features/home/home_screen.dart';
+import '../features/phone_checker/phone_checker_screen.dart';
 import '../features/quiz/quiz_screen.dart';
 import '../features/scam_checker/scam_checker_screen.dart';
 import '../features/scam_checker/scam_result.dart';
@@ -20,6 +21,10 @@ final appRouter = GoRouter(
         final result = state.extra as ScamResult;
         return ResultScreen(result: result);
       },
+    ),
+    GoRoute(
+      path: '/phone',
+      builder: (context, state) => const PhoneCheckerScreen(),
     ),
     GoRoute(
       path: '/quiz',

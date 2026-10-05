@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.phone_in_talk_outlined,
               title: t.cardCheckPhone,
               subtitle: t.cardCheckPhoneDesc,
-              onTap: comingSoon,
+              onTap: () => context.push('/phone'),
             ),
             _HomeCard(
               icon: Icons.school_outlined,

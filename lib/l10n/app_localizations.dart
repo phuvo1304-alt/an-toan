@@ -523,6 +523,180 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Về trang chủ'**
   String get quizBackHome;
+
+  /// No description provided for @phoneTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kiểm tra số điện thoại'**
+  String get phoneTitle;
+
+  /// No description provided for @phoneCommunityNote.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thông tin ở đây do người dùng báo cáo, không phải kết quả xác minh. Một số chưa có báo cáo không có nghĩa là an toàn.'**
+  String get phoneCommunityNote;
+
+  /// No description provided for @phoneNumberLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số điện thoại'**
+  String get phoneNumberLabel;
+
+  /// No description provided for @phoneNumberHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ví dụ: 0901 234 567'**
+  String get phoneNumberHint;
+
+  /// No description provided for @phoneCheck.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kiểm tra'**
+  String get phoneCheck;
+
+  /// No description provided for @phoneInvalid.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số không hợp lệ. Hãy nhập số di động Việt Nam, ví dụ 0901 234 567 hoặc +84 901 234 567.'**
+  String get phoneInvalid;
+
+  /// No description provided for @phoneNoReports.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có báo cáo nào'**
+  String get phoneNoReports;
+
+  /// No description provided for @phoneNoReportsNote.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa ai báo cáo số này. Điều đó không đảm bảo số này an toàn, hãy luôn cẩn thận.'**
+  String get phoneNoReportsNote;
+
+  /// No description provided for @phoneReportedBy.
+  ///
+  /// In vi, this message translates to:
+  /// **'{count, plural, other{Được {count} người dùng báo cáo}}'**
+  String phoneReportedBy(int count);
+
+  /// No description provided for @phoneCategoryCount.
+  ///
+  /// In vi, this message translates to:
+  /// **'{category}: {count}'**
+  String phoneCategoryCount(String category, int count);
+
+  /// No description provided for @phoneLastReported.
+  ///
+  /// In vi, this message translates to:
+  /// **'Báo cáo gần nhất: {date}'**
+  String phoneLastReported(String date);
+
+  /// No description provided for @phoneReportsNote.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đây là báo cáo của người dùng, có thể sai. Báo cáo không chứng minh ai là chủ của số này.'**
+  String get phoneReportsNote;
+
+  /// No description provided for @phoneReportTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Báo cáo số này'**
+  String get phoneReportTitle;
+
+  /// No description provided for @phoneReportIntro.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nếu số trên đã gọi hoặc nhắn tin lừa đảo bạn, hãy báo cáo để cảnh báo người khác. Không ghi tên, địa chỉ hay thông tin cá nhân.'**
+  String get phoneReportIntro;
+
+  /// No description provided for @phoneCategoryLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Loại lừa đảo'**
+  String get phoneCategoryLabel;
+
+  /// No description provided for @phoneCategoryRequired.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hãy chọn loại lừa đảo.'**
+  String get phoneCategoryRequired;
+
+  /// No description provided for @phoneDescriptionLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mô tả ngắn (không bắt buộc)'**
+  String get phoneDescriptionLabel;
+
+  /// No description provided for @phoneDescriptionTooLong.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mô tả quá dài (tối đa 300 ký tự).'**
+  String get phoneDescriptionTooLong;
+
+  /// No description provided for @phoneSubmit.
+  ///
+  /// In vi, this message translates to:
+  /// **'Gửi báo cáo'**
+  String get phoneSubmit;
+
+  /// No description provided for @phoneReportSuccess.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã gửi báo cáo. Cảm ơn bạn đã giúp cảnh báo mọi người!'**
+  String get phoneReportSuccess;
+
+  /// No description provided for @phoneReportRateLimited.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn đã gửi quá nhiều báo cáo. Vui lòng thử lại sau một giờ.'**
+  String get phoneReportRateLimited;
+
+  /// No description provided for @phoneCatImpersonation.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giả danh công an, cơ quan nhà nước'**
+  String get phoneCatImpersonation;
+
+  /// No description provided for @phoneCatFakeBank.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giả danh ngân hàng, ví điện tử'**
+  String get phoneCatFakeBank;
+
+  /// No description provided for @phoneCatFakeJob.
+  ///
+  /// In vi, this message translates to:
+  /// **'Việc làm giả, việc nhẹ lương cao'**
+  String get phoneCatFakeJob;
+
+  /// No description provided for @phoneCatInvestment.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đầu tư, tiền ảo'**
+  String get phoneCatInvestment;
+
+  /// No description provided for @phoneCatLoan.
+  ///
+  /// In vi, this message translates to:
+  /// **'Vay tiền'**
+  String get phoneCatLoan;
+
+  /// No description provided for @phoneCatShopping.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mua bán, giao hàng'**
+  String get phoneCatShopping;
+
+  /// No description provided for @phoneCatSpam.
+  ///
+  /// In vi, this message translates to:
+  /// **'Quảng cáo, làm phiền'**
+  String get phoneCatSpam;
+
+  /// No description provided for @phoneCatOther.
+  ///
+  /// In vi, this message translates to:
+  /// **'Khác'**
+  String get phoneCatOther;
 }
 
 class _AppLocalizationsDelegate

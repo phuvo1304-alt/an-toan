@@ -243,4 +243,109 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get quizBackHome => 'Về trang chủ';
+
+  @override
+  String get phoneTitle => 'Kiểm tra số điện thoại';
+
+  @override
+  String get phoneCommunityNote =>
+      'Thông tin ở đây do người dùng báo cáo, không phải kết quả xác minh. Một số chưa có báo cáo không có nghĩa là an toàn.';
+
+  @override
+  String get phoneNumberLabel => 'Số điện thoại';
+
+  @override
+  String get phoneNumberHint => 'Ví dụ: 0901 234 567';
+
+  @override
+  String get phoneCheck => 'Kiểm tra';
+
+  @override
+  String get phoneInvalid =>
+      'Số không hợp lệ. Hãy nhập số di động Việt Nam, ví dụ 0901 234 567 hoặc +84 901 234 567.';
+
+  @override
+  String get phoneNoReports => 'Chưa có báo cáo nào';
+
+  @override
+  String get phoneNoReportsNote =>
+      'Chưa ai báo cáo số này. Điều đó không đảm bảo số này an toàn, hãy luôn cẩn thận.';
+
+  @override
+  String phoneReportedBy(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Được $count người dùng báo cáo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String phoneCategoryCount(String category, int count) {
+    return '$category: $count';
+  }
+
+  @override
+  String phoneLastReported(String date) {
+    return 'Báo cáo gần nhất: $date';
+  }
+
+  @override
+  String get phoneReportsNote =>
+      'Đây là báo cáo của người dùng, có thể sai. Báo cáo không chứng minh ai là chủ của số này.';
+
+  @override
+  String get phoneReportTitle => 'Báo cáo số này';
+
+  @override
+  String get phoneReportIntro =>
+      'Nếu số trên đã gọi hoặc nhắn tin lừa đảo bạn, hãy báo cáo để cảnh báo người khác. Không ghi tên, địa chỉ hay thông tin cá nhân.';
+
+  @override
+  String get phoneCategoryLabel => 'Loại lừa đảo';
+
+  @override
+  String get phoneCategoryRequired => 'Hãy chọn loại lừa đảo.';
+
+  @override
+  String get phoneDescriptionLabel => 'Mô tả ngắn (không bắt buộc)';
+
+  @override
+  String get phoneDescriptionTooLong => 'Mô tả quá dài (tối đa 300 ký tự).';
+
+  @override
+  String get phoneSubmit => 'Gửi báo cáo';
+
+  @override
+  String get phoneReportSuccess =>
+      'Đã gửi báo cáo. Cảm ơn bạn đã giúp cảnh báo mọi người!';
+
+  @override
+  String get phoneReportRateLimited =>
+      'Bạn đã gửi quá nhiều báo cáo. Vui lòng thử lại sau một giờ.';
+
+  @override
+  String get phoneCatImpersonation => 'Giả danh công an, cơ quan nhà nước';
+
+  @override
+  String get phoneCatFakeBank => 'Giả danh ngân hàng, ví điện tử';
+
+  @override
+  String get phoneCatFakeJob => 'Việc làm giả, việc nhẹ lương cao';
+
+  @override
+  String get phoneCatInvestment => 'Đầu tư, tiền ảo';
+
+  @override
+  String get phoneCatLoan => 'Vay tiền';
+
+  @override
+  String get phoneCatShopping => 'Mua bán, giao hàng';
+
+  @override
+  String get phoneCatSpam => 'Quảng cáo, làm phiền';
+
+  @override
+  String get phoneCatOther => 'Khác';
 }
