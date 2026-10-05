@@ -122,7 +122,9 @@ void main() {
   });
 
   testWidgets('screen opens from Home and shows client-side errors', (tester) async {
-    SharedPreferences.setMockInitialValues({});
+    // Onboarding already done, so the app starts on Home (the gate is tested
+    // in onboarding_test.dart).
+    SharedPreferences.setMockInitialValues({'onboarding_complete': true});
     // A tall test screen so the whole form fits without scrolling.
     tester.view.physicalSize = const Size(800, 2000);
     tester.view.devicePixelRatio = 1;

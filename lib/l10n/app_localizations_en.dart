@@ -350,4 +350,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get phoneCatOther => 'Other';
+
+  @override
+  String get onboardingWelcomeBody =>
+      'Paste a message or pick a screenshot, and An Toàn tells you whether it looks like a scam, why, and what to do next.';
+
+  @override
+  String get onboardingLanguageTitle => 'Choose your language';
+
+  @override
+  String get onboardingLanguageBody =>
+      'You can change it any time in Settings.';
+
+  @override
+  String get onboardingPrivacyTitle => 'Your privacy';
+
+  @override
+  String get onboardingPrivacyBody =>
+      'Content you submit for checking is sent to an AI service for analysis. Results are AI-generated and can be wrong. The app needs no login and collects no personal data. Do not send passwords, OTP codes or banking details.';
+
+  @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingNext => 'Next';
+
+  @override
+  String get onboardingGetStarted => 'Get started';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String privacyPolicyOpenError(String url) {
+    return 'Could not open the page. You can open it yourself: $url';
+  }
 }

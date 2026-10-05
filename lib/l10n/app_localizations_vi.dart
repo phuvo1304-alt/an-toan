@@ -348,4 +348,39 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get phoneCatOther => 'Khác';
+
+  @override
+  String get onboardingWelcomeBody =>
+      'Dán tin nhắn hoặc chọn ảnh chụp màn hình, An Toàn sẽ cho bạn biết nó có giống lừa đảo không, vì sao, và nên làm gì tiếp theo.';
+
+  @override
+  String get onboardingLanguageTitle => 'Chọn ngôn ngữ';
+
+  @override
+  String get onboardingLanguageBody =>
+      'Bạn có thể đổi lại bất cứ lúc nào trong phần Cài đặt.';
+
+  @override
+  String get onboardingPrivacyTitle => 'Quyền riêng tư của bạn';
+
+  @override
+  String get onboardingPrivacyBody =>
+      'Nội dung bạn gửi để kiểm tra sẽ được chuyển đến một dịch vụ AI để phân tích. Kết quả do AI tạo ra và có thể sai. Ứng dụng không cần đăng nhập và không thu thập thông tin cá nhân. Đừng gửi mật khẩu, mã OTP hay thông tin ngân hàng.';
+
+  @override
+  String get onboardingSkip => 'Bỏ qua';
+
+  @override
+  String get onboardingNext => 'Tiếp';
+
+  @override
+  String get onboardingGetStarted => 'Bắt đầu sử dụng';
+
+  @override
+  String get privacyPolicy => 'Chính sách quyền riêng tư';
+
+  @override
+  String privacyPolicyOpenError(String url) {
+    return 'Không mở được trang. Bạn có thể tự mở: $url';
+  }
 }

@@ -697,6 +697,66 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Khác'**
   String get phoneCatOther;
+
+  /// No description provided for @onboardingWelcomeBody.
+  ///
+  /// In vi, this message translates to:
+  /// **'Dán tin nhắn hoặc chọn ảnh chụp màn hình, An Toàn sẽ cho bạn biết nó có giống lừa đảo không, vì sao, và nên làm gì tiếp theo.'**
+  String get onboardingWelcomeBody;
+
+  /// No description provided for @onboardingLanguageTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn ngôn ngữ'**
+  String get onboardingLanguageTitle;
+
+  /// No description provided for @onboardingLanguageBody.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn có thể đổi lại bất cứ lúc nào trong phần Cài đặt.'**
+  String get onboardingLanguageBody;
+
+  /// No description provided for @onboardingPrivacyTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Quyền riêng tư của bạn'**
+  String get onboardingPrivacyTitle;
+
+  /// No description provided for @onboardingPrivacyBody.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nội dung bạn gửi để kiểm tra sẽ được chuyển đến một dịch vụ AI để phân tích. Kết quả do AI tạo ra và có thể sai. Ứng dụng không cần đăng nhập và không thu thập thông tin cá nhân. Đừng gửi mật khẩu, mã OTP hay thông tin ngân hàng.'**
+  String get onboardingPrivacyBody;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bỏ qua'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiếp'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingGetStarted.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bắt đầu sử dụng'**
+  String get onboardingGetStarted;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chính sách quyền riêng tư'**
+  String get privacyPolicy;
+
+  /// No description provided for @privacyPolicyOpenError.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không mở được trang. Bạn có thể tự mở: {url}'**
+  String privacyPolicyOpenError(String url);
 }
 
 class _AppLocalizationsDelegate

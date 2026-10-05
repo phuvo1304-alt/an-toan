@@ -116,7 +116,9 @@ void main() {
   });
 
   testWidgets('full quiz flow from Home to summary and Play again', (tester) async {
-    SharedPreferences.setMockInitialValues({});
+    // Onboarding already done, so the app starts on Home (the gate is tested
+    // in onboarding_test.dart).
+    SharedPreferences.setMockInitialValues({'onboarding_complete': true});
     await tester.pumpWidget(const ProviderScope(child: AnToanApp()));
     await tester.pumpAndSettle();
 

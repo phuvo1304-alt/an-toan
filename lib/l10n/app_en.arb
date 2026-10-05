@@ -99,5 +99,15 @@
   "phoneCatLoan": "Loans",
   "phoneCatShopping": "Shopping, delivery",
   "phoneCatSpam": "Ads, nuisance calls",
-  "phoneCatOther": "Other"
+  "phoneCatOther": "Other",
+  "onboardingWelcomeBody": "Paste a message or pick a screenshot, and An Toàn tells you whether it looks like a scam, why, and what to do next.",
+  "onboardingLanguageTitle": "Choose your language",
+  "onboardingLanguageBody": "You can change it any time in Settings.",
+  "onboardingPrivacyTitle": "Your privacy",
+  "onboardingPrivacyBody": "Content you submit for checking is sent to an AI service for analysis. Results are AI-generated and can be wrong. The app needs no login and collects no personal data. Do not send passwords, OTP codes or banking details.",
+  "onboardingSkip": "Skip",
+  "onboardingNext": "Next",
+  "onboardingGetStarted": "Get started",
+  "privacyPolicy": "Privacy Policy",
+  "privacyPolicyOpenError": "Could not open the page. You can open it yourself: {url}"
 }
