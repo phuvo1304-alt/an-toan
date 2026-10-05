@@ -7,11 +7,11 @@ If anything fails, copy the exact error text and give it to Claude Code.
 
 ## Step 1: Create the two accounts (about 10 minutes)
 
-### 1a. Gemini API key
-1. Go to https://aistudio.google.com/apikey and sign in.
-2. Click **Create API key**, copy it into a private note.
+### 1a. Anthropic (Claude) API key
+1. Go to https://console.anthropic.com/settings/keys and sign in.
+2. Click **Create Key**, copy it into a private note.
 3. **Never** paste it into chat, a screenshot, a file in the repo, or GitHub.
-4. In Google Cloud / AI Studio billing settings, set a budget alert if you enable billing.
+4. In the Anthropic Console billing settings, set a spending limit so costs can't run away.
 
 ### 1b. Supabase project
 1. Go to https://supabase.com/dashboard, click **New project**. Pick a region near you (Singapore is closest).
@@ -92,7 +92,7 @@ Needs Node.js. We use `npx` so you don't have to install the Supabase CLI.
 ```powershell
 npx supabase@latest login
 npx supabase@latest link --project-ref YOUR_PROJECT_REF
-npx supabase@latest secrets set GEMINI_API_KEY=PASTE_YOUR_KEY_HERE
+npx supabase@latest secrets set ANTHROPIC_API_KEY=PASTE_YOUR_KEY_HERE
 npx supabase@latest functions deploy analyze-scam
 ```
 
@@ -100,9 +100,9 @@ Type the key only in your own terminal. Do not paste it into chat.
 
 Optional: change the model without redeploying code:
 ```powershell
-npx supabase@latest secrets set GEMINI_MODEL=gemini-3.8-flash
+npx supabase@latest secrets set CLAUDE_MODEL=claude-haiku-4-5-20251001
 ```
-The default in the code is `gemini-3.8-flash`, the Flash model listed in Google's docs on 4 Oct 2026. If the function logs say the model is not found, check https://ai.google.dev/gemini-api/docs/models for the current name.
+The default in the code is `claude-haiku-4-5-20251001`. If the function logs say the model is not found (or that name stops working), check https://docs.claude.com/en/docs/about-claude/models for the current name.
 
 **If the app gets a 401 error:** newer Supabase projects use "publishable" keys that are not JWTs. Redeploy with:
 ```powershell
