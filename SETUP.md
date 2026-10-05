@@ -181,7 +181,10 @@ git push
 
 Works:
 - Home, and the vi/en switch in Settings.
-- Text check and screenshot check, with the result screen and disclaimer.
+- Text check, screenshot check and voice check, with the result screen and disclaimer.
+  Voice: the phone turns speech into text live (up to 60 seconds), you can edit it, and
+  only the text is sent. No audio file is saved. Needs the phone's speech recognition for
+  the app language (Vietnamese or English).
   The backend (`analyze-scam` Edge Function) uses Anthropic's Claude API, not Gemini,
   with a rule-based pattern pre-check that gives Claude a hint.
 - Quiz: 12 bilingual questions bundled in the app, shuffled every round, with the
@@ -198,5 +201,5 @@ Works:
   fake shipper). Tap the suspicious parts of a message, submit, and every part you
   caught, missed or wrongly marked is explained in place.
 
-Not built yet: audio check, store builds.
+Not built yet: store builds.
 All four Home cards now open a working feature.

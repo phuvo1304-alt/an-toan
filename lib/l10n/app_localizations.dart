@@ -877,6 +877,90 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Khác'**
   String get scamTypeOther;
+
+  /// No description provided for @tabAudio.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giọng nói'**
+  String get tabAudio;
+
+  /// No description provided for @recordStart.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bấm micro và nói (hoặc mở tin nhắn thoại gần điện thoại)'**
+  String get recordStart;
+
+  /// No description provided for @recordStop.
+  ///
+  /// In vi, this message translates to:
+  /// **'Dừng'**
+  String get recordStop;
+
+  /// No description provided for @listening.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang nghe...'**
+  String get listening;
+
+  /// No description provided for @audioPreparing.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang chuẩn bị micro...'**
+  String get audioPreparing;
+
+  /// No description provided for @audioSecondsLeft.
+  ///
+  /// In vi, this message translates to:
+  /// **'Còn {seconds} giây'**
+  String audioSecondsLeft(int seconds);
+
+  /// No description provided for @transcriptHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Lời nói sẽ hiện ở đây thành chữ. Bạn có thể sửa lại trước khi bấm Kiểm tra.'**
+  String get transcriptHint;
+
+  /// No description provided for @noSpeechDetected.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không nghe được lời nói nào. Hãy thử lại ở nơi yên tĩnh, nói rõ hơn, hoặc gõ nội dung vào ô.'**
+  String get noSpeechDetected;
+
+  /// No description provided for @audioTranscriptEmpty.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có nội dung. Hãy bấm micro và nói, hoặc gõ nội dung vào ô trước khi kiểm tra.'**
+  String get audioTranscriptEmpty;
+
+  /// No description provided for @audioPermissionDenied.
+  ///
+  /// In vi, this message translates to:
+  /// **'An Toàn chưa được phép dùng micro nên không thể nghe. Để bật: mở Cài đặt của điện thoại, chọn Ứng dụng, An Toàn, Quyền, rồi cho phép Micro. Hoặc dùng thẻ Văn bản để gõ nội dung.'**
+  String get audioPermissionDenied;
+
+  /// No description provided for @audioLocaleUnavailable.
+  ///
+  /// In vi, this message translates to:
+  /// **'Điện thoại này chưa hỗ trợ nhận dạng giọng nói tiếng Việt. Vui lòng dùng thẻ Văn bản để gõ nội dung.'**
+  String get audioLocaleUnavailable;
+
+  /// No description provided for @audioNotSupported.
+  ///
+  /// In vi, this message translates to:
+  /// **'Điện thoại này không hỗ trợ nhận dạng giọng nói. Vui lòng dùng thẻ Văn bản để gõ hoặc dán nội dung.'**
+  String get audioNotSupported;
+
+  /// No description provided for @audioNotSupportedShort.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không dùng được giọng nói trên máy này'**
+  String get audioNotSupportedShort;
+
+  /// No description provided for @audioFailed.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không nhận dạng được giọng nói lúc này. Hãy thử lại, hoặc dùng thẻ Văn bản.'**
+  String get audioFailed;
 }
 
 class _AppLocalizationsDelegate

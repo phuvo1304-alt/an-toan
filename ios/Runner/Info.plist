@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>An Toàn uses the microphone to let you check a suspicious voice message by turning it into text.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>An Toàn turns your speech into text so it can be checked for scam patterns.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

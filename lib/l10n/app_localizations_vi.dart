@@ -456,4 +456,56 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get scamTypeOther => 'Khác';
+
+  @override
+  String get tabAudio => 'Giọng nói';
+
+  @override
+  String get recordStart =>
+      'Bấm micro và nói (hoặc mở tin nhắn thoại gần điện thoại)';
+
+  @override
+  String get recordStop => 'Dừng';
+
+  @override
+  String get listening => 'Đang nghe...';
+
+  @override
+  String get audioPreparing => 'Đang chuẩn bị micro...';
+
+  @override
+  String audioSecondsLeft(int seconds) {
+    return 'Còn $seconds giây';
+  }
+
+  @override
+  String get transcriptHint =>
+      'Lời nói sẽ hiện ở đây thành chữ. Bạn có thể sửa lại trước khi bấm Kiểm tra.';
+
+  @override
+  String get noSpeechDetected =>
+      'Không nghe được lời nói nào. Hãy thử lại ở nơi yên tĩnh, nói rõ hơn, hoặc gõ nội dung vào ô.';
+
+  @override
+  String get audioTranscriptEmpty =>
+      'Chưa có nội dung. Hãy bấm micro và nói, hoặc gõ nội dung vào ô trước khi kiểm tra.';
+
+  @override
+  String get audioPermissionDenied =>
+      'An Toàn chưa được phép dùng micro nên không thể nghe. Để bật: mở Cài đặt của điện thoại, chọn Ứng dụng, An Toàn, Quyền, rồi cho phép Micro. Hoặc dùng thẻ Văn bản để gõ nội dung.';
+
+  @override
+  String get audioLocaleUnavailable =>
+      'Điện thoại này chưa hỗ trợ nhận dạng giọng nói tiếng Việt. Vui lòng dùng thẻ Văn bản để gõ nội dung.';
+
+  @override
+  String get audioNotSupported =>
+      'Điện thoại này không hỗ trợ nhận dạng giọng nói. Vui lòng dùng thẻ Văn bản để gõ hoặc dán nội dung.';
+
+  @override
+  String get audioNotSupportedShort => 'Không dùng được giọng nói trên máy này';
+
+  @override
+  String get audioFailed =>
+      'Không nhận dạng được giọng nói lúc này. Hãy thử lại, hoặc dùng thẻ Văn bản.';
 }

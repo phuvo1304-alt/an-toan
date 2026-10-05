@@ -129,5 +129,19 @@
   "scamTypeInvestment": "Investment",
   "scamTypeRomance": "Romance scam",
   "scamTypeLoan": "Loan",
-  "scamTypeOther": "Other"
+  "scamTypeOther": "Other",
+  "tabAudio": "Voice",
+  "recordStart": "Tap the mic and speak (or play a voice message near the phone)",
+  "recordStop": "Stop",
+  "listening": "Listening...",
+  "audioPreparing": "Getting the microphone ready...",
+  "audioSecondsLeft": "{seconds}s left",
+  "transcriptHint": "Your speech appears here as text. You can edit it before you press Check.",
+  "noSpeechDetected": "No speech was heard. Try again somewhere quiet, speak more clearly, or type the content in the box.",
+  "audioTranscriptEmpty": "There is nothing to check yet. Tap the mic and speak, or type the content in the box first.",
+  "audioPermissionDenied": "An Toàn is not allowed to use the microphone, so it cannot listen. To allow it: open your phone's Settings, then Apps, An Toàn, Permissions, and allow Microphone. Or use the Text tab to type it.",
+  "audioLocaleUnavailable": "English voice input isn't available on this device. Please use the Text tab to type it instead.",
+  "audioNotSupported": "This device does not support speech recognition. Please use the Text tab to type or paste the content.",
+  "audioNotSupportedShort": "Voice input is not available on this device",
+  "audioFailed": "Speech recognition did not work just now. Try again, or use the Text tab."
 }

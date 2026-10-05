@@ -459,4 +459,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scamTypeOther => 'Other';
+
+  @override
+  String get tabAudio => 'Voice';
+
+  @override
+  String get recordStart =>
+      'Tap the mic and speak (or play a voice message near the phone)';
+
+  @override
+  String get recordStop => 'Stop';
+
+  @override
+  String get listening => 'Listening...';
+
+  @override
+  String get audioPreparing => 'Getting the microphone ready...';
+
+  @override
+  String audioSecondsLeft(int seconds) {
+    return '${seconds}s left';
+  }
+
+  @override
+  String get transcriptHint =>
+      'Your speech appears here as text. You can edit it before you press Check.';
+
+  @override
+  String get noSpeechDetected =>
+      'No speech was heard. Try again somewhere quiet, speak more clearly, or type the content in the box.';
+
+  @override
+  String get audioTranscriptEmpty =>
+      'There is nothing to check yet. Tap the mic and speak, or type the content in the box first.';
+
+  @override
+  String get audioPermissionDenied =>
+      'An Toàn is not allowed to use the microphone, so it cannot listen. To allow it: open your phone\'s Settings, then Apps, An Toàn, Permissions, and allow Microphone. Or use the Text tab to type it.';
+
+  @override
+  String get audioLocaleUnavailable =>
+      'English voice input isn\'t available on this device. Please use the Text tab to type it instead.';
+
+  @override
+  String get audioNotSupported =>
+      'This device does not support speech recognition. Please use the Text tab to type or paste the content.';
+
+  @override
+  String get audioNotSupportedShort =>
+      'Voice input is not available on this device';
+
+  @override
+  String get audioFailed =>
+      'Speech recognition did not work just now. Try again, or use the Text tab.';
 }

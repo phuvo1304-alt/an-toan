@@ -228,5 +228,26 @@
   "scamTypeInvestment": "Đầu tư",
   "scamTypeRomance": "Lừa đảo tình cảm",
   "scamTypeLoan": "Vay tiền",
-  "scamTypeOther": "Khác"
+  "scamTypeOther": "Khác",
+  "tabAudio": "Giọng nói",
+  "recordStart": "Bấm micro và nói (hoặc mở tin nhắn thoại gần điện thoại)",
+  "recordStop": "Dừng",
+  "listening": "Đang nghe...",
+  "audioPreparing": "Đang chuẩn bị micro...",
+  "audioSecondsLeft": "Còn {seconds} giây",
+  "@audioSecondsLeft": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "transcriptHint": "Lời nói sẽ hiện ở đây thành chữ. Bạn có thể sửa lại trước khi bấm Kiểm tra.",
+  "noSpeechDetected": "Không nghe được lời nói nào. Hãy thử lại ở nơi yên tĩnh, nói rõ hơn, hoặc gõ nội dung vào ô.",
+  "audioTranscriptEmpty": "Chưa có nội dung. Hãy bấm micro và nói, hoặc gõ nội dung vào ô trước khi kiểm tra.",
+  "audioPermissionDenied": "An Toàn chưa được phép dùng micro nên không thể nghe. Để bật: mở Cài đặt của điện thoại, chọn Ứng dụng, An Toàn, Quyền, rồi cho phép Micro. Hoặc dùng thẻ Văn bản để gõ nội dung.",
+  "audioLocaleUnavailable": "Điện thoại này chưa hỗ trợ nhận dạng giọng nói tiếng Việt. Vui lòng dùng thẻ Văn bản để gõ nội dung.",
+  "audioNotSupported": "Điện thoại này không hỗ trợ nhận dạng giọng nói. Vui lòng dùng thẻ Văn bản để gõ hoặc dán nội dung.",
+  "audioNotSupportedShort": "Không dùng được giọng nói trên máy này",
+  "audioFailed": "Không nhận dạng được giọng nói lúc này. Hãy thử lại, hoặc dùng thẻ Văn bản."
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../../core/config.dart';
@@ -97,3 +98,6 @@ class ScamApi {
     }
   }
 }
+
+/// The API the checker screen uses (a provider so tests can swap in a fake).
+final scamApiProvider = Provider<ScamApi>((ref) => ScamApi());
