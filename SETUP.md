@@ -137,20 +137,13 @@ npx supabase@latest db push
 It lists the migrations it will apply and asks you to confirm. Run it again
 whenever a new file appears in `supabase/migrations/`.
 
-Then set the secret salt used to hash device IDs (so the raw ID is never stored).
-1. Make a random value in PowerShell. It prints 64 random letters/numbers:
-   ```powershell
-   $b = New-Object byte[] 32; [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($b); ($b | ForEach-Object { $_.ToString('x2') }) -join ''
-   ```
-2. In the Supabase dashboard, open **SQL Editor** and run (paste your value in place of the placeholder):
-   ```sql
-   alter database postgres set app.report_salt = 'PASTE_THE_RANDOM_VALUE';
-   ```
-3. Keep the value private: never put it in the repo, chat or a screenshot. Set it once and do not change it,
-   or the per-phone report limit restarts for everyone.
+There is no secret to set by hand. Device IDs are hashed with a random salt that
+the migration creates inside the database (table `private.app_settings`, which the
+app cannot read). It is never in Git, chat or on your laptop. Do not change or delete
+it, or the per-phone report limit restarts for everyone.
 
-Until the salt is set, reports are refused with `server_misconfigured` (looking up a number still works).
-If step 2 says "permission denied", give the error to Claude Code.
+(An older version of this guide said to run `alter database postgres set app.report_salt = ...`.
+Hosted Supabase refuses that with "permission denied", so the salt moved to that table.)
 
 ---
 
