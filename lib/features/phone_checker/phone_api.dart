@@ -1,21 +1,24 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../../core/config.dart';
 import '../../core/device_id.dart';
 
-/// Report categories. MUST match the allowed list in
-/// supabase/migrations/20261005120000_phone_reports.sql.
+/// Report categories: the same list as the Scam Checker's scam_type
+/// (supabase/functions/analyze-scam/index.ts, without "none"). MUST match the
+/// allowed list in supabase/migrations/20261006120000_phone_reports_dispute_and_limits.sql.
 const reportCategories = <String>[
-  'impersonation',
-  'fake_bank',
   'fake_job',
+  'fake_scholarship',
+  'phishing',
+  'impersonation',
   'investment',
+  'romance',
   'loan',
-  'shopping',
-  'spam',
   'other',
 ];
 
@@ -106,14 +109,28 @@ class PhoneReportSummary {
   }
 }
 
-enum PhoneError { notConfigured, invalidPhone, rateLimited, network, generic }
+/// SHA-256 of the device id, as lowercase hex. Computed ON THE PHONE so the raw
+/// id never leaves it; the server salts this value again before storing it.
+String hashDeviceId(String deviceId) =>
+    sha256.convert(utf8.encode(deviceId)).toString();
+
+enum PhoneError {
+  notConfigured,
+  invalidPhone,
+  rateLimited,
+  alreadyReported, // this phone reported this number in the last 24 hours
+  alreadyDisputed, // this phone already flagged this number
+  nothingToDispute, // no counted reports left for this number
+  network,
+  generic,
+}
 
 class PhoneApiException implements Exception {
   final PhoneError error;
   const PhoneApiException(this.error);
 }
 
-/// Calls the two Postgres functions through Supabase's REST API (PostgREST),
+/// Calls the three Postgres functions through Supabase's REST API (PostgREST),
 /// with the same anon-key headers as ScamApi.
 class PhoneApi {
   // The project URL is the part of the Edge Function URL before the path,
@@ -144,7 +161,17 @@ class PhoneApi {
       'p_phone': normalized,
       'p_category': category,
       'p_description': desc.isEmpty ? null : desc,
-      'p_device_id': await getDeviceId(),
+      'p_reporter_hash': hashDeviceId(await getDeviceId()),
+    });
+  }
+
+  /// "This looks wrong": flags the number's most recent counted report.
+  Future<void> disputeReports(String phone) async {
+    final normalized = normalizePhone(phone);
+    if (normalized == null) throw const PhoneApiException(PhoneError.invalidPhone);
+    await _post('dispute_phone_report', {
+      'p_phone': normalized,
+      'p_reporter_hash': hashDeviceId(await getDeviceId()),
     });
   }
 
@@ -172,6 +199,12 @@ class PhoneApi {
           throw const PhoneApiException(PhoneError.invalidPhone);
         case 'rate_limited':
           throw const PhoneApiException(PhoneError.rateLimited);
+        case 'already_reported':
+          throw const PhoneApiException(PhoneError.alreadyReported);
+        case 'already_disputed':
+          throw const PhoneApiException(PhoneError.alreadyDisputed);
+        case 'no_reports':
+          throw const PhoneApiException(PhoneError.nothingToDispute);
         default:
           throw const PhoneApiException(PhoneError.generic);
       }
@@ -195,3 +228,6 @@ class PhoneApi {
     }
   }
 }
+
+/// The API the Phone Checker screen uses (a provider so tests can swap in a fake).
+final phoneApiProvider = Provider<PhoneApi>((ref) => PhoneApi());

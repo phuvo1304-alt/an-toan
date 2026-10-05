@@ -44,6 +44,7 @@ dependencies:
   intl: any
   url_launcher: ^6.3.3
   speech_to_text: ^7.5.0
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:

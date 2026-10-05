@@ -126,16 +126,21 @@ If you see an error, run `npx supabase@latest functions logs analyze-scam` (or o
 
 ## Step 5b: Database for the Phone Checker
 
-The Phone Checker stores community reports in Postgres. The table and its two
-functions are in `supabase/migrations/`. Apply them to your project (uses the
-link from Step 5; it may ask for the database password from Step 1b):
+The Phone Checker stores community reports in Postgres. The tables and functions
+(look up, report, and "report an error") are in `supabase/migrations/`. Apply them to
+your project (uses the link from Step 5; it may ask for the database password from Step 1b):
 
 ```powershell
 npx supabase@latest db push
 ```
 
 It lists the migrations it will apply and asks you to confirm. Run it again
-whenever a new file appears in `supabase/migrations/`.
+whenever a new file appears in `supabase/migrations/`. To see what it would do
+without changing anything, add `--dry-run` first.
+
+Moderation: disputed reports are not deleted. To review them, open the Supabase
+dashboard, **SQL Editor**, and run
+`select * from phone_reports where disputed_count > 0 order by created_at desc;`
 
 There is no secret to set by hand. Device IDs are hashed with a random salt that
 the migration creates inside the database (table `private.app_settings`, which the
@@ -190,7 +195,9 @@ Works:
 - Quiz: 12 bilingual questions bundled in the app, shuffled every round, with the
   best score and best streak saved on the phone.
 - Phone Checker: look up how many users reported a Vietnamese mobile number (by category,
-  with the last report date) and report a number. Needs Step 5b done first.
+  with the last report date), report a number, and flag reports that look wrong
+  ("report an error"). Limits: 5 reports and 5 flags per phone per day, one report per
+  number per day, one flag per number. Needs Step 5b done first (including the newest migration).
 - Onboarding: 3 slides on first launch (what the app does, language, privacy note).
 - Privacy Policy (vi + en) in `docs/privacy-policy/index.html`, linked from Settings.
   It only goes online after you turn on GitHub Pages once: on GitHub open the repo's

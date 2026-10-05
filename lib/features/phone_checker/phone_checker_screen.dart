@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/app_localizations.dart';
 import 'phone_api.dart';
 
 /// Phone Checker: look up community reports for a number, and report one.
 /// Wording rule (CLAUDE.md section 8): "reported by users", never "scammer".
-class PhoneCheckerScreen extends StatefulWidget {
+class PhoneCheckerScreen extends ConsumerStatefulWidget {
   const PhoneCheckerScreen({super.key});
 
   @override
-  State<PhoneCheckerScreen> createState() => _PhoneCheckerScreenState();
+  ConsumerState<PhoneCheckerScreen> createState() => _PhoneCheckerScreenState();
 }
 
-class _PhoneCheckerScreenState extends State<PhoneCheckerScreen> {
-  final _api = PhoneApi();
+class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
+  late final PhoneApi _api = ref.read(phoneApiProvider);
   final _phoneController = TextEditingController();
   final _descController = TextEditingController();
 
@@ -30,6 +31,11 @@ class _PhoneCheckerScreenState extends State<PhoneCheckerScreen> {
   String? _reportError;
   bool _reportSent = false;
 
+  // Dispute ("this looks wrong")
+  bool _disputing = false;
+  String? _disputeMessage;
+  bool _disputeIsError = false;
+
   @override
   void dispose() {
     _phoneController.dispose();
@@ -37,14 +43,22 @@ class _PhoneCheckerScreenState extends State<PhoneCheckerScreen> {
     super.dispose();
   }
 
-  String _errorText(PhoneError e, AppLocalizations t) {
+  String _errorText(PhoneError e, AppLocalizations t,
+      {bool dispute = false, bool lookup = false}) {
     switch (e) {
       case PhoneError.notConfigured:
         return t.errorNotConfigured;
       case PhoneError.invalidPhone:
         return t.phoneInvalid;
       case PhoneError.rateLimited:
-        return t.phoneReportRateLimited;
+        if (lookup) return t.errorRateLimited;
+        return dispute ? t.phoneDisputeRateLimited : t.phoneReportRateLimited;
+      case PhoneError.alreadyReported:
+        return t.phoneAlreadyReported;
+      case PhoneError.alreadyDisputed:
+        return t.phoneAlreadyDisputed;
+      case PhoneError.nothingToDispute:
+        return t.phoneNothingToDispute;
       case PhoneError.network:
         return t.errorNetwork;
       case PhoneError.generic:
@@ -77,7 +91,7 @@ class _PhoneCheckerScreenState extends State<PhoneCheckerScreen> {
     } on PhoneApiException catch (e) {
       if (!mounted) return;
       setState(() {
-        _checkError = _errorText(e.error, t);
+        _checkError = _errorText(e.error, t, lookup: true);
         _summary = null;
       });
     } finally {
@@ -133,6 +147,54 @@ class _PhoneCheckerScreenState extends State<PhoneCheckerScreen> {
     }
   }
 
+  /// "This looks wrong? Flag it": asks for confirmation, then flags the
+  /// number's most recent counted report and refreshes the summary.
+  Future<void> _dispute() async {
+    final t = AppLocalizations.of(context)!;
+    final number = _summaryFor;
+    if (number == null) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(t.phoneDisputeConfirmTitle),
+        content: Text(t.phoneDisputeConfirmBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(t.phoneDisputeCancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(t.phoneDisputeConfirm),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    setState(() {
+      _disputing = true;
+      _disputeMessage = null;
+    });
+    try {
+      await _api.disputeReports(number);
+      if (!mounted) return;
+      setState(() {
+        _disputeMessage = t.phoneDisputeSuccess;
+        _disputeIsError = false;
+      });
+      await _check(); // the disputed report may no longer count
+    } on PhoneApiException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _disputeMessage = _errorText(e.error, t, dispute: true);
+        _disputeIsError = true;
+      });
+    } finally {
+      if (mounted) setState(() => _disputing = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
@@ -184,7 +246,15 @@ class _PhoneCheckerScreenState extends State<PhoneCheckerScreen> {
             ],
             if (_summary != null) ...[
               const SizedBox(height: 16),
-              _SummaryCard(summary: _summary!),
+              _SummaryCard(
+                summary: _summary!,
+                disputing: _disputing,
+                onDispute: _dispute,
+              ),
+            ],
+            if (_disputeMessage != null) ...[
+              const SizedBox(height: 12),
+              _Message(text: _disputeMessage!, isError: _disputeIsError),
             ],
             const SizedBox(height: 24),
             const Divider(),
@@ -247,30 +317,37 @@ class _PhoneCheckerScreenState extends State<PhoneCheckerScreen> {
   }
 }
 
+/// Same labels as the Scam Checker / Training scam types (one taxonomy).
 String categoryLabel(String category, AppLocalizations t) {
   switch (category) {
-    case 'impersonation':
-      return t.phoneCatImpersonation;
-    case 'fake_bank':
-      return t.phoneCatFakeBank;
     case 'fake_job':
-      return t.phoneCatFakeJob;
+      return t.scamTypeFakeJob;
+    case 'fake_scholarship':
+      return t.scamTypeFakeScholarship;
+    case 'phishing':
+      return t.scamTypePhishing;
+    case 'impersonation':
+      return t.scamTypeImpersonation;
     case 'investment':
-      return t.phoneCatInvestment;
+      return t.scamTypeInvestment;
+    case 'romance':
+      return t.scamTypeRomance;
     case 'loan':
-      return t.phoneCatLoan;
-    case 'shopping':
-      return t.phoneCatShopping;
-    case 'spam':
-      return t.phoneCatSpam;
+      return t.scamTypeLoan;
     default:
-      return t.phoneCatOther;
+      return t.scamTypeOther;
   }
 }
 
 class _SummaryCard extends StatelessWidget {
   final PhoneReportSummary summary;
-  const _SummaryCard({required this.summary});
+  final bool disputing;
+  final VoidCallback onDispute;
+  const _SummaryCard({
+    required this.summary,
+    required this.disputing,
+    required this.onDispute,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -314,6 +391,21 @@ class _SummaryCard extends StatelessWidget {
               ],
               const SizedBox(height: 8),
               Text(t.phoneReportsNote, style: textTheme.bodySmall),
+              const SizedBox(height: 4),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: disputing ? null : onDispute,
+                  icon: disputing
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.outlined_flag),
+                  label: Text(t.phoneDisputeAction),
+                ),
+              ),
             ],
           ],
         ),

@@ -325,31 +325,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get phoneReportRateLimited =>
-      'You have sent too many reports. Please try again in an hour.';
-
-  @override
-  String get phoneCatImpersonation => 'Pretending to be police or officials';
-
-  @override
-  String get phoneCatFakeBank => 'Pretending to be a bank or e-wallet';
-
-  @override
-  String get phoneCatFakeJob => 'Fake job, easy money tasks';
-
-  @override
-  String get phoneCatInvestment => 'Investment, crypto';
-
-  @override
-  String get phoneCatLoan => 'Loans';
-
-  @override
-  String get phoneCatShopping => 'Shopping, delivery';
-
-  @override
-  String get phoneCatSpam => 'Ads, nuisance calls';
-
-  @override
-  String get phoneCatOther => 'Other';
+      'You have sent too many reports today. Please try again tomorrow.';
 
   @override
   String get onboardingWelcomeBody =>
@@ -512,4 +488,39 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get audioFailed =>
       'Speech recognition did not work just now. Try again, or use the Text tab.';
+
+  @override
+  String get phoneAlreadyReported =>
+      'You already reported this number in the last 24 hours. Thank you, one report per person is enough.';
+
+  @override
+  String get phoneDisputeAction => 'Looks wrong? Flag it';
+
+  @override
+  String get phoneDisputeConfirmTitle => 'Do these reports look wrong?';
+
+  @override
+  String get phoneDisputeConfirmBody =>
+      'If you think the reports about this number are wrong (for example it is your number or someone you know), flag it. When enough people flag a report, it stops being counted and is reviewed. You can flag each number only once.';
+
+  @override
+  String get phoneDisputeCancel => 'Cancel';
+
+  @override
+  String get phoneDisputeConfirm => 'Flag it';
+
+  @override
+  String get phoneDisputeSuccess =>
+      'Thanks, noted. You are helping keep this information accurate.';
+
+  @override
+  String get phoneAlreadyDisputed => 'You have already flagged this number.';
+
+  @override
+  String get phoneNothingToDispute =>
+      'There are no reports left on this number to flag.';
+
+  @override
+  String get phoneDisputeRateLimited =>
+      'You have flagged too many times today. Please try again tomorrow.';
 }

@@ -323,31 +323,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get phoneReportRateLimited =>
-      'Bạn đã gửi quá nhiều báo cáo. Vui lòng thử lại sau một giờ.';
-
-  @override
-  String get phoneCatImpersonation => 'Giả danh công an, cơ quan nhà nước';
-
-  @override
-  String get phoneCatFakeBank => 'Giả danh ngân hàng, ví điện tử';
-
-  @override
-  String get phoneCatFakeJob => 'Việc làm giả, việc nhẹ lương cao';
-
-  @override
-  String get phoneCatInvestment => 'Đầu tư, tiền ảo';
-
-  @override
-  String get phoneCatLoan => 'Vay tiền';
-
-  @override
-  String get phoneCatShopping => 'Mua bán, giao hàng';
-
-  @override
-  String get phoneCatSpam => 'Quảng cáo, làm phiền';
-
-  @override
-  String get phoneCatOther => 'Khác';
+      'Bạn đã gửi quá nhiều báo cáo hôm nay. Vui lòng thử lại vào ngày mai.';
 
   @override
   String get onboardingWelcomeBody =>
@@ -508,4 +484,39 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get audioFailed =>
       'Không nhận dạng được giọng nói lúc này. Hãy thử lại, hoặc dùng thẻ Văn bản.';
+
+  @override
+  String get phoneAlreadyReported =>
+      'Bạn đã báo cáo số này trong 24 giờ qua. Cảm ơn bạn, mỗi người chỉ cần báo cáo một lần.';
+
+  @override
+  String get phoneDisputeAction => 'Thấy sai? Báo lỗi';
+
+  @override
+  String get phoneDisputeConfirmTitle => 'Báo cáo này có vẻ sai?';
+
+  @override
+  String get phoneDisputeConfirmBody =>
+      'Nếu bạn nghĩ các báo cáo về số này không đúng (ví dụ đây là số của bạn hoặc người quen), hãy báo lỗi. Khi đủ người báo lỗi, báo cáo sẽ không còn được tính và sẽ được xem xét lại. Mỗi số bạn chỉ báo lỗi được một lần.';
+
+  @override
+  String get phoneDisputeCancel => 'Hủy';
+
+  @override
+  String get phoneDisputeConfirm => 'Báo lỗi';
+
+  @override
+  String get phoneDisputeSuccess =>
+      'Đã ghi nhận. Cảm ơn bạn đã giúp giữ thông tin chính xác.';
+
+  @override
+  String get phoneAlreadyDisputed => 'Bạn đã báo lỗi cho số này rồi.';
+
+  @override
+  String get phoneNothingToDispute =>
+      'Số này hiện không còn báo cáo nào để báo lỗi.';
+
+  @override
+  String get phoneDisputeRateLimited =>
+      'Bạn đã báo lỗi quá nhiều lần hôm nay. Vui lòng thử lại vào ngày mai.';
 }

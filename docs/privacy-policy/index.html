@@ -63,6 +63,8 @@ Nhiều người dùng của chúng tôi chưa đủ 18 tuổi, vì vậy ứng 
       thời gian báo cáo, và một mã băm của mã thiết bị (xem mục 3). Không có tài khoản, không có tên người báo cáo.</li>
   <li>Người dùng khác chỉ thấy <strong>số liệu tổng hợp</strong>: số người đã báo cáo, các loại lừa đảo, ngày báo cáo gần nhất.
       Không ai xem được từng báo cáo hay mô tả của bạn qua ứng dụng.</li>
+  <li>Nếu bạn thấy báo cáo về một số là sai (ví dụ đó là số của bạn), hãy dùng nút "Thấy sai? Báo lỗi". Khi đủ người báo lỗi,
+      báo cáo đó không còn được tính và sẽ được người quản lý xem xét lại.</li>
   <li>Đây là <strong>dữ liệu do cộng đồng báo cáo, không phải kết quả xác minh</strong>. Một báo cáo không chứng minh ai là chủ của số đó.
       Đừng ghi tên, địa chỉ hay thông tin cá nhân vào mô tả.</li>
 </ul>
@@ -71,7 +73,10 @@ Nhiều người dùng của chúng tôi chưa đủ 18 tuổi, vì vậy ứng 
 <ul>
   <li>Ứng dụng tạo một mã ngẫu nhiên lưu trên điện thoại của bạn. Mã này <strong>không gắn với tên, số điện thoại
       hay phần cứng</strong> của bạn, và chỉ dùng để giới hạn số lần kiểm tra/báo cáo nhằm chống lạm dụng.</li>
-  <li>Với báo cáo số điện thoại, chúng tôi chỉ lưu mã băm (SHA-256 kèm một giá trị bí mật), không lưu mã gốc.</li>
+  <li>Với báo cáo số điện thoại, điện thoại của bạn băm mã này (SHA-256) trước khi gửi, nên mã gốc không bao giờ rời khỏi máy.
+      Máy chủ băm lại một lần nữa kèm một giá trị bí mật rồi mới lưu.</li>
+  <li>Để chống lạm dụng, chúng tôi lưu một nhật ký gồm: mã băm đó, số điện thoại được báo cáo hoặc báo lỗi, và thời gian.
+      Nhật ký này chỉ dùng để giới hạn số lần báo cáo/báo lỗi và không ai đọc được qua ứng dụng.</li>
 </ul>
 
 <h3>4. Dữ liệu chỉ lưu trên điện thoại của bạn</h3>
@@ -137,6 +142,8 @@ Many of our users are under 18, so the app is designed to
       the time, and a hash of the device ID (see section 3). There are no accounts and no reporter names.</li>
   <li>Other users only see <strong>aggregates</strong>: how many users reported the number, the categories, and the last report date.
       Nobody can see individual reports or your description through the app.</li>
+  <li>If the reports about a number look wrong (for example it is your number), use "Looks wrong? Flag it". When enough
+      people flag a report, it stops being counted and is reviewed by a person.</li>
   <li>This is <strong>community-reported data, not verification</strong>. A report does not prove who owns a number.
       Do not put names, addresses or personal details in the description.</li>
 </ul>
@@ -145,7 +152,10 @@ Many of our users are under 18, so the app is designed to
 <ul>
   <li>The app creates a random ID stored on your phone. It is <strong>not linked to your name, phone number
       or hardware</strong>, and is only used to limit how often checks and reports can be made, to prevent abuse.</li>
-  <li>For phone reports we store only a hash of it (SHA-256 with a secret value), never the ID itself.</li>
+  <li>For phone reports, your phone hashes this ID (SHA-256) before sending it, so the ID itself never leaves the device.
+      The server hashes it again with a secret value before storing it.</li>
+  <li>To prevent abuse we keep a log of: that hash, the number that was reported or flagged, and the time.
+      It is only used to limit how often reports and flags can be made, and nobody can read it through the app.</li>
 </ul>
 
 <h3>4. Data that stays on your phone</h3>

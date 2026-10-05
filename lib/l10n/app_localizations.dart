@@ -647,56 +647,8 @@ abstract class AppLocalizations {
   /// No description provided for @phoneReportRateLimited.
   ///
   /// In vi, this message translates to:
-  /// **'Bạn đã gửi quá nhiều báo cáo. Vui lòng thử lại sau một giờ.'**
+  /// **'Bạn đã gửi quá nhiều báo cáo hôm nay. Vui lòng thử lại vào ngày mai.'**
   String get phoneReportRateLimited;
-
-  /// No description provided for @phoneCatImpersonation.
-  ///
-  /// In vi, this message translates to:
-  /// **'Giả danh công an, cơ quan nhà nước'**
-  String get phoneCatImpersonation;
-
-  /// No description provided for @phoneCatFakeBank.
-  ///
-  /// In vi, this message translates to:
-  /// **'Giả danh ngân hàng, ví điện tử'**
-  String get phoneCatFakeBank;
-
-  /// No description provided for @phoneCatFakeJob.
-  ///
-  /// In vi, this message translates to:
-  /// **'Việc làm giả, việc nhẹ lương cao'**
-  String get phoneCatFakeJob;
-
-  /// No description provided for @phoneCatInvestment.
-  ///
-  /// In vi, this message translates to:
-  /// **'Đầu tư, tiền ảo'**
-  String get phoneCatInvestment;
-
-  /// No description provided for @phoneCatLoan.
-  ///
-  /// In vi, this message translates to:
-  /// **'Vay tiền'**
-  String get phoneCatLoan;
-
-  /// No description provided for @phoneCatShopping.
-  ///
-  /// In vi, this message translates to:
-  /// **'Mua bán, giao hàng'**
-  String get phoneCatShopping;
-
-  /// No description provided for @phoneCatSpam.
-  ///
-  /// In vi, this message translates to:
-  /// **'Quảng cáo, làm phiền'**
-  String get phoneCatSpam;
-
-  /// No description provided for @phoneCatOther.
-  ///
-  /// In vi, this message translates to:
-  /// **'Khác'**
-  String get phoneCatOther;
 
   /// No description provided for @onboardingWelcomeBody.
   ///
@@ -961,6 +913,66 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Không nhận dạng được giọng nói lúc này. Hãy thử lại, hoặc dùng thẻ Văn bản.'**
   String get audioFailed;
+
+  /// No description provided for @phoneAlreadyReported.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn đã báo cáo số này trong 24 giờ qua. Cảm ơn bạn, mỗi người chỉ cần báo cáo một lần.'**
+  String get phoneAlreadyReported;
+
+  /// No description provided for @phoneDisputeAction.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thấy sai? Báo lỗi'**
+  String get phoneDisputeAction;
+
+  /// No description provided for @phoneDisputeConfirmTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Báo cáo này có vẻ sai?'**
+  String get phoneDisputeConfirmTitle;
+
+  /// No description provided for @phoneDisputeConfirmBody.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nếu bạn nghĩ các báo cáo về số này không đúng (ví dụ đây là số của bạn hoặc người quen), hãy báo lỗi. Khi đủ người báo lỗi, báo cáo sẽ không còn được tính và sẽ được xem xét lại. Mỗi số bạn chỉ báo lỗi được một lần.'**
+  String get phoneDisputeConfirmBody;
+
+  /// No description provided for @phoneDisputeCancel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hủy'**
+  String get phoneDisputeCancel;
+
+  /// No description provided for @phoneDisputeConfirm.
+  ///
+  /// In vi, this message translates to:
+  /// **'Báo lỗi'**
+  String get phoneDisputeConfirm;
+
+  /// No description provided for @phoneDisputeSuccess.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã ghi nhận. Cảm ơn bạn đã giúp giữ thông tin chính xác.'**
+  String get phoneDisputeSuccess;
+
+  /// No description provided for @phoneAlreadyDisputed.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn đã báo lỗi cho số này rồi.'**
+  String get phoneAlreadyDisputed;
+
+  /// No description provided for @phoneNothingToDispute.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số này hiện không còn báo cáo nào để báo lỗi.'**
+  String get phoneNothingToDispute;
+
+  /// No description provided for @phoneDisputeRateLimited.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn đã báo lỗi quá nhiều lần hôm nay. Vui lòng thử lại vào ngày mai.'**
+  String get phoneDisputeRateLimited;
 }
 
 class _AppLocalizationsDelegate
