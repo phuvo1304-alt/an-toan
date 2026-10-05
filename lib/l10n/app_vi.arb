@@ -191,5 +191,42 @@
         "type": "String"
       }
     }
-  }
+  },
+  "trainingTitle": "Luyện tập",
+  "trainingIntro": "Mỗi tình huống là một tin nhắn mô phỏng. Hãy tìm những phần đáng ngờ, rồi xem bạn đã phát hiện được bao nhiêu.",
+  "trainingInstructions": "Chạm vào những phần bạn thấy đáng ngờ (chạm lần nữa để bỏ chọn), rồi bấm Nộp bài.",
+  "trainingResultIntro": "Kết quả: phần màu xanh là bạn phát hiện đúng, màu đỏ là bạn bỏ sót, màu cam là phần bình thường mà bạn đánh dấu nhầm.",
+  "trainingSubmit": "Nộp bài",
+  "trainingCaughtLabel": "Bạn đã phát hiện",
+  "trainingMissedLabel": "Bạn đã bỏ sót",
+  "trainingFalsePositiveLabel": "Phần này bình thường",
+  "trainingSummaryCaught": "Bạn phát hiện {caught}/{total} dấu hiệu đáng ngờ",
+  "@trainingSummaryCaught": {
+    "placeholders": {
+      "caught": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "trainingSummaryFalsePositives": "{count, plural, =0{Không đánh dấu nhầm phần nào} other{Đánh dấu nhầm {count} phần bình thường}}",
+  "@trainingSummaryFalsePositives": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trainingTryAgain": "Thử lại",
+  "trainingBackToList": "Về danh sách tình huống",
+  "scamTypeFakeJob": "Việc làm giả",
+  "scamTypeFakeScholarship": "Học bổng giả",
+  "scamTypePhishing": "Giả mạo đường link",
+  "scamTypeImpersonation": "Giả danh",
+  "scamTypeInvestment": "Đầu tư",
+  "scamTypeRomance": "Lừa đảo tình cảm",
+  "scamTypeLoan": "Vay tiền",
+  "scamTypeOther": "Khác"
 }

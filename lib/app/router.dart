@@ -11,6 +11,9 @@ import '../features/scam_checker/scam_checker_screen.dart';
 import '../features/scam_checker/scam_result.dart';
 import '../features/scam_checker/result_screen.dart';
 import '../features/settings/settings_screen.dart';
+import '../features/training/training_data.dart';
+import '../features/training/training_list_screen.dart';
+import '../features/training/training_scenario_screen.dart';
 
 /// The app's router. It lives in a provider so its redirect can read the
 /// onboarding flag. Built once: the redirect reads the flag through a
@@ -53,6 +56,23 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/quiz',
         builder: (context, state) => const QuizScreen(),
+      ),
+      GoRoute(
+        path: '/training',
+        builder: (context, state) => const TrainingListScreen(),
+        routes: [
+          GoRoute(
+            path: ':id',
+            builder: (context, state) {
+              final id = state.pathParameters['id'];
+              final matches = trainingScenarios.where((s) => s.id == id);
+              // Unknown id (e.g. an old link): show the list instead.
+              return matches.isEmpty
+                  ? const TrainingListScreen()
+                  : TrainingScenarioScreen(scenario: matches.first);
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: '/settings',

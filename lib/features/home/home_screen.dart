@@ -10,11 +10,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
 
-    void comingSoon() {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(t.comingSoon)));
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(t.homeTitle),
@@ -49,7 +44,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.school_outlined,
               title: t.cardTraining,
               subtitle: t.cardTrainingDesc,
-              onTap: comingSoon,
+              onTap: () => context.push('/training'),
             ),
             _HomeCard(
               icon: Icons.quiz_outlined,

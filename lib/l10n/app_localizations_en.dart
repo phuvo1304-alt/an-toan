@@ -385,4 +385,78 @@ class AppLocalizationsEn extends AppLocalizations {
   String privacyPolicyOpenError(String url) {
     return 'Could not open the page. You can open it yourself: $url';
   }
+
+  @override
+  String get trainingTitle => 'Training';
+
+  @override
+  String get trainingIntro =>
+      'Each scenario is a simulated message. Find the suspicious parts, then see how many you spotted.';
+
+  @override
+  String get trainingInstructions =>
+      'Tap the parts you think are suspicious (tap again to unmark), then press Submit.';
+
+  @override
+  String get trainingResultIntro =>
+      'Results: green means you spotted it, red means you missed it, amber is a normal part you marked by mistake.';
+
+  @override
+  String get trainingSubmit => 'Submit';
+
+  @override
+  String get trainingCaughtLabel => 'You spotted this';
+
+  @override
+  String get trainingMissedLabel => 'You missed this';
+
+  @override
+  String get trainingFalsePositiveLabel => 'This part is fine';
+
+  @override
+  String trainingSummaryCaught(int caught, int total) {
+    return 'You spotted $caught/$total red flags';
+  }
+
+  @override
+  String trainingSummaryFalsePositives(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count normal parts marked by mistake',
+      one: '1 normal part marked by mistake',
+      zero: 'No normal parts marked by mistake',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get trainingTryAgain => 'Try again';
+
+  @override
+  String get trainingBackToList => 'Back to scenarios';
+
+  @override
+  String get scamTypeFakeJob => 'Fake job';
+
+  @override
+  String get scamTypeFakeScholarship => 'Fake scholarship';
+
+  @override
+  String get scamTypePhishing => 'Phishing link';
+
+  @override
+  String get scamTypeImpersonation => 'Impersonation';
+
+  @override
+  String get scamTypeInvestment => 'Investment';
+
+  @override
+  String get scamTypeRomance => 'Romance scam';
+
+  @override
+  String get scamTypeLoan => 'Loan';
+
+  @override
+  String get scamTypeOther => 'Other';
 }

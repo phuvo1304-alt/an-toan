@@ -188,13 +188,15 @@ Works:
   best score and best streak saved on the phone.
 - Phone Checker: look up how many users reported a Vietnamese mobile number (by category,
   with the last report date) and report a number. Needs Step 5b done first.
-
 - Onboarding: 3 slides on first launch (what the app does, language, privacy note).
 - Privacy Policy (vi + en) in `docs/privacy-policy/index.html`, linked from Settings.
   It only goes online after you turn on GitHub Pages once: on GitHub open the repo's
   **Settings, then Pages**, choose **Deploy from a branch**, branch **main**, folder **/docs**, and Save.
   After a minute it is at https://phuvo1304-alt.github.io/an-toan/privacy-policy/.
   Replace the placeholder contact line at the bottom of the page before you publish the app.
+- Training: 4 bundled practice scenarios (fake job, fake scholarship, impersonation,
+  fake shipper). Tap the suspicious parts of a message, submit, and every part you
+  caught, missed or wrongly marked is explained in place.
 
-Not built yet: audio check, training, store builds.
-Home shows "Coming soon" for the Training card.
+Not built yet: audio check, store builds.
+All four Home cards now open a working feature.

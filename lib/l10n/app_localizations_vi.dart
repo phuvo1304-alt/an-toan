@@ -383,4 +383,77 @@ class AppLocalizationsVi extends AppLocalizations {
   String privacyPolicyOpenError(String url) {
     return 'Không mở được trang. Bạn có thể tự mở: $url';
   }
+
+  @override
+  String get trainingTitle => 'Luyện tập';
+
+  @override
+  String get trainingIntro =>
+      'Mỗi tình huống là một tin nhắn mô phỏng. Hãy tìm những phần đáng ngờ, rồi xem bạn đã phát hiện được bao nhiêu.';
+
+  @override
+  String get trainingInstructions =>
+      'Chạm vào những phần bạn thấy đáng ngờ (chạm lần nữa để bỏ chọn), rồi bấm Nộp bài.';
+
+  @override
+  String get trainingResultIntro =>
+      'Kết quả: phần màu xanh là bạn phát hiện đúng, màu đỏ là bạn bỏ sót, màu cam là phần bình thường mà bạn đánh dấu nhầm.';
+
+  @override
+  String get trainingSubmit => 'Nộp bài';
+
+  @override
+  String get trainingCaughtLabel => 'Bạn đã phát hiện';
+
+  @override
+  String get trainingMissedLabel => 'Bạn đã bỏ sót';
+
+  @override
+  String get trainingFalsePositiveLabel => 'Phần này bình thường';
+
+  @override
+  String trainingSummaryCaught(int caught, int total) {
+    return 'Bạn phát hiện $caught/$total dấu hiệu đáng ngờ';
+  }
+
+  @override
+  String trainingSummaryFalsePositives(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Đánh dấu nhầm $count phần bình thường',
+      zero: 'Không đánh dấu nhầm phần nào',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get trainingTryAgain => 'Thử lại';
+
+  @override
+  String get trainingBackToList => 'Về danh sách tình huống';
+
+  @override
+  String get scamTypeFakeJob => 'Việc làm giả';
+
+  @override
+  String get scamTypeFakeScholarship => 'Học bổng giả';
+
+  @override
+  String get scamTypePhishing => 'Giả mạo đường link';
+
+  @override
+  String get scamTypeImpersonation => 'Giả danh';
+
+  @override
+  String get scamTypeInvestment => 'Đầu tư';
+
+  @override
+  String get scamTypeRomance => 'Lừa đảo tình cảm';
+
+  @override
+  String get scamTypeLoan => 'Vay tiền';
+
+  @override
+  String get scamTypeOther => 'Khác';
 }

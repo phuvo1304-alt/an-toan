@@ -757,6 +757,126 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Không mở được trang. Bạn có thể tự mở: {url}'**
   String privacyPolicyOpenError(String url);
+
+  /// No description provided for @trainingTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Luyện tập'**
+  String get trainingTitle;
+
+  /// No description provided for @trainingIntro.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mỗi tình huống là một tin nhắn mô phỏng. Hãy tìm những phần đáng ngờ, rồi xem bạn đã phát hiện được bao nhiêu.'**
+  String get trainingIntro;
+
+  /// No description provided for @trainingInstructions.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chạm vào những phần bạn thấy đáng ngờ (chạm lần nữa để bỏ chọn), rồi bấm Nộp bài.'**
+  String get trainingInstructions;
+
+  /// No description provided for @trainingResultIntro.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kết quả: phần màu xanh là bạn phát hiện đúng, màu đỏ là bạn bỏ sót, màu cam là phần bình thường mà bạn đánh dấu nhầm.'**
+  String get trainingResultIntro;
+
+  /// No description provided for @trainingSubmit.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nộp bài'**
+  String get trainingSubmit;
+
+  /// No description provided for @trainingCaughtLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn đã phát hiện'**
+  String get trainingCaughtLabel;
+
+  /// No description provided for @trainingMissedLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn đã bỏ sót'**
+  String get trainingMissedLabel;
+
+  /// No description provided for @trainingFalsePositiveLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Phần này bình thường'**
+  String get trainingFalsePositiveLabel;
+
+  /// No description provided for @trainingSummaryCaught.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn phát hiện {caught}/{total} dấu hiệu đáng ngờ'**
+  String trainingSummaryCaught(int caught, int total);
+
+  /// No description provided for @trainingSummaryFalsePositives.
+  ///
+  /// In vi, this message translates to:
+  /// **'{count, plural, =0{Không đánh dấu nhầm phần nào} other{Đánh dấu nhầm {count} phần bình thường}}'**
+  String trainingSummaryFalsePositives(int count);
+
+  /// No description provided for @trainingTryAgain.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thử lại'**
+  String get trainingTryAgain;
+
+  /// No description provided for @trainingBackToList.
+  ///
+  /// In vi, this message translates to:
+  /// **'Về danh sách tình huống'**
+  String get trainingBackToList;
+
+  /// No description provided for @scamTypeFakeJob.
+  ///
+  /// In vi, this message translates to:
+  /// **'Việc làm giả'**
+  String get scamTypeFakeJob;
+
+  /// No description provided for @scamTypeFakeScholarship.
+  ///
+  /// In vi, this message translates to:
+  /// **'Học bổng giả'**
+  String get scamTypeFakeScholarship;
+
+  /// No description provided for @scamTypePhishing.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giả mạo đường link'**
+  String get scamTypePhishing;
+
+  /// No description provided for @scamTypeImpersonation.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giả danh'**
+  String get scamTypeImpersonation;
+
+  /// No description provided for @scamTypeInvestment.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đầu tư'**
+  String get scamTypeInvestment;
+
+  /// No description provided for @scamTypeRomance.
+  ///
+  /// In vi, this message translates to:
+  /// **'Lừa đảo tình cảm'**
+  String get scamTypeRomance;
+
+  /// No description provided for @scamTypeLoan.
+  ///
+  /// In vi, this message translates to:
+  /// **'Vay tiền'**
+  String get scamTypeLoan;
+
+  /// No description provided for @scamTypeOther.
+  ///
+  /// In vi, this message translates to:
+  /// **'Khác'**
+  String get scamTypeOther;
 }
 
 class _AppLocalizationsDelegate
