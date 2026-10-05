@@ -8,6 +8,8 @@
 // privacy note on the Checker screen says content is sent to an AI service.
 // No UI change is needed right now. Keep those texts if you redesign screens.
 
+import { preCheck } from "./patterns.ts";
+
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const ANTHROPIC_VERSION = "2023-06-01";
@@ -284,6 +286,14 @@ Deno.serve(async (req) => {
   // Build the content blocks of ONE user message. Wrap text in tags so the
   // model sees where untrusted content starts/ends.
   const content: any[] = [];
+  // Rule-based pre-check (text only; image-only requests skip it). Only the
+  // matched scam types reach Claude, as a hint. Claude still decides the result.
+  if (text) {
+    const preCheckResult = preCheck(text);
+    if (preCheckResult.length > 0) {
+      content.push({ type: "text", text: `A rule-based pattern check flagged possible: ${preCheckResult.map(r => r.scamType).join(", ")}. Treat this as a hint to double-check, not a verdict — confirm or override it based on your own full analysis.` });
+    }
+  }
   if (imageB64) {
     content.push({ type: "text", text: "The following image is the USER CONTENT (untrusted). Read any text in it and analyze it." });
     content.push({ type: "image", source: { type: "base64", media_type: imageMime, data: imageB64 } });
