@@ -156,6 +156,13 @@ git push
 
 ## What works after this, and what does not
 
-Works: Home, vi/en switch in Settings, text check, screenshot check, result screen with disclaimer.
-Not built yet: audio check, phone checker, quiz, training, onboarding, privacy policy page, store builds.
-Home shows "Coming soon" for the unfinished cards.
+Works:
+- Home, and the vi/en switch in Settings.
+- Text check and screenshot check, with the result screen and disclaimer.
+  The backend (`analyze-scam` Edge Function) uses Anthropic's Claude API, not Gemini,
+  with a rule-based pattern pre-check that gives Claude a hint.
+- Quiz: 12 bilingual questions bundled in the app, shuffled every round, with the
+  best score and best streak saved on the phone.
+
+Not built yet: audio check, phone checker, training, onboarding, privacy policy page, store builds.
+Home shows "Coming soon" for the Phone and Training cards.
