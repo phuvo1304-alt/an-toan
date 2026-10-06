@@ -295,3 +295,37 @@ When you've read this, reply with:
 3. The exact plan for **Day 1** (commands, files to create, what I should see when it works).
 
 Then wait for my "go" before writing code.
+---
+
+## 14. Known issues (each to be scoped and fixed as its own slice)
+
+### 14.1 analyze-scam: red-flag titles don't always match their quotes
+- **Found:** 2026-10-06, live 3-image tests of a fake-job chat (1024 and 1280 px).
+- **What happens:** the model blends a multi-step escalation pattern (a small
+  payout first, a deposit demand later) into ONE red flag and quotes the first
+  step. In 4 of 4 runs, the flag titled "Yêu cầu nạp tiền trước để làm việc"
+  (asks you to deposit money first) quoted "Nhiệm vụ đầu tiên bạn được trả ngay
+  40.000đ để làm quen" — a payment TO the user. One explanation even said
+  "yêu cầu nạp 40.000đ", which is false.
+- **Impact:** the verdict was correct every time, but the app tells the user
+  something untrue about their message.
+- **Cause:** the system prompt only requires `quote` to be an exact snippet.
+  Nothing ties a flag's title/explanation to what its quote actually says, or
+  limits a flag to one warning sign.
+- **Suggested prompt wording (not applied, untested):** "Each red flag covers
+  one warning sign. Its quote must be the words that show that sign, and its
+  title and explanation must describe what the quoted words actually say. If a
+  pattern spans several messages (for example, a small payout first and a
+  deposit later), quote the line with the risky request."
+- **Fixing it needs:** prompt change in `supabase/functions/analyze-scam/index.ts`,
+  redeploy, and a re-test with the same 3-image scenario (check every flag's
+  title against its quote).
+
+### 14.2 Image checks: Vietnamese diacritics sometimes misread
+- **Found:** 2026-10-06, same tests. "Tuyển" read as "Tuyên", "gốc" as "góc",
+  "ạ?" as "q?", "tim" as "tìm".
+- **Not a resize problem:** the images were clearly legible; misreads persisted
+  at 1280 px and partly at 1568 px (Haiku 4.5's maximum), with lossless PNG.
+  They vary between runs. Verdicts were not affected.
+- **Possible fix (a cost decision):** a stronger / high-resolution model for
+  image checks, tested against the same scenario before switching.
