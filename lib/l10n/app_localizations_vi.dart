@@ -519,4 +519,21 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get phoneDisputeRateLimited =>
       'Bạn đã báo lỗi quá nhiều lần hôm nay. Vui lòng thử lại vào ngày mai.';
+
+  @override
+  String get trainingDifficultyEasy => 'Dễ';
+
+  @override
+  String get trainingDifficultyMedium => 'Vừa';
+
+  @override
+  String get trainingDifficultyHard => 'Khó';
+
+  @override
+  String get trainingSummaryNoFlags =>
+      'Tin nhắn này an toàn: không có dấu hiệu đáng ngờ nào để tìm';
+
+  @override
+  String get trainingResultIntroSafe =>
+      'Kết quả: tin nhắn này không có dấu hiệu đáng ngờ nào. Phần màu cam (nếu có) là phần bình thường mà bạn đánh dấu nhầm.';
 }

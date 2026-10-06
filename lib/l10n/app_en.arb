@@ -145,5 +145,10 @@
   "phoneDisputeSuccess": "Thanks, noted. You are helping keep this information accurate.",
   "phoneAlreadyDisputed": "You have already flagged this number.",
   "phoneNothingToDispute": "There are no reports left on this number to flag.",
-  "phoneDisputeRateLimited": "You have flagged too many times today. Please try again tomorrow."
+  "phoneDisputeRateLimited": "You have flagged too many times today. Please try again tomorrow.",
+  "trainingDifficultyEasy": "Easy",
+  "trainingDifficultyMedium": "Medium",
+  "trainingDifficultyHard": "Hard",
+  "trainingSummaryNoFlags": "This message was safe: there were no red flags to find",
+  "trainingResultIntroSafe": "Results: this message had no red flags. Any amber part is a normal part you marked by mistake."
 }

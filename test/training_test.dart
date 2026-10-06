@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:an_toan/app/app.dart';
+import 'package:an_toan/app/router.dart';
+import 'package:an_toan/features/quiz/quiz_data.dart';
 import 'package:an_toan/features/training/training_data.dart';
 import 'package:an_toan/features/training/training_session.dart';
 
@@ -15,10 +17,10 @@ void main() {
       'investment', 'romance', 'loan', 'other',
     ];
 
-    test('4 scenarios, unique ids, 4 different valid scam types', () {
-      expect(trainingScenarios.length, 4);
-      expect(trainingScenarios.map((s) => s.id).toSet().length, 4);
-      expect(trainingScenarios.map((s) => s.scamType).toSet().length, 4);
+    test('14 scenarios, unique ids, every scam type covered', () {
+      expect(trainingScenarios.length, 14);
+      expect(trainingScenarios.map((s) => s.id).toSet().length, 14);
+      expect(trainingScenarios.map((s) => s.scamType).toSet(), scamTypes.toSet());
       for (final s in trainingScenarios) {
         expect(scamTypes, contains(s.scamType), reason: s.id);
         expect(s.titleVi.trim(), isNotEmpty, reason: s.id);
@@ -43,10 +45,72 @@ void main() {
       }
     });
 
-    test('each scenario has 6-12 segments and 2-4 suspicious ones', () {
+    // Replaces the old "2-4 suspicious segments for every scenario" rule: the
+    // allowed number of red flags now depends on the difficulty.
+    test('each scenario has 6-12 segments and a red-flag count that fits its difficulty', () {
       for (final s in trainingScenarios) {
+        final flags = s.suspiciousSegments.length;
         expect(s.segments.length, inInclusiveRange(6, 12), reason: s.id);
-        expect(s.suspiciousSegments.length, inInclusiveRange(2, 4), reason: s.id);
+        switch (s.difficulty) {
+          case TrainingDifficulty.easy:
+            expect(flags, inInclusiveRange(2, 4), reason: '${s.id} (easy)');
+          case TrainingDifficulty.medium:
+            expect(flags, inInclusiveRange(2, 3), reason: '${s.id} (medium)');
+          case TrainingDifficulty.hard:
+            expect(flags, inInclusiveRange(0, 1), reason: '${s.id} (hard)');
+        }
+      }
+    });
+
+    test('difficulty is structural: every hard scenario has fewer red flags than every easy one', () {
+      int count(TrainingScenario s) => s.suspiciousSegments.length;
+      final easy = trainingScenarios.where((s) => s.difficulty == TrainingDifficulty.easy);
+      final hard = trainingScenarios.where((s) => s.difficulty == TrainingDifficulty.hard);
+      expect(easy, isNotEmpty);
+      expect(hard, isNotEmpty);
+      for (final h in hard) {
+        for (final e in easy) {
+          expect(count(h), lessThan(count(e)), reason: '${h.id} (hard) vs ${e.id} (easy)');
+        }
+      }
+    });
+
+    test('difficulty mix: 4 easy, several medium, 2+ hard with one hidden flag', () {
+      Iterable<TrainingScenario> of(TrainingDifficulty d) =>
+          trainingScenarios.where((s) => s.difficulty == d);
+      expect(of(TrainingDifficulty.easy).length, 4);
+      expect(of(TrainingDifficulty.medium).length, greaterThanOrEqualTo(3));
+      expect(of(TrainingDifficulty.hard).where((s) => s.suspiciousSegments.length == 1).length,
+          greaterThanOrEqualTo(2));
+    });
+
+    test('no fake detail (amount, link, masked phone) is reused between messages', () {
+      // One entry per message: every quiz question and every training scenario.
+      final messages = <String, String>{
+        for (final q in quizQuestions) 'quiz/${q.id}': q.messageVi,
+        for (final s in trainingScenarios)
+          'training/${s.id}': s.segments.map((g) => g.textVi).join(),
+      };
+      final detail = RegExp(
+          r'\d{1,3}(?:\.\d{3})+ ?(?:đ|VND)'      // amounts like 1.280.000đ
+          r'|[a-z0-9-]+\[\.\][a-z]+'             // defanged links
+          r'|0\dxx xxx \d{3}');                  // masked phone numbers
+      final seenIn = <String, String>{};
+      for (final e in messages.entries) {
+        for (final m in detail.allMatches(e.value).map((m) => m.group(0)!).toSet()) {
+          expect(seenIn[m], isNull, reason: '"$m" is used in both ${seenIn[m]} and ${e.key}');
+          seenIn[m] = e.key;
+        }
+      }
+      expect(seenIn, isNotEmpty); // the pattern really finds details
+    });
+
+    test('fully safe scenarios exist, are tagged hard, and have exactly 0 red flags', () {
+      final safe = trainingScenarios.where((s) => s.suspiciousSegments.isEmpty).toList();
+      expect(safe.map((s) => s.id), containsAll(['safe_balance_alert', 'safe_school_scholarship']));
+      for (final s in safe) {
+        expect(s.difficulty, TrainingDifficulty.hard, reason: s.id);
+        expect(s.suspiciousSegments.length, 0, reason: s.id);
       }
     });
 
@@ -140,6 +204,16 @@ void main() {
       expect(state().tapped, {'job_deposit'});
     });
 
+    test('a fully safe scenario: nothing to catch or miss, only false positives count', () {
+      notifier.start(trainingScenarios.firstWhere((s) => s.id == 'safe_balance_alert'));
+      notifier.toggleSegment('bal_amount');
+      notifier.submit();
+      expect(state().suspiciousCount, 0);
+      expect(state().caught, isEmpty);
+      expect(state().missed, isEmpty);
+      expect(state().falsePositives, {'bal_amount'});
+    });
+
     test('start() with another scenario begins fresh', () {
       notifier.toggleSegment('job_pay');
       notifier.submit();
@@ -197,5 +271,53 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Nộp bài'), findsOneWidget);
     expect(find.text('Bạn đã phát hiện'), findsNothing);
+  });
+
+  testWidgets('list shows a difficulty badge on every scenario', (tester) async {
+    SharedPreferences.setMockInitialValues({'onboarding_complete': true});
+    tester.view.physicalSize = const Size(800, 4000); // all 14 cards on screen
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(const ProviderScope(child: AnToanApp()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Luyện tập'));
+    await tester.pumpAndSettle();
+    expect(find.text('Dễ'), findsNWidgets(4));
+    expect(find.text('Vừa'), findsNWidgets(5));
+    expect(find.text('Khó'), findsNWidgets(5));
+  });
+
+  testWidgets('a fully safe scenario shows a sensible result, never "0/0"', (tester) async {
+    SharedPreferences.setMockInitialValues({'onboarding_complete': true});
+    tester.view.physicalSize = const Size(800, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(const ProviderScope(child: AnToanApp()));
+    await tester.pumpAndSettle();
+    final container = ProviderScope.containerOf(tester.element(find.byType(Scaffold).first));
+    container.read(routerProvider).go('/training/safe_balance_alert');
+    await tester.pumpAndSettle();
+    expect(find.text('Tin nhắn biến động số dư'), findsOneWidget);
+
+    // Submit without marking anything: the right answer for a safe message.
+    await tester.tap(find.text('Nộp bài'));
+    await tester.pumpAndSettle();
+    expect(find.text('Tin nhắn này an toàn: không có dấu hiệu đáng ngờ nào để tìm'), findsOneWidget);
+    expect(find.textContaining('0/0'), findsNothing);
+    expect(find.text('Kết quả: tin nhắn này không có dấu hiệu đáng ngờ nào. Phần màu cam (nếu có) là phần bình thường mà bạn đánh dấu nhầm.'), findsOneWidget);
+    expect(find.textContaining('màu đỏ là bạn bỏ sót'), findsNothing);
+    expect(find.text('Không đánh dấu nhầm phần nào'), findsOneWidget);
+    expect(find.text('Bạn đã bỏ sót'), findsNothing);
+
+    // Over-flagging is explained.
+    await tester.tap(find.text('Thử lại'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Số dư: 2.318.000VND. '));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Nộp bài'));
+    await tester.pumpAndSettle();
+    expect(find.text('Đánh dấu nhầm 1 phần bình thường'), findsOneWidget);
+    expect(find.text('Phần này bình thường'), findsOneWidget);
+    expect(find.text('Chỉ báo số dư, không đòi bạn làm gì.'), findsOneWidget);
   });
 }

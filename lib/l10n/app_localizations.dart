@@ -973,6 +973,36 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Bạn đã báo lỗi quá nhiều lần hôm nay. Vui lòng thử lại vào ngày mai.'**
   String get phoneDisputeRateLimited;
+
+  /// No description provided for @trainingDifficultyEasy.
+  ///
+  /// In vi, this message translates to:
+  /// **'Dễ'**
+  String get trainingDifficultyEasy;
+
+  /// No description provided for @trainingDifficultyMedium.
+  ///
+  /// In vi, this message translates to:
+  /// **'Vừa'**
+  String get trainingDifficultyMedium;
+
+  /// No description provided for @trainingDifficultyHard.
+  ///
+  /// In vi, this message translates to:
+  /// **'Khó'**
+  String get trainingDifficultyHard;
+
+  /// No description provided for @trainingSummaryNoFlags.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tin nhắn này an toàn: không có dấu hiệu đáng ngờ nào để tìm'**
+  String get trainingSummaryNoFlags;
+
+  /// No description provided for @trainingResultIntroSafe.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kết quả: tin nhắn này không có dấu hiệu đáng ngờ nào. Phần màu cam (nếu có) là phần bình thường mà bạn đánh dấu nhầm.'**
+  String get trainingResultIntroSafe;
 }
 
 class _AppLocalizationsDelegate

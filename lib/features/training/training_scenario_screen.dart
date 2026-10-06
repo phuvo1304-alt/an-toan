@@ -59,7 +59,7 @@ class _TrainingScenarioScreenState extends ConsumerState<TrainingScenarioScreen>
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            Text(session.submitted ? t.trainingResultIntro : t.trainingInstructions,
+            Text(session.submitted ? (session.suspiciousCount == 0 ? t.trainingResultIntroSafe : t.trainingResultIntro) : t.trainingInstructions,
                 style: textTheme.bodyLarge),
             const SizedBox(height: 16),
             Card(
@@ -231,7 +231,11 @@ class _Summary extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(t.trainingSummaryCaught(session.caught.length, session.suspiciousCount),
+            Text(
+                session.suspiciousCount == 0
+                    ? t.trainingSummaryNoFlags
+                    : t.trainingSummaryCaught(
+                        session.caught.length, session.suspiciousCount),
                 style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
             Text(t.trainingSummaryFalsePositives(session.falsePositives.length)),

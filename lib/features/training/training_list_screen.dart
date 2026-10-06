@@ -44,7 +44,17 @@ class TrainingListScreen extends ConsumerWidget {
                                   style: textTheme.titleMedium
                                       ?.copyWith(fontWeight: FontWeight.bold)),
                               const SizedBox(height: 6),
-                              _TypeBadge(label: scamTypeLabel(scenario.scamType, t)),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 6,
+                                children: [
+                                  _TypeBadge(label: scamTypeLabel(scenario.scamType, t)),
+                                  _TypeBadge(
+                                    label: difficultyLabel(scenario.difficulty, t),
+                                    tertiary: true,
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -63,7 +73,8 @@ class TrainingListScreen extends ConsumerWidget {
 
 class _TypeBadge extends StatelessWidget {
   final String label;
-  const _TypeBadge({required this.label});
+  final bool tertiary;
+  const _TypeBadge({required this.label, this.tertiary = false});
 
   @override
   Widget build(BuildContext context) {
@@ -71,12 +82,28 @@ class _TypeBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: scheme.secondaryContainer,
+        color: tertiary ? scheme.tertiaryContainer : scheme.secondaryContainer,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(label,
-          style: TextStyle(color: scheme.onSecondaryContainer, fontSize: 13)),
+          style: TextStyle(
+              color: tertiary
+                  ? scheme.onTertiaryContainer
+                  : scheme.onSecondaryContainer,
+              fontSize: 13)),
     );
+  }
+}
+
+/// Readable name for a difficulty level.
+String difficultyLabel(TrainingDifficulty d, AppLocalizations t) {
+  switch (d) {
+    case TrainingDifficulty.easy:
+      return t.trainingDifficultyEasy;
+    case TrainingDifficulty.medium:
+      return t.trainingDifficultyMedium;
+    case TrainingDifficulty.hard:
+      return t.trainingDifficultyHard;
   }
 }
 

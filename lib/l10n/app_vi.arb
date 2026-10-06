@@ -251,5 +251,10 @@
   "phoneDisputeSuccess": "Đã ghi nhận. Cảm ơn bạn đã giúp giữ thông tin chính xác.",
   "phoneAlreadyDisputed": "Bạn đã báo lỗi cho số này rồi.",
   "phoneNothingToDispute": "Số này hiện không còn báo cáo nào để báo lỗi.",
-  "phoneDisputeRateLimited": "Bạn đã báo lỗi quá nhiều lần hôm nay. Vui lòng thử lại vào ngày mai."
+  "phoneDisputeRateLimited": "Bạn đã báo lỗi quá nhiều lần hôm nay. Vui lòng thử lại vào ngày mai.",
+  "trainingDifficultyEasy": "Dễ",
+  "trainingDifficultyMedium": "Vừa",
+  "trainingDifficultyHard": "Khó",
+  "trainingSummaryNoFlags": "Tin nhắn này an toàn: không có dấu hiệu đáng ngờ nào để tìm",
+  "trainingResultIntroSafe": "Kết quả: tin nhắn này không có dấu hiệu đáng ngờ nào. Phần màu cam (nếu có) là phần bình thường mà bạn đánh dấu nhầm."
 }

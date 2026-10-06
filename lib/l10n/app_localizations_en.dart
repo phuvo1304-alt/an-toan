@@ -523,4 +523,21 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get phoneDisputeRateLimited =>
       'You have flagged too many times today. Please try again tomorrow.';
+
+  @override
+  String get trainingDifficultyEasy => 'Easy';
+
+  @override
+  String get trainingDifficultyMedium => 'Medium';
+
+  @override
+  String get trainingDifficultyHard => 'Hard';
+
+  @override
+  String get trainingSummaryNoFlags =>
+      'This message was safe: there were no red flags to find';
+
+  @override
+  String get trainingResultIntroSafe =>
+      'Results: this message had no red flags. Any amber part is a normal part you marked by mistake.';
 }
