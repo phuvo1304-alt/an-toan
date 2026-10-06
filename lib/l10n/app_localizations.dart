@@ -1003,6 +1003,42 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Kết quả: tin nhắn này không có dấu hiệu đáng ngờ nào. Phần màu cam (nếu có) là phần bình thường mà bạn đánh dấu nhầm.'**
   String get trainingResultIntroSafe;
+
+  /// No description provided for @addImages.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thêm ảnh ({count}/{max})'**
+  String addImages(int count, int max);
+
+  /// No description provided for @removeImage.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xóa ảnh {number}'**
+  String removeImage(int number);
+
+  /// No description provided for @imagesLimitReached.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tối đa 3 ảnh cho mỗi lần kiểm tra'**
+  String get imagesLimitReached;
+
+  /// No description provided for @imagesOrderHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ảnh được gửi theo thứ tự 1, 2, 3 như một cuộc trò chuyện.'**
+  String get imagesOrderHint;
+
+  /// No description provided for @imageUnsupported.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không đọc được ảnh này. Hãy chọn ảnh chụp màn hình dạng JPG hoặc PNG.'**
+  String get imageUnsupported;
+
+  /// No description provided for @errorTooManyImages.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mỗi lần chỉ kiểm tra được tối đa 3 ảnh. Hãy bỏ bớt ảnh rồi thử lại.'**
+  String get errorTooManyImages;
 }
 
 class _AppLocalizationsDelegate

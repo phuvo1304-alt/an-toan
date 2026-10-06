@@ -150,5 +150,11 @@
   "trainingDifficultyMedium": "Medium",
   "trainingDifficultyHard": "Hard",
   "trainingSummaryNoFlags": "This message was safe: there were no red flags to find",
-  "trainingResultIntroSafe": "Results: this message had no red flags. Any amber part is a normal part you marked by mistake."
+  "trainingResultIntroSafe": "Results: this message had no red flags. Any amber part is a normal part you marked by mistake.",
+  "addImages": "Add screenshots ({count}/{max})",
+  "removeImage": "Remove screenshot {number}",
+  "imagesLimitReached": "Up to 3 screenshots per check",
+  "imagesOrderHint": "Screenshots are sent in order 1, 2, 3, as one conversation.",
+  "imageUnsupported": "This image could not be read. Please pick a JPG or PNG screenshot.",
+  "errorTooManyImages": "You can check at most 3 screenshots at a time. Remove some and try again."
 }

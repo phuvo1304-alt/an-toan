@@ -256,5 +256,28 @@
   "trainingDifficultyMedium": "Vừa",
   "trainingDifficultyHard": "Khó",
   "trainingSummaryNoFlags": "Tin nhắn này an toàn: không có dấu hiệu đáng ngờ nào để tìm",
-  "trainingResultIntroSafe": "Kết quả: tin nhắn này không có dấu hiệu đáng ngờ nào. Phần màu cam (nếu có) là phần bình thường mà bạn đánh dấu nhầm."
+  "trainingResultIntroSafe": "Kết quả: tin nhắn này không có dấu hiệu đáng ngờ nào. Phần màu cam (nếu có) là phần bình thường mà bạn đánh dấu nhầm.",
+  "addImages": "Thêm ảnh ({count}/{max})",
+  "@addImages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "removeImage": "Xóa ảnh {number}",
+  "@removeImage": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "imagesLimitReached": "Tối đa 3 ảnh cho mỗi lần kiểm tra",
+  "imagesOrderHint": "Ảnh được gửi theo thứ tự 1, 2, 3 như một cuộc trò chuyện.",
+  "imageUnsupported": "Không đọc được ảnh này. Hãy chọn ảnh chụp màn hình dạng JPG hoặc PNG.",
+  "errorTooManyImages": "Mỗi lần chỉ kiểm tra được tối đa 3 ảnh. Hãy bỏ bớt ảnh rồi thử lại."
 }

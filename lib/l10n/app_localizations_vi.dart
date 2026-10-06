@@ -536,4 +536,29 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get trainingResultIntroSafe =>
       'Kết quả: tin nhắn này không có dấu hiệu đáng ngờ nào. Phần màu cam (nếu có) là phần bình thường mà bạn đánh dấu nhầm.';
+
+  @override
+  String addImages(int count, int max) {
+    return 'Thêm ảnh ($count/$max)';
+  }
+
+  @override
+  String removeImage(int number) {
+    return 'Xóa ảnh $number';
+  }
+
+  @override
+  String get imagesLimitReached => 'Tối đa 3 ảnh cho mỗi lần kiểm tra';
+
+  @override
+  String get imagesOrderHint =>
+      'Ảnh được gửi theo thứ tự 1, 2, 3 như một cuộc trò chuyện.';
+
+  @override
+  String get imageUnsupported =>
+      'Không đọc được ảnh này. Hãy chọn ảnh chụp màn hình dạng JPG hoặc PNG.';
+
+  @override
+  String get errorTooManyImages =>
+      'Mỗi lần chỉ kiểm tra được tối đa 3 ảnh. Hãy bỏ bớt ảnh rồi thử lại.';
 }

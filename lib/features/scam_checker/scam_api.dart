@@ -15,6 +15,8 @@ enum ScamError {
   empty,
   tooLong,
   imageTooLarge,
+  tooManyImages,
+  unsupportedImage,
   rateLimited,
   network,
   generic,
@@ -25,26 +27,49 @@ class ScamApiException implements Exception {
   const ScamApiException(this.error);
 }
 
+/// One screenshot to send.
+class ImageUpload {
+  final Uint8List bytes;
+  final String mime;
+  const ImageUpload(this.bytes, {this.mime = 'image/jpeg'});
+}
+
 class ScamApi {
+  /// The JSON body sent to the Edge Function. Images go in an `images` array
+  /// in the given order (the server tells the model Image 1 comes first).
+  /// A text-only body is exactly what it was before images became a list.
+  static Map<String, dynamic> buildBody({
+    String? text,
+    List<ImageUpload>? images,
+    required String language,
+    required String deviceId,
+  }) =>
+      <String, dynamic>{
+        'language': language,
+        'device_id': deviceId,
+        if (text != null && text.trim().isNotEmpty) 'text': text.trim(),
+        if (images != null && images.isNotEmpty)
+          'images': [
+            for (final image in images)
+              {'image_base64': base64Encode(image.bytes), 'image_mime': image.mime},
+          ],
+      };
+
   Future<ScamResult> analyze({
     String? text,
-    Uint8List? imageBytes,
-    String? imageMime,
+    List<ImageUpload>? images,
     required String language,
   }) async {
     if (!AppConfig.isConfigured) {
       throw const ScamApiException(ScamError.notConfigured);
     }
 
-    final body = <String, dynamic>{
-      'language': language,
-      'device_id': await getDeviceId(),
-      if (text != null && text.trim().isNotEmpty) 'text': text.trim(),
-      if (imageBytes != null) ...{
-        'image_base64': base64Encode(imageBytes),
-        'image_mime': imageMime ?? 'image/jpeg',
-      },
-    };
+    final body = buildBody(
+      text: text,
+      images: images,
+      language: language,
+      deviceId: await getDeviceId(),
+    );
 
     try {
       final resp = await http
@@ -66,13 +91,17 @@ class ScamApi {
 
       switch (resp.statusCode) {
         case 400:
-          throw const ScamApiException(ScamError.empty);
+          throw ScamApiException(_errorCode(resp.body) == 'too_many_images'
+              ? ScamError.tooManyImages
+              : ScamError.empty);
         case 413:
           // Either text_too_long or image_too_large. The function says which.
           final err = _errorCode(resp.body);
           throw ScamApiException(err == 'image_too_large'
               ? ScamError.imageTooLarge
               : ScamError.tooLong);
+        case 415:
+          throw const ScamApiException(ScamError.unsupportedImage);
         case 429:
           throw const ScamApiException(ScamError.rateLimited);
         default:

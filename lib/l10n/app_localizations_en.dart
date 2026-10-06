@@ -540,4 +540,29 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get trainingResultIntroSafe =>
       'Results: this message had no red flags. Any amber part is a normal part you marked by mistake.';
+
+  @override
+  String addImages(int count, int max) {
+    return 'Add screenshots ($count/$max)';
+  }
+
+  @override
+  String removeImage(int number) {
+    return 'Remove screenshot $number';
+  }
+
+  @override
+  String get imagesLimitReached => 'Up to 3 screenshots per check';
+
+  @override
+  String get imagesOrderHint =>
+      'Screenshots are sent in order 1, 2, 3, as one conversation.';
+
+  @override
+  String get imageUnsupported =>
+      'This image could not be read. Please pick a JPG or PNG screenshot.';
+
+  @override
+  String get errorTooManyImages =>
+      'You can check at most 3 screenshots at a time. Remove some and try again.';
 }

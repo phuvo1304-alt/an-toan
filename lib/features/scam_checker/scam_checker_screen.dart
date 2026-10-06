@@ -3,11 +3,12 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../core/locale_provider.dart';
 import '../../l10n/app_localizations.dart';
 import 'audio_tab.dart';
+import 'image_prep.dart';
+import 'image_selection.dart';
 import 'scam_api.dart';
 
 class ScamCheckerScreen extends ConsumerStatefulWidget {
@@ -25,8 +26,8 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
   late final TabController _tabs = TabController(length: 3, vsync: this);
   late final ScamApi _api = ref.read(scamApiProvider);
 
-  Uint8List? _imageBytes;
-  String? _imageMime;
+  final _images = ImageSelection(); // Screenshot tab, in sending order
+  bool _preparingImages = false;
   bool _loading = false;
   String? _errorText;
   bool _audioListening = false;
@@ -39,27 +40,59 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    // Shrink the image on the phone first: faster upload and cheaper AI call.
-    final file = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 1600,
-      maxHeight: 1600,
-      imageQuality: 80,
-    );
-    if (file == null) return;
-    final bytes = await file.readAsBytes();
-    final name = file.path.toLowerCase();
+  /// Adds screenshots (up to the 3-image limit), keeping the order they were
+  /// added in. Each one is made upright, shrunk and stripped of EXIF in a
+  /// background isolate (prepareImage), so the UI does not freeze.
+  Future<void> _addImages() async {
+    final t = AppLocalizations.of(context)!;
+    final remaining = _images.remaining;
+    if (remaining <= 0) return;
+    final raw = await ref.read(imageSourceProvider)(remaining);
+    if (raw.isEmpty || !mounted) return;
+
     setState(() {
-      _imageBytes = bytes;
-      _imageMime = name.endsWith('.png')
-          ? 'image/png'
-          : name.endsWith('.webp')
-              ? 'image/webp'
-              : 'image/jpeg';
+      _preparingImages = true;
       _errorText = null;
     });
+    final prepared = <Uint8List>[];
+    var unreadable = 0;
+    for (final bytes in raw) {
+      final p = await prepareImage(bytes, singleImageLongSide);
+      if (p == null) {
+        unreadable++;
+      } else {
+        prepared.add(p.bytes);
+      }
+    }
+    if (!mounted) return;
+    setState(() {
+      final dropped = _images.addAll(prepared); // some platforms ignore the limit
+      _preparingImages = false;
+      if (unreadable > 0) {
+        _errorText = t.imageUnsupported;
+      } else if (dropped > 0) {
+        _errorText = t.imagesLimitReached;
+      }
+    });
+  }
+
+  void _removeImage(int id) => setState(() {
+        _images.remove(id);
+        _errorText = null;
+      });
+
+  /// The screenshots to send. One keeps the 1600 px version; 2-3 are each
+  /// shrunk again to 1024 px on the long side (off the UI thread).
+  Future<List<ImageUpload>> _imagesToSend() async {
+    final items = _images.items;
+    if (items.length == 1) return [ImageUpload(items.first.bytes)];
+    final uploads = <ImageUpload>[];
+    for (final item in items) {
+      final p = await prepareImage(item.bytes, multiImageLongSide);
+      if (p == null) throw const ScamApiException(ScamError.unsupportedImage);
+      uploads.add(ImageUpload(p.bytes));
+    }
+    return uploads;
   }
 
   Future<void> _check() async {
@@ -74,7 +107,7 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
       setState(() => _errorText = t.audioTranscriptEmpty);
       return;
     }
-    if ((!useImage && text.isEmpty) || (useImage && _imageBytes == null)) {
+    if ((!useImage && text.isEmpty) || (useImage && _images.isEmpty)) {
       setState(() => _errorText = t.errorEmpty);
       return;
     }
@@ -87,8 +120,7 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
     try {
       final result = await _api.analyze(
         text: useImage ? null : text,
-        imageBytes: useImage ? _imageBytes : null,
-        imageMime: useImage ? _imageMime : null,
+        images: useImage ? await _imagesToSend() : null,
         language: ref.read(localeProvider).languageCode,
       );
       if (!mounted) return;
@@ -113,6 +145,10 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
         return t.errorTooLong;
       case ScamError.imageTooLarge:
         return t.errorImageTooLarge;
+      case ScamError.tooManyImages:
+        return t.errorTooManyImages;
+      case ScamError.unsupportedImage:
+        return t.imageUnsupported;
       case ScamError.rateLimited:
         return t.errorRateLimited;
       case ScamError.network:
@@ -206,7 +242,8 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
               ),
             FilledButton.icon(
               // Not while the Voice tab is still listening: stop first, then check.
-              onPressed: _loading || _audioListening ? null : _check,
+              onPressed:
+                  _loading || _audioListening || _preparingImages ? null : _check,
               icon: _loading
                   ? const SizedBox(
                       width: 18,
@@ -224,38 +261,129 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
 
   Widget _imageTab(AppLocalizations t) {
     final scheme = Theme.of(context).colorScheme;
+    final items = _images.items;
+    final busy = _loading || _preparingImages;
+
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: scheme.outlineVariant),
-        borderRadius: BorderRadius.circular(8),
+        color: scheme.surfaceContainerLow,
+        border: Border.all(color: scheme.outline),
+        borderRadius: BorderRadius.circular(12),
       ),
+      padding: const EdgeInsets.all(8),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (_imageBytes != null)
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Image.memory(_imageBytes!, fit: BoxFit.contain),
-              ),
-            )
-          else
-            Expanded(
-              child: Center(
-                child: Text(t.noImageSelected,
-                    style: TextStyle(color: scheme.outline)),
-              ),
+          Expanded(
+            child: items.isEmpty && !_preparingImages
+                ? Center(
+                    child: Text(t.noImageSelected, style: TextStyle(color: scheme.outline)))
+                : Row(
+                    children: [
+                      for (var i = 0; i < maxImages; i++)
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: i < items.length
+                                ? _Thumbnail(
+                                    key: ValueKey('thumb-${items[i].id}'),
+                                    bytes: items[i].bytes,
+                                    number: i + 1,
+                                    removeLabel: t.removeImage(i + 1),
+                                    onRemove: busy ? null : () => _removeImage(items[i].id),
+                                  )
+                                : (i == items.length && _preparingImages)
+                                    ? const Center(child: CircularProgressIndicator())
+                                    : const SizedBox.shrink(),
+                          ),
+                        ),
+                    ],
+                  ),
+          ),
+          if (items.length > 1)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(t.imagesOrderHint,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: scheme.onSurfaceVariant)),
             ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: OutlinedButton.icon(
-              onPressed: _loading ? null : _pickImage,
-              icon: const Icon(Icons.photo_library_outlined),
-              label: Text(_imageBytes == null ? t.pickImage : t.changeImage),
-            ),
+          const SizedBox(height: 4),
+          OutlinedButton.icon(
+            onPressed: busy || _images.isFull ? null : _addImages,
+            icon: const Icon(Icons.add_photo_alternate_outlined),
+            label: Text(items.isEmpty
+                ? t.pickImage
+                : _images.isFull
+                    ? t.imagesLimitReached
+                    : t.addImages(items.length, maxImages)),
           ),
         ],
       ),
+    );
+  }
+}
+
+/// One picked screenshot: its number in the sending order (1, 2, 3) and a
+/// remove button. The number is what the server presents as the order.
+class _Thumbnail extends StatelessWidget {
+  final Uint8List bytes;
+  final int number;
+  final String removeLabel;
+  final VoidCallback? onRemove;
+
+  const _Thumbnail({
+    super.key,
+    required this.bytes,
+    required this.number,
+    required this.removeLabel,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          // Screenshots are tall; show their TOP, where a chat's messages start,
+          // so each thumbnail is recognizable (the middle is often blank).
+          child: Image.memory(bytes, fit: BoxFit.cover, alignment: Alignment.topCenter),
+        ),
+        Positioned(
+          left: 4,
+          top: 4,
+          child: Container(
+            width: 26,
+            height: 26,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: scheme.primary, shape: BoxShape.circle),
+            child: Text('$number',
+                style: TextStyle(color: scheme.onPrimary, fontWeight: FontWeight.w700)),
+          ),
+        ),
+        Positioned(
+          right: 0,
+          top: 0,
+          // A small 28 px circle, but still a full 48x48 tap area (padded).
+          child: IconButton.filledTonal(
+            tooltip: removeLabel,
+            onPressed: onRemove,
+            iconSize: 16,
+            style: IconButton.styleFrom(
+              minimumSize: const Size(28, 28),
+              fixedSize: const Size(28, 28),
+              padding: EdgeInsets.zero,
+              tapTargetSize: MaterialTapTargetSize.padded,
+            ),
+            icon: const Icon(Icons.close),
+          ),
+        ),
+      ],
     );
   }
 }

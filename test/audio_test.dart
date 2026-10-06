@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -68,18 +66,17 @@ class FakeSpeechService implements SpeechService {
 class FakeScamApi extends ScamApi {
   int calls = 0;
   String? lastText;
-  Uint8List? lastImage;
+  List<ImageUpload>? lastImages;
 
   @override
   Future<ScamResult> analyze({
     String? text,
-    Uint8List? imageBytes,
-    String? imageMime,
+    List<ImageUpload>? images,
     required String language,
   }) async {
     calls++;
     lastText = text;
-    lastImage = imageBytes;
+    lastImages = images;
     throw const ScamApiException(ScamError.generic); // stay on the screen
   }
 }
@@ -190,7 +187,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(api.calls, 1);
     expect(api.lastText, 'Chuyển khoản ngay cho chú công an'); // the TEXT path
-    expect(api.lastImage, isNull);
+    expect(api.lastImages, isNull);
   });
 
   testWidgets('listening stops automatically at the 60-second cap', (tester) async {
@@ -266,6 +263,6 @@ void main() {
     await tester.tap(find.text('Kiểm tra'));
     await tester.pumpAndSettle();
     expect(api.lastText, 'Tin nhắn bình thường');
-    expect(api.lastImage, isNull);
+    expect(api.lastImages, isNull);
   });
 }
