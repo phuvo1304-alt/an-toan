@@ -38,6 +38,16 @@ class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
   String? _disputeMessage;
   bool _disputeIsError = false;
 
+  // Public comments (loaded only when the number has reports)
+  final List<PhoneComment> _comments = [];
+  int _commentsCursor = 0; // how many the server has already sent
+  bool _commentsLoading = false;
+  bool _commentsHasMore = false;
+  String? _commentsError;
+  String? _disputingToken; // the comment being flagged right now
+  String? _commentMessage;
+  bool _commentMessageIsError = false;
+
   @override
   void dispose() {
     _phoneController.dispose();
@@ -46,7 +56,7 @@ class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
   }
 
   String _errorText(PhoneError e, AppLocalizations t,
-      {bool dispute = false, bool lookup = false}) {
+      {bool dispute = false, bool lookup = false, bool comment = false}) {
     switch (e) {
       case PhoneError.notConfigured:
         return t.errorNotConfigured;
@@ -54,13 +64,16 @@ class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
         return t.phoneInvalid;
       case PhoneError.rateLimited:
         if (lookup) return t.errorRateLimited;
+        if (comment) return t.phoneCommentDisputeRateLimited;
         return dispute ? t.phoneDisputeRateLimited : t.phoneReportRateLimited;
       case PhoneError.alreadyReported:
         return t.phoneAlreadyReported;
       case PhoneError.alreadyDisputed:
-        return t.phoneAlreadyDisputed;
+        return comment ? t.phoneCommentAlreadyDisputed : t.phoneAlreadyDisputed;
       case PhoneError.nothingToDispute:
         return t.phoneNothingToDispute;
+      case PhoneError.commentUnavailable:
+        return t.phoneCommentUnavailable;
       case PhoneError.network:
         return t.errorNetwork;
       case PhoneError.generic:
@@ -82,6 +95,7 @@ class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
     setState(() {
       _checking = true;
       _checkError = null;
+      if (normalized != _summaryFor) _commentMessage = null;
     });
     try {
       final summary = await _api.getSummary(normalized);
@@ -90,11 +104,17 @@ class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
         _summary = summary;
         _summaryFor = normalized;
       });
+      if (summary.reportCount > 0) {
+        await _loadComments(normalized, reset: true);
+      } else {
+        setState(_clearComments);
+      }
     } on PhoneApiException catch (e) {
       if (!mounted) return;
       setState(() {
         _checkError = _errorText(e.error, t, lookup: true);
         _summary = null;
+        _clearComments();
       });
     } finally {
       if (mounted) setState(() => _checking = false);
@@ -197,6 +217,87 @@ class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
     }
   }
 
+  void _clearComments() {
+    _comments.clear();
+    _commentsCursor = 0;
+    _commentsHasMore = false;
+    _commentsError = null;
+  }
+
+  /// Loads the next page of comments ([reset]: start again from the newest).
+  Future<void> _loadComments(String phone, {bool reset = false}) async {
+    final t = AppLocalizations.of(context)!;
+    setState(() {
+      if (reset) _clearComments();
+      _commentsLoading = true;
+      _commentsError = null;
+    });
+    try {
+      final page = await _api.getComments(phone, cursor: _commentsCursor);
+      if (!mounted || phone != _summaryFor) return; // the user looked up another number
+      setState(() {
+        _comments.addAll(page.comments);
+        _commentsCursor += commentsPageSize;
+        _commentsHasMore = page.hasMore;
+      });
+    } on PhoneApiException catch (e) {
+      if (!mounted || phone != _summaryFor) return;
+      setState(() => _commentsError = _errorText(e.error, t, lookup: true));
+    } finally {
+      if (mounted) setState(() => _commentsLoading = false);
+    }
+  }
+
+  /// "This comment looks wrong": asks for confirmation, then flags this ONE
+  /// comment and refreshes the summary and the list (it may now be hidden).
+  Future<void> _disputeComment(PhoneComment comment) async {
+    final t = AppLocalizations.of(context)!;
+    final number = _summaryFor;
+    if (number == null) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(t.phoneCommentDisputeConfirmTitle),
+        content: Text(t.phoneCommentDisputeConfirmBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(t.phoneDisputeCancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(t.phoneDisputeConfirm),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    setState(() {
+      _disputingToken = comment.token;
+      _commentMessage = null;
+    });
+    try {
+      await _api.disputeComment(number, comment.token);
+      if (!mounted) return;
+      setState(() {
+        _commentMessage = t.phoneCommentDisputeSuccess;
+        _commentMessageIsError = false;
+      });
+      await _check();
+    } on PhoneApiException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _commentMessage = _errorText(e.error, t, comment: true);
+        _commentMessageIsError = true;
+      });
+      // Already hidden on the server: refresh so it disappears here too.
+      if (e.error == PhoneError.commentUnavailable) await _check();
+    } finally {
+      if (mounted) setState(() => _disputingToken = null);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
@@ -245,6 +346,21 @@ class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
               StatusBanner(
                   message: _disputeMessage!,
                   kind: _disputeIsError ? BannerKind.error : BannerKind.success),
+            ],
+            if (_summary != null && _summary!.reportCount > 0) ...[
+              const SizedBox(height: AppSpace.lg),
+              _CommentsSection(
+                comments: _comments,
+                loading: _commentsLoading,
+                hasMore: _commentsHasMore,
+                error: _commentsError,
+                disputingToken: _disputingToken,
+                message: _commentMessage,
+                messageIsError: _commentMessageIsError,
+                onDispute: _disputeComment,
+                onLoadMore: () => _loadComments(_summaryFor!),
+                onRetry: () => _loadComments(_summaryFor!, reset: _comments.isEmpty),
+              ),
             ],
             const Divider(height: AppSpace.xl * 1.5),
 
@@ -391,6 +507,161 @@ class _SummaryCard extends StatelessWidget {
                 ),
               ),
             ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// "2 days ago" etc., in the phone's local time.
+String commentAgeText(DateTime createdAt, AppLocalizations t, {DateTime? now}) {
+  final (unit, n) = relativeAge(createdAt, now ?? DateTime.now());
+  return switch (unit) {
+    AgeUnit.today => t.phoneCommentToday,
+    AgeUnit.yesterday => t.phoneCommentYesterday,
+    AgeUnit.days => t.phoneCommentDaysAgo(n),
+    AgeUnit.months => t.phoneCommentMonthsAgo(n),
+    AgeUnit.years => t.phoneCommentYearsAgo(n),
+  };
+}
+
+/// Public comments for the number. In EVERY state (loading, error, empty,
+/// list) it repeats the "reports by users, can be wrong" note, so the warning
+/// never only applies to the top of the screen. Shows category, text and date
+/// only: there is no reporter identity to show.
+class _CommentsSection extends StatelessWidget {
+  final List<PhoneComment> comments;
+  final bool loading;
+  final bool hasMore;
+  final String? error;
+  final String? disputingToken;
+  final String? message;
+  final bool messageIsError;
+  final void Function(PhoneComment) onDispute;
+  final VoidCallback onLoadMore;
+  final VoidCallback onRetry;
+
+  const _CommentsSection({
+    required this.comments,
+    required this.loading,
+    required this.hasMore,
+    required this.error,
+    required this.disputingToken,
+    required this.message,
+    required this.messageIsError,
+    required this.onDispute,
+    required this.onLoadMore,
+    required this.onRetry,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final textTheme = Theme.of(context).textTheme;
+    final scheme = Theme.of(context).colorScheme;
+    final firstLoad = loading && comments.isEmpty;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SectionTitle(t.phoneCommentsTitle),
+        Text(t.phoneReportsNote,
+            style: textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
+        const SizedBox(height: 12),
+        if (firstLoad)
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.all(AppSpace.md),
+              child: CircularProgressIndicator(),
+            ),
+          )
+        else if (comments.isEmpty && error == null)
+          Text(t.phoneCommentsEmpty,
+              style: textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
+        for (final c in comments)
+          _CommentTile(
+            comment: c,
+            busy: disputingToken == c.token,
+            enabled: disputingToken == null,
+            onDispute: () => onDispute(c),
+          ),
+        if (error != null) ...[
+          StatusBanner(message: error!),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: loading ? null : onRetry,
+              icon: const Icon(Icons.refresh),
+              label: Text(t.retry),
+            ),
+          ),
+        ] else if (hasMore && !firstLoad)
+          OutlinedButton.icon(
+            onPressed: loading ? null : onLoadMore,
+            icon: loading ? const ButtonSpinner() : const Icon(Icons.expand_more),
+            label: Text(t.phoneCommentsLoadMore),
+          ),
+        if (message != null) ...[
+          const SizedBox(height: 12),
+          StatusBanner(
+              message: message!, kind: messageIsError ? BannerKind.error : BannerKind.success),
+        ],
+      ],
+    );
+  }
+}
+
+class _CommentTile extends StatelessWidget {
+  final PhoneComment comment;
+  final bool busy;
+  final bool enabled;
+  final VoidCallback onDispute;
+  const _CommentTile({
+    required this.comment,
+    required this.busy,
+    required this.enabled,
+    required this.onDispute,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final textTheme = Theme.of(context).textTheme;
+    final scheme = Theme.of(context).colorScheme;
+    return Card(
+      margin: const EdgeInsets.only(bottom: AppSpace.sm),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(AppSpace.md, AppSpace.md, AppSpace.md, AppSpace.xs),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(categoryLabel(comment.category, t), style: textTheme.titleSmall),
+                ),
+                const SizedBox(width: AppSpace.sm),
+                Text(commentAgeText(comment.createdAt, t),
+                    style: textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
+              ],
+            ),
+            const SizedBox(height: AppSpace.xs),
+            Text(comment.description),
+            Align(
+              alignment: Alignment.centerLeft,
+              // Same words as the whole-number action; the tooltip tells screen
+              // readers it is about THIS comment.
+              child: Tooltip(
+                message: t.phoneCommentDisputeSemantics,
+                child: TextButton.icon(
+                  onPressed: enabled ? onDispute : null,
+                  icon: busy ? const ButtonSpinner() : const Icon(Icons.outlined_flag),
+                  label: Text(t.phoneCommentDisputeAction),
+                ),
+              ),
+            ),
           ],
         ),
       ),

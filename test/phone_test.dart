@@ -127,6 +127,57 @@ void main() {
     });
   });
 
+  group('CommentPage.fromRows', () {
+    Map<String, Object?> row(int i) => {
+          'comment_token': 'tok$i',
+          'category': 'loan',
+          'description': 'Nhận xét $i',
+          'created_at': '2026-10-0${1 + i % 5}T08:00:00+00:00',
+        };
+
+    test('reads token, category, text and date; only those fields exist', () {
+      final page = CommentPage.fromRows([row(0)]);
+      expect(page.comments.single.token, 'tok0');
+      expect(page.comments.single.category, 'loan');
+      expect(page.comments.single.description, 'Nhận xét 0');
+      expect(page.comments.single.createdAt, DateTime.utc(2026, 10, 1, 8));
+      expect(page.hasMore, isFalse);
+    });
+
+    test('a full page of 20 means there may be more', () {
+      expect(CommentPage.fromRows([for (var i = 0; i < 20; i++) row(i)]).hasMore, isTrue);
+      expect(CommentPage.fromRows([for (var i = 0; i < 19; i++) row(i)]).hasMore, isFalse);
+    });
+
+    test('skips malformed rows; non-list is empty', () {
+      final page = CommentPage.fromRows([
+        row(0),
+        {'comment_token': 'x'}, // missing fields
+        {...row(1), 'created_at': 'not a date'},
+        'junk',
+      ]);
+      expect(page.comments.map((c) => c.token), ['tok0']);
+      expect(CommentPage.fromRows(null).comments, isEmpty);
+      expect(CommentPage.fromRows({'a': 1}).comments, isEmpty);
+    });
+  });
+
+  group('relativeAge', () {
+    final now = DateTime(2026, 10, 7, 9);
+    test('today, yesterday, days, months, years', () {
+      expect(relativeAge(DateTime(2026, 10, 7, 0, 5), now), (AgeUnit.today, 0));
+      expect(relativeAge(DateTime(2026, 10, 6, 23, 59), now), (AgeUnit.yesterday, 1));
+      expect(relativeAge(DateTime(2026, 10, 2), now), (AgeUnit.days, 5));
+      expect(relativeAge(DateTime(2026, 9, 8), now), (AgeUnit.days, 29));
+      expect(relativeAge(DateTime(2026, 9, 7), now), (AgeUnit.months, 1));
+      expect(relativeAge(DateTime(2026, 1, 1), now), (AgeUnit.months, 9));
+      expect(relativeAge(DateTime(2024, 10, 1), now), (AgeUnit.years, 2));
+    });
+    test('a date in the future (phone clock behind) counts as today', () {
+      expect(relativeAge(DateTime(2026, 10, 9), now), (AgeUnit.today, 0));
+    });
+  });
+
   testWidgets('screen opens from Home and shows client-side errors', (tester) async {
     // Onboarding already done, so the app starts on Home (the gate is tested
     // in onboarding_test.dart).
@@ -224,8 +275,10 @@ void main() {
       expect(find.text('• Giả mạo đường link: 2'), findsOneWidget);
       expect(find.text('• Giả danh: 1'), findsOneWidget);
       expect(find.textContaining('Báo cáo gần nhất:'), findsOneWidget);
-      expect(find.textContaining('Đây là báo cáo của người dùng, có thể sai'), findsOneWidget);
-      expect(find.text('Thấy sai? Báo lỗi'), findsOneWidget);
+      // Once on the summary card, once in the comment section (every comment
+      // state repeats it).
+      expect(find.textContaining('Đây là báo cáo của người dùng, có thể sai'), findsNWidgets(2));
+      expect(find.text('Thấy sai? Báo lỗi'), findsOneWidget); // no comments: only the number's
       // Never accuses anyone.
       expect(find.textContaining('kẻ lừa đảo'), findsNothing);
     });
@@ -344,6 +397,161 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Bạn đã báo lỗi cho số này rồi.'), findsOneWidget);
     });
+
+    // -- Public comments
+    const note = 'Đây là báo cáo của người dùng, có thể sai';
+    final flagComment = find.byTooltip('Báo lỗi nhận xét này');
+    PhoneComment comment(int i, {int daysAgo = 0}) => PhoneComment(
+          token: 'tok$i',
+          category: 'loan',
+          description: 'Nhận xét $i',
+          createdAt: DateTime.now().subtract(Duration(days: daysAgo)),
+        );
+
+    testWidgets('comments: category, text, relative date, note; no comments call without reports',
+        (tester) async {
+      api.summary = twoReports();
+      api.commentPages[0] = CommentPage([
+        comment(1),
+        PhoneComment(
+            token: 'tok2',
+            category: 'phishing',
+            description: 'Gửi link lạ, đòi mã OTP',
+            createdAt: DateTime.now().subtract(const Duration(days: 1))),
+        comment(3, daysAgo: 5),
+      ], hasMore: false);
+      await open(tester);
+      await lookUp(tester, '0912345678');
+      expect(api.commentCursors, [0]);
+      expect(api.lastCommentsPhone, '+84912345678');
+      expect(find.text('Nhận xét của người dùng'), findsOneWidget);
+      expect(find.textContaining(note), findsNWidgets(2));
+      expect(find.text('Gửi link lạ, đòi mã OTP'), findsOneWidget);
+      expect(find.text('Giả mạo đường link'), findsOneWidget); // its category
+      expect(find.text('Hôm nay'), findsOneWidget);
+      expect(find.text('Hôm qua'), findsOneWidget);
+      expect(find.text('5 ngày trước'), findsOneWidget);
+      expect(flagComment, findsNWidgets(3)); // one action per comment
+      expect(find.text('Xem thêm nhận xét'), findsNothing);
+      expect(find.textContaining('kẻ lừa đảo'), findsNothing);
+
+      // A number with no reports: no comment section, no call.
+      api.summary = PhoneReportSummary.none;
+      await lookUp(tester, '0987654321');
+      expect(api.commentCursors, [0]);
+      expect(find.text('Nhận xét của người dùng'), findsNothing);
+    });
+
+    testWidgets('comments: empty state still shows the note', (tester) async {
+      api.summary = twoReports(); // reports exist, but none has text
+      await open(tester);
+      await lookUp(tester, '0912345678');
+      expect(find.text('Chưa có nhận xét nào cho số này.'), findsOneWidget);
+      expect(find.textContaining(note), findsNWidgets(2));
+      expect(flagComment, findsNothing);
+    });
+
+    testWidgets('comments: paginated, loads the next page only when asked', (tester) async {
+      api.summary = twoReports();
+      api.commentPages[0] = CommentPage([for (var i = 0; i < 20; i++) comment(i)], hasMore: true);
+      api.commentPages[20] = CommentPage([for (var i = 20; i < 25; i++) comment(i)], hasMore: false);
+      await open(tester);
+      tester.view.physicalSize = const Size(800, 9000); // room for 25 cards
+      await lookUp(tester, '0912345678');
+      expect(api.commentCursors, [0]); // not everything at once
+      expect(flagComment, findsNWidgets(20));
+
+      await tester.tap(find.text('Xem thêm nhận xét'));
+      await tester.pumpAndSettle();
+      expect(api.commentCursors, [0, 20]);
+      expect(flagComment, findsNWidgets(25));
+      expect(find.text('Nhận xét 24'), findsOneWidget);
+      expect(find.text('Xem thêm nhận xét'), findsNothing); // last page
+    });
+
+    testWidgets('comments: error shows a message, the note and a working retry', (tester) async {
+      api.summary = twoReports();
+      api.commentsError = PhoneError.network;
+      await open(tester);
+      await lookUp(tester, '0912345678');
+      expect(find.text('Được 2 người dùng báo cáo'), findsOneWidget); // summary still shown
+      expect(find.textContaining('Không có kết nối mạng'), findsOneWidget);
+      expect(find.textContaining(note), findsNWidgets(2));
+
+      api.commentsError = null;
+      api.commentPages[0] = CommentPage([comment(1)], hasMore: false);
+      await tester.tap(find.text('Thử lại'));
+      await tester.pumpAndSettle();
+      expect(find.text('Nhận xét 1'), findsOneWidget);
+      expect(find.textContaining('Không có kết nối mạng'), findsNothing);
+    });
+
+    testWidgets('comment dispute: cancel does nothing; confirm flags THAT comment and refreshes',
+        (tester) async {
+      api.summary = twoReports();
+      api.commentPages[0] = CommentPage([comment(1), comment(2)], hasMore: false);
+      await open(tester);
+      await lookUp(tester, '0912345678');
+
+      await tester.tap(flagComment.at(1));
+      await tester.pumpAndSettle();
+      expect(find.text('Nhận xét này có vẻ sai?'), findsOneWidget);
+      await tester.tap(find.text('Hủy'));
+      await tester.pumpAndSettle();
+      expect(api.commentDisputes, isEmpty);
+
+      await tester.tap(flagComment.at(1));
+      await tester.pumpAndSettle();
+      api.commentPages[0] = CommentPage([comment(1)], hasMore: false); // now hidden
+      await tester.tap(find.widgetWithText(FilledButton, 'Báo lỗi'));
+      await tester.pumpAndSettle();
+      expect(api.commentDisputes, [('+84912345678', 'tok2')]);
+      expect(api.disputeCalls, 0); // not the whole-number dispute
+      expect(find.text('Đã ghi nhận báo lỗi cho nhận xét này. Cảm ơn bạn!'), findsOneWidget);
+      expect(api.summaryCalls, 2); // summary refreshed
+      expect(api.commentCursors, [0, 0]); // list reloaded from the top
+      expect(find.text('Nhận xét 2'), findsNothing);
+    });
+
+    Future<void> flagFirst(WidgetTester tester) async {
+      await tester.tap(flagComment.first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Báo lỗi'));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('comment dispute: rate-limited shows the kind message', (tester) async {
+      api.summary = twoReports();
+      api.commentPages[0] = CommentPage([comment(1)], hasMore: false);
+      api.disputeCommentError = PhoneError.rateLimited;
+      await open(tester);
+      await lookUp(tester, '0912345678');
+      await flagFirst(tester);
+      expect(find.textContaining('Bạn đã báo lỗi nhiều lần trong hôm nay'), findsOneWidget);
+      expect(find.text('Nhận xét 1'), findsOneWidget); // still listed
+    });
+
+    testWidgets('comment dispute: already flagged this comment', (tester) async {
+      api.summary = twoReports();
+      api.commentPages[0] = CommentPage([comment(1)], hasMore: false);
+      api.disputeCommentError = PhoneError.alreadyDisputed;
+      await open(tester);
+      await lookUp(tester, '0912345678');
+      await flagFirst(tester);
+      expect(find.text('Bạn đã báo lỗi nhận xét này rồi.'), findsOneWidget);
+    });
+
+    testWidgets('comment dispute: comment no longer shown -> message and refresh', (tester) async {
+      api.summary = twoReports();
+      api.commentPages[0] = CommentPage([comment(1)], hasMore: false);
+      api.disputeCommentError = PhoneError.commentUnavailable;
+      await open(tester);
+      await lookUp(tester, '0912345678');
+      api.commentPages[0] = CommentPage.empty;
+      await flagFirst(tester);
+      expect(find.text('Nhận xét này không còn được hiển thị.'), findsOneWidget);
+      expect(find.text('Nhận xét 1'), findsNothing);
+    });
   });
 }
 
@@ -353,6 +561,9 @@ class FakePhoneApi extends PhoneApi {
   PhoneError? summaryError;
   PhoneError? submitError;
   PhoneError? disputeError;
+  final Map<int, CommentPage> commentPages = {}; // by cursor
+  PhoneError? commentsError;
+  PhoneError? disputeCommentError;
 
   int summaryCalls = 0;
   int submitCalls = 0;
@@ -360,6 +571,9 @@ class FakePhoneApi extends PhoneApi {
   String? lastSummaryPhone;
   String? lastDisputePhone;
   (String, String, String)? lastSubmit;
+  final List<int> commentCursors = [];
+  String? lastCommentsPhone;
+  final List<(String, String)> commentDisputes = [];
 
   @override
   Future<PhoneReportSummary> getSummary(String phone) async {
@@ -378,6 +592,20 @@ class FakePhoneApi extends PhoneApi {
     submitCalls++;
     lastSubmit = (phone, category, description);
     if (submitError != null) throw PhoneApiException(submitError!);
+  }
+
+  @override
+  Future<CommentPage> getComments(String phone, {int cursor = 0}) async {
+    commentCursors.add(cursor);
+    lastCommentsPhone = normalizePhone(phone);
+    if (commentsError != null) throw PhoneApiException(commentsError!);
+    return commentPages[cursor] ?? CommentPage.empty;
+  }
+
+  @override
+  Future<void> disputeComment(String phone, String token) async {
+    if (disputeCommentError != null) throw PhoneApiException(disputeCommentError!);
+    commentDisputes.add((normalizePhone(phone)!, token));
   }
 
   @override

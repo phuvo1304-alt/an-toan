@@ -160,13 +160,19 @@ Create a small `test_cases.json` with about 30 real-style examples (10 scams, 10
 
 Create via migrations in `supabase/migrations/`. **Enable Row Level Security on every table.**
 
-- `phone_reports` — `id`, `phone_normalized` (E.164, e.g. +84…), `category`, `description` (nullable, max length), `created_at`, `reporter_hash` (hashed device ID, to limit spam; never store the raw ID).
-- `phone_report_summary` (view or RPC) — aggregates count, categories and last_reported per number. The app **reads only the aggregate**, never the raw rows.
+- `phone_reports` — `id`, `phone_normalized` (E.164, e.g. +84…), `category`, `description` (nullable, max length), `created_at`, `reporter_hash` (hashed device ID, to limit spam; never store the raw ID), `disputed_count`, `visible_to_public` (NOT NULL, **DEFAULT false**).
+- `get_phone_report_summary` (RPC) — aggregates count, categories and last_reported per number. Counts every report that is not disputed away, public or not.
+- `get_phone_report_comments` (RPC, decided 2026-10-07) — **the one deliberate exception** to "aggregates only": the app may read a report's *description text*, 20 per page, with these safeguards:
+  - only reports with `visible_to_public = true`. The column defaults to false, every report that existed before this feature was backfilled to false (written under the old "never public" rule, so it stays private forever), and `submit_phone_report` is the ONLY place that sets true;
+  - only reports with `disputed_count < 2` (the same threshold that removes a report from the count);
+  - personal details stripped **at read time** (`strip_report_pii`; the original text is stored): phone numbers, emails, bare 6+ digit runs. Money amounts with separators or đ/VND are kept. It does NOT catch names, handles, links, spaced-out account numbers or numbers in words, so it is not anonymization;
+  - each comment is identified by `comment_token` = HMAC-SHA256 of the report id with a secret key in `private.app_settings` (generated inside the database; not in Git; anon cannot read it). The real id, `reporter_hash` and dispute counts are never returned.
+- `dispute_phone_comment` (RPC) — flags one comment by its token; shares the dispute limits in `report_rate_log` with `dispute_phone_report` (5 per device per day, one per device per report). Every bad token gives the same `invalid_comment` error.
 - `quiz_questions` — `id`, `question_vi`, `question_en`, `is_scam`, `explanation_vi`, `explanation_en`, `difficulty`, `category`.
 - `training_scenarios` — `id`, `title_vi/en`, `body_vi/en`, `hotspots` (JSON: which parts are suspicious and why), `scam_type`.
 - `analysis_log` (optional) — only `device_hash`, timestamp, input type and risk level for rate limiting and stats. **Do not store the user's message text, screenshots or audio.**
 
-**RLS rules:** anonymous clients can `SELECT` quiz/training content; can only `INSERT` into `phone_reports` through a controlled RPC with validation and a rate limit; can never read raw reports.
+**RLS rules:** anonymous clients can `SELECT` quiz/training content; can only `INSERT` into `phone_reports` through a controlled RPC with validation and a rate limit; can never read raw rows of `phone_reports` or `report_rate_log` directly. They see report data only through the SECURITY DEFINER RPCs above: aggregates, plus the filtered, PII-stripped comment text.
 
 ---
 

@@ -1039,6 +1039,102 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Mỗi lần chỉ kiểm tra được tối đa 3 ảnh. Hãy bỏ bớt ảnh rồi thử lại.'**
   String get errorTooManyImages;
+
+  /// No description provided for @phoneCommentsTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhận xét của người dùng'**
+  String get phoneCommentsTitle;
+
+  /// No description provided for @phoneCommentsEmpty.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có nhận xét nào cho số này.'**
+  String get phoneCommentsEmpty;
+
+  /// No description provided for @phoneCommentsLoadMore.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xem thêm nhận xét'**
+  String get phoneCommentsLoadMore;
+
+  /// No description provided for @phoneCommentDisputeAction.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thấy sai? Báo lỗi'**
+  String get phoneCommentDisputeAction;
+
+  /// No description provided for @phoneCommentDisputeSemantics.
+  ///
+  /// In vi, this message translates to:
+  /// **'Báo lỗi nhận xét này'**
+  String get phoneCommentDisputeSemantics;
+
+  /// No description provided for @phoneCommentDisputeConfirmTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhận xét này có vẻ sai?'**
+  String get phoneCommentDisputeConfirmTitle;
+
+  /// No description provided for @phoneCommentDisputeConfirmBody.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nếu nhận xét này không đúng, xúc phạm ai đó hoặc có thông tin cá nhân, hãy báo lỗi. Khi đủ người báo lỗi, nhận xét sẽ bị ẩn và được xem xét lại. Mỗi nhận xét bạn chỉ báo lỗi được một lần.'**
+  String get phoneCommentDisputeConfirmBody;
+
+  /// No description provided for @phoneCommentDisputeSuccess.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã ghi nhận báo lỗi cho nhận xét này. Cảm ơn bạn!'**
+  String get phoneCommentDisputeSuccess;
+
+  /// No description provided for @phoneCommentAlreadyDisputed.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn đã báo lỗi nhận xét này rồi.'**
+  String get phoneCommentAlreadyDisputed;
+
+  /// No description provided for @phoneCommentDisputeRateLimited.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn đã báo lỗi nhiều lần trong hôm nay. Cảm ơn bạn đã giúp giữ thông tin chính xác! Bạn có thể thử lại vào ngày mai.'**
+  String get phoneCommentDisputeRateLimited;
+
+  /// No description provided for @phoneCommentUnavailable.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhận xét này không còn được hiển thị.'**
+  String get phoneCommentUnavailable;
+
+  /// No description provided for @phoneCommentToday.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hôm nay'**
+  String get phoneCommentToday;
+
+  /// No description provided for @phoneCommentYesterday.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hôm qua'**
+  String get phoneCommentYesterday;
+
+  /// No description provided for @phoneCommentDaysAgo.
+  ///
+  /// In vi, this message translates to:
+  /// **'{count, plural, other{{count} ngày trước}}'**
+  String phoneCommentDaysAgo(int count);
+
+  /// No description provided for @phoneCommentMonthsAgo.
+  ///
+  /// In vi, this message translates to:
+  /// **'{count, plural, other{{count} tháng trước}}'**
+  String phoneCommentMonthsAgo(int count);
+
+  /// No description provided for @phoneCommentYearsAgo.
+  ///
+  /// In vi, this message translates to:
+  /// **'{count, plural, other{{count} năm trước}}'**
+  String phoneCommentYearsAgo(int count);
 }
 
 class _AppLocalizationsDelegate

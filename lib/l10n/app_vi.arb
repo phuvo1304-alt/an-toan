@@ -279,5 +279,42 @@
   "imagesLimitReached": "Tối đa 3 ảnh cho mỗi lần kiểm tra",
   "imagesOrderHint": "Ảnh được gửi theo thứ tự 1, 2, 3 như một cuộc trò chuyện.",
   "imageUnsupported": "Không đọc được ảnh này. Hãy chọn ảnh chụp màn hình dạng JPG hoặc PNG.",
-  "errorTooManyImages": "Mỗi lần chỉ kiểm tra được tối đa 3 ảnh. Hãy bỏ bớt ảnh rồi thử lại."
+  "errorTooManyImages": "Mỗi lần chỉ kiểm tra được tối đa 3 ảnh. Hãy bỏ bớt ảnh rồi thử lại.",
+  "phoneCommentsTitle": "Nhận xét của người dùng",
+  "phoneCommentsEmpty": "Chưa có nhận xét nào cho số này.",
+  "phoneCommentsLoadMore": "Xem thêm nhận xét",
+  "phoneCommentDisputeAction": "Thấy sai? Báo lỗi",
+  "phoneCommentDisputeSemantics": "Báo lỗi nhận xét này",
+  "phoneCommentDisputeConfirmTitle": "Nhận xét này có vẻ sai?",
+  "phoneCommentDisputeConfirmBody": "Nếu nhận xét này không đúng, xúc phạm ai đó hoặc có thông tin cá nhân, hãy báo lỗi. Khi đủ người báo lỗi, nhận xét sẽ bị ẩn và được xem xét lại. Mỗi nhận xét bạn chỉ báo lỗi được một lần.",
+  "phoneCommentDisputeSuccess": "Đã ghi nhận báo lỗi cho nhận xét này. Cảm ơn bạn!",
+  "phoneCommentAlreadyDisputed": "Bạn đã báo lỗi nhận xét này rồi.",
+  "phoneCommentDisputeRateLimited": "Bạn đã báo lỗi nhiều lần trong hôm nay. Cảm ơn bạn đã giúp giữ thông tin chính xác! Bạn có thể thử lại vào ngày mai.",
+  "phoneCommentUnavailable": "Nhận xét này không còn được hiển thị.",
+  "phoneCommentToday": "Hôm nay",
+  "phoneCommentYesterday": "Hôm qua",
+  "phoneCommentDaysAgo": "{count, plural, other{{count} ngày trước}}",
+  "@phoneCommentDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "phoneCommentMonthsAgo": "{count, plural, other{{count} tháng trước}}",
+  "@phoneCommentMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "phoneCommentYearsAgo": "{count, plural, other{{count} năm trước}}",
+  "@phoneCommentYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

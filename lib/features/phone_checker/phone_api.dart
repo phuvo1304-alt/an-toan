@@ -109,6 +109,76 @@ class PhoneReportSummary {
   }
 }
 
+/// Comments per page. MUST match "limit 20" in get_phone_report_comments
+/// (supabase/migrations/20261007120000_phone_report_comments.sql).
+const commentsPageSize = 20;
+
+/// One public comment, as get_phone_report_comments returns it. There is no
+/// reporter identity in any form: the server never sends one. [token] is an
+/// opaque id used only to flag this comment.
+class PhoneComment {
+  final String token;
+  final String category;
+  final String description; // already PII-stripped by the server
+  final DateTime createdAt;
+
+  const PhoneComment({
+    required this.token,
+    required this.category,
+    required this.description,
+    required this.createdAt,
+  });
+}
+
+/// One page of comments. [hasMore] is true when the page was full, so there
+/// may be another one (worst case the next page is empty).
+class CommentPage {
+  final List<PhoneComment> comments;
+  final bool hasMore;
+  const CommentPage(this.comments, {required this.hasMore});
+
+  static const empty = CommentPage([], hasMore: false);
+
+  /// [rows] is the JSON array PostgREST returns. Malformed rows are skipped.
+  factory CommentPage.fromRows(Object? rows) {
+    if (rows is! List) return empty;
+    final out = <PhoneComment>[];
+    for (final r in rows) {
+      if (r is! Map) continue;
+      final token = r['comment_token'];
+      final category = r['category'];
+      final description = r['description'];
+      final created = r['created_at'] is String ? DateTime.tryParse(r['created_at'] as String) : null;
+      if (token is String && category is String && description is String && created != null) {
+        out.add(PhoneComment(
+            token: token, category: category, description: description, createdAt: created));
+      }
+    }
+    return CommentPage(out, hasMore: rows.length >= commentsPageSize);
+  }
+}
+
+enum AgeUnit { today, yesterday, days, months, years }
+
+/// How long ago [then] was, in calendar days of the phone's local time:
+/// (today, 0), (yesterday, 1), (days, 2-29), (months, 1-11), (years, 1+).
+/// Dates in the future (a phone clock that is behind) count as today.
+(AgeUnit, int) relativeAge(DateTime then, DateTime now) {
+  final a = then.toLocal();
+  final b = now.toLocal();
+  // Round, because a day with a daylight-saving change is not 24 hours long.
+  final days = (DateTime(b.year, b.month, b.day)
+              .difference(DateTime(a.year, a.month, a.day))
+              .inHours /
+          24)
+      .round();
+  if (days <= 0) return (AgeUnit.today, 0);
+  if (days == 1) return (AgeUnit.yesterday, 1);
+  if (days < 30) return (AgeUnit.days, days);
+  if (days < 365) return (AgeUnit.months, days ~/ 30);
+  return (AgeUnit.years, days ~/ 365);
+}
+
 /// SHA-256 of the device id, as lowercase hex. Computed ON THE PHONE so the raw
 /// id never leaves it; the server salts this value again before storing it.
 String hashDeviceId(String deviceId) =>
@@ -121,6 +191,7 @@ enum PhoneError {
   alreadyReported, // this phone reported this number in the last 24 hours
   alreadyDisputed, // this phone already flagged this number
   nothingToDispute, // no counted reports left for this number
+  commentUnavailable, // the comment is no longer shown (or the token is wrong)
   network,
   generic,
 }
@@ -130,7 +201,7 @@ class PhoneApiException implements Exception {
   const PhoneApiException(this.error);
 }
 
-/// Calls the three Postgres functions through Supabase's REST API (PostgREST),
+/// Calls the Postgres functions through Supabase's REST API (PostgREST),
 /// with the same anon-key headers as ScamApi.
 class PhoneApi {
   // The project URL is the part of the Edge Function URL before the path,
@@ -175,6 +246,32 @@ class PhoneApi {
     });
   }
 
+  /// One page of public comments, newest first. [cursor] = how many to skip.
+  Future<CommentPage> getComments(String phone, {int cursor = 0}) async {
+    final normalized = normalizePhone(phone);
+    if (normalized == null) throw const PhoneApiException(PhoneError.invalidPhone);
+    final resp = await _post('get_phone_report_comments', {
+      'p_phone': normalized,
+      'p_cursor': cursor,
+    });
+    try {
+      return CommentPage.fromRows(jsonDecode(utf8.decode(resp.bodyBytes)));
+    } catch (_) {
+      throw const PhoneApiException(PhoneError.generic);
+    }
+  }
+
+  /// "This comment looks wrong": flags ONE comment by its token.
+  Future<void> disputeComment(String phone, String token) async {
+    final normalized = normalizePhone(phone);
+    if (normalized == null) throw const PhoneApiException(PhoneError.invalidPhone);
+    await _post('dispute_phone_comment', {
+      'p_phone': normalized,
+      'p_comment_token': token,
+      'p_reporter_hash': hashDeviceId(await getDeviceId()),
+    });
+  }
+
   Future<http.Response> _post(String fn, Map<String, dynamic> args) async {
     if (!AppConfig.isConfigured) {
       throw const PhoneApiException(PhoneError.notConfigured);
@@ -205,6 +302,8 @@ class PhoneApi {
           throw const PhoneApiException(PhoneError.alreadyDisputed);
         case 'no_reports':
           throw const PhoneApiException(PhoneError.nothingToDispute);
+        case 'invalid_comment':
+          throw const PhoneApiException(PhoneError.commentUnavailable);
         default:
           throw const PhoneApiException(PhoneError.generic);
       }

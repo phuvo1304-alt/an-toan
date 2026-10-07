@@ -565,4 +565,80 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorTooManyImages =>
       'You can check at most 3 screenshots at a time. Remove some and try again.';
+
+  @override
+  String get phoneCommentsTitle => 'Comments from users';
+
+  @override
+  String get phoneCommentsEmpty => 'No comments for this number yet.';
+
+  @override
+  String get phoneCommentsLoadMore => 'Show more comments';
+
+  @override
+  String get phoneCommentDisputeAction => 'Looks wrong? Flag it';
+
+  @override
+  String get phoneCommentDisputeSemantics => 'Flag this comment';
+
+  @override
+  String get phoneCommentDisputeConfirmTitle => 'Does this comment look wrong?';
+
+  @override
+  String get phoneCommentDisputeConfirmBody =>
+      'If this comment is untrue, insults someone or contains personal details, flag it. When enough people flag it, the comment is hidden and reviewed. You can flag each comment only once.';
+
+  @override
+  String get phoneCommentDisputeSuccess =>
+      'Thanks, this comment has been flagged.';
+
+  @override
+  String get phoneCommentAlreadyDisputed =>
+      'You have already flagged this comment.';
+
+  @override
+  String get phoneCommentDisputeRateLimited =>
+      'You\'ve flagged a lot today. Thank you for helping keep this accurate! You can try again tomorrow.';
+
+  @override
+  String get phoneCommentUnavailable => 'This comment is no longer shown.';
+
+  @override
+  String get phoneCommentToday => 'Today';
+
+  @override
+  String get phoneCommentYesterday => 'Yesterday';
+
+  @override
+  String phoneCommentDaysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days ago',
+      one: '1 day ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String phoneCommentMonthsAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months ago',
+      one: '1 month ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String phoneCommentYearsAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count years ago',
+      one: '1 year ago',
+    );
+    return '$_temp0';
+  }
 }

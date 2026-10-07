@@ -561,4 +561,76 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get errorTooManyImages =>
       'Mỗi lần chỉ kiểm tra được tối đa 3 ảnh. Hãy bỏ bớt ảnh rồi thử lại.';
+
+  @override
+  String get phoneCommentsTitle => 'Nhận xét của người dùng';
+
+  @override
+  String get phoneCommentsEmpty => 'Chưa có nhận xét nào cho số này.';
+
+  @override
+  String get phoneCommentsLoadMore => 'Xem thêm nhận xét';
+
+  @override
+  String get phoneCommentDisputeAction => 'Thấy sai? Báo lỗi';
+
+  @override
+  String get phoneCommentDisputeSemantics => 'Báo lỗi nhận xét này';
+
+  @override
+  String get phoneCommentDisputeConfirmTitle => 'Nhận xét này có vẻ sai?';
+
+  @override
+  String get phoneCommentDisputeConfirmBody =>
+      'Nếu nhận xét này không đúng, xúc phạm ai đó hoặc có thông tin cá nhân, hãy báo lỗi. Khi đủ người báo lỗi, nhận xét sẽ bị ẩn và được xem xét lại. Mỗi nhận xét bạn chỉ báo lỗi được một lần.';
+
+  @override
+  String get phoneCommentDisputeSuccess =>
+      'Đã ghi nhận báo lỗi cho nhận xét này. Cảm ơn bạn!';
+
+  @override
+  String get phoneCommentAlreadyDisputed => 'Bạn đã báo lỗi nhận xét này rồi.';
+
+  @override
+  String get phoneCommentDisputeRateLimited =>
+      'Bạn đã báo lỗi nhiều lần trong hôm nay. Cảm ơn bạn đã giúp giữ thông tin chính xác! Bạn có thể thử lại vào ngày mai.';
+
+  @override
+  String get phoneCommentUnavailable => 'Nhận xét này không còn được hiển thị.';
+
+  @override
+  String get phoneCommentToday => 'Hôm nay';
+
+  @override
+  String get phoneCommentYesterday => 'Hôm qua';
+
+  @override
+  String phoneCommentDaysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ngày trước',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String phoneCommentMonthsAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tháng trước',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String phoneCommentYearsAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count năm trước',
+    );
+    return '$_temp0';
+  }
 }

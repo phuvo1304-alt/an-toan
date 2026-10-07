@@ -156,5 +156,21 @@
   "imagesLimitReached": "Up to 3 screenshots per check",
   "imagesOrderHint": "Screenshots are sent in order 1, 2, 3, as one conversation.",
   "imageUnsupported": "This image could not be read. Please pick a JPG or PNG screenshot.",
-  "errorTooManyImages": "You can check at most 3 screenshots at a time. Remove some and try again."
+  "errorTooManyImages": "You can check at most 3 screenshots at a time. Remove some and try again.",
+  "phoneCommentsTitle": "Comments from users",
+  "phoneCommentsEmpty": "No comments for this number yet.",
+  "phoneCommentsLoadMore": "Show more comments",
+  "phoneCommentDisputeAction": "Looks wrong? Flag it",
+  "phoneCommentDisputeSemantics": "Flag this comment",
+  "phoneCommentDisputeConfirmTitle": "Does this comment look wrong?",
+  "phoneCommentDisputeConfirmBody": "If this comment is untrue, insults someone or contains personal details, flag it. When enough people flag it, the comment is hidden and reviewed. You can flag each comment only once.",
+  "phoneCommentDisputeSuccess": "Thanks, this comment has been flagged.",
+  "phoneCommentAlreadyDisputed": "You have already flagged this comment.",
+  "phoneCommentDisputeRateLimited": "You've flagged a lot today. Thank you for helping keep this accurate! You can try again tomorrow.",
+  "phoneCommentUnavailable": "This comment is no longer shown.",
+  "phoneCommentToday": "Today",
+  "phoneCommentYesterday": "Yesterday",
+  "phoneCommentDaysAgo": "{count, plural, one{1 day ago} other{{count} days ago}}",
+  "phoneCommentMonthsAgo": "{count, plural, one{1 month ago} other{{count} months ago}}",
+  "phoneCommentYearsAgo": "{count, plural, one{1 year ago} other{{count} years ago}}"
 }
