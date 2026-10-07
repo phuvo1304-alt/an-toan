@@ -1,0 +1,450 @@
+[
+  {
+    "id": "impersonation-001",
+    "scam_type": "impersonation",
+    "entry_kind": "incident_report",
+    "source_name": "Tuổi Trẻ",
+    "published_date": "2025-05-08",
+    "source_url": "https://tuoitre.vn/toi-pham-mang-nham-vao-hoc-sinh-sinh-vien-gia-cong-an-tao-zoom-chiem-doat-tien-ti-20250508095003458.htm",
+    "headline": "Tội phạm mạng nhắm vào học sinh, sinh viên: Giả công an, tạo Zoom, chiếm đoạt tiền tỉ",
+    "summary_vi": "Theo Cục Cảnh sát hình sự, kẻ gian gọi điện hoặc gọi video xưng là công an, viện kiểm sát, tòa án, báo cho học sinh, sinh viên rằng các em dính líu tới một vụ án và sẽ bị bắt nếu không làm theo. Chúng bắt nạn nhân giữ bí mật với gia đình, tự tìm đến nhà nghỉ, khách sạn và làm theo kịch bản có sẵn, rồi đòi chuyển tiền để \"chứng minh vô tội\"; có vụ còn dọa đưa sang Campuchia hoặc hứa cho đi du học.",
+    "summary_en": "According to the Criminal Police Department, scammers phone or video-call students posing as police, prosecutors or court officials, saying the student is tied to a criminal case and will be arrested unless they comply. Victims are told to keep it secret from family, go alone to a guesthouse or hotel and follow a prepared script, then pay money to 'prove their innocence'; some were also threatened with being sent to Cambodia or promised study abroad.",
+    "red_flags": [
+      "Caller or video caller claims to be police, prosecutor or court",
+      "Says you are linked to a criminal case and will be arrested",
+      "Forbids you from telling your family",
+      "Tells you to go alone to a hotel or guesthouse",
+      "Demands money to 'prove your innocence'"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "impersonation-002",
+    "scam_type": "impersonation",
+    "entry_kind": "official_warning",
+    "source_name": "Ngân hàng Nhà nước Việt Nam (Cục Phòng, chống rửa tiền)",
+    "published_date": "2024-07-19",
+    "source_url": "https://sbv.gov.vn/en/w/sbv608015",
+    "headline": "Thông báo về các thủ đoạn lừa đảo, giả danh Cục Phòng, chống rửa tiền",
+    "summary_vi": "Cục Phòng, chống rửa tiền cho biết có kẻ gian gọi điện tự xưng là cán bộ của Cục, nói tài khoản của người nghe liên quan đến một vụ rửa tiền và yêu cầu chuyển hết tiền trong tài khoản \"để phục vụ điều tra\". Chúng có thể gửi văn bản giả với chữ ký, con dấu cắt ghép, thậm chí biết trước số dư tài khoản; ngoài ra có website giả trang của Cục yêu cầu đăng ký tài khoản để thu thập thông tin cá nhân. Cục khẳng định không gọi điện cho người dân và không yêu cầu chuyển tiền dưới bất kỳ hình thức nào.",
+    "summary_en": "The State Bank's Anti-Money Laundering Department warns that callers pose as its officers, claim the listener's account is part of a money-laundering case and ask them to move their whole balance 'for the investigation'. They may send forged documents with pasted-in signatures and stamps and may already know the account balance; a fake copy of the department's website also asks people to register, harvesting personal data. The department says it never phones citizens and never asks anyone to transfer money.",
+    "red_flags": [
+      "Caller claims to be from the central bank's anti-money-laundering department",
+      "Says your account is part of a money-laundering case",
+      "Asks you to transfer your entire balance 'for the investigation'",
+      "Sends official-looking documents with pasted signatures and stamps",
+      "Already knows your account balance",
+      "Look-alike agency website asking you to register"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "impersonation-003",
+    "scam_type": "impersonation",
+    "entry_kind": "incident_report",
+    "source_name": "Bộ Công an (Cổng TTĐT)",
+    "published_date": "2026-09-04",
+    "source_url": "https://bocongan.gov.vn/bai-viet/phu-tho-canh-giac-thu-doan-dung-kich-ban-mao-danh-zalo-nguoi-quen-de-lua-dao-1788481818",
+    "headline": "Phú Thọ: Cảnh giác thủ đoạn dựng kịch bản, mạo danh Zalo người quen để lừa đảo",
+    "summary_vi": "Công an xã ở Phú Thọ ghi nhận một tài khoản Zalo có tên và ảnh đại diện giống người thân của nạn nhân. Thay vì hỏi vay thẳng, kẻ gian nhờ nạn nhân gọi qua Facebook cho một người thân khác để \"vay giúp\" tiền mua quà, khiến yêu cầu trông không giống một vụ vay tiền. Công an cảnh báo kịch bản nhiều bước này thường tiếp tục bằng ảnh chuyển khoản giả, báo \"giao dịch lỗi\" và yêu cầu chuyển tiền để \"xác nhận\"; người dân đã gọi điện trực tiếp cho người thân nên phát hiện kịp.",
+    "summary_en": "Commune police in Phú Thọ logged a Zalo account copying a relative's name and profile photo. Rather than asking for a loan directly, the scammer asked the target to call another relative on Facebook to 'borrow' money for a gift, so the request didn't look like a loan. Police warn this multi-step script typically continues with fake transfer screenshots, a 'transaction error' and a request to send money 'to confirm'; the person checked by phoning the real relative and avoided it.",
+    "red_flags": [
+      "Account copies a relative's or friend's name and photo",
+      "Indirect, multi-step request instead of asking for money outright",
+      "Fake bank-transfer screenshots",
+      "'Transaction failed, transfer to confirm or activate'",
+      "Asks you to contact another relative on their behalf"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "impersonation-004",
+    "scam_type": "impersonation",
+    "entry_kind": "official_warning",
+    "source_name": "Bộ Công an (Cổng TTĐT)",
+    "published_date": "2025-11-26",
+    "source_url": "https://bocongan.gov.vn/bai-viet/canh-bao-toi-pham-lua-dao-bang-thu-doan-tong-tien-truc-tuyen-1764129007",
+    "headline": "Cảnh báo tội phạm lừa đảo bằng thủ đoạn \"tống tiền trực tuyến\"",
+    "summary_vi": "Bộ Công an giải thích \"bắt cóc online\" thực chất là lừa đảo: kẻ gian dựng phòng làm việc giống trụ sở công an, mặc trang phục công an, dùng giấy triệu tập, lệnh bắt giả và gọi video qua Zalo, Viber, Zoom báo nạn nhân liên quan vụ án rửa tiền, ma túy. Sau đó chúng bắt nạn nhân tự cách ly, cắt liên lạc với gia đình, đưa mật khẩu mạng xã hội để chính chúng nhắn cho gia đình là \"bị bắt cóc\", gợi ý cách kiếm tiền (vay bạn, lấy tiền nhà, nói dối bố mẹ), mua vé cho nạn nhân tự đi tới nơi chỉ định và đòi gửi ảnh nhạy cảm hoặc video cầu cứu; khi cả nhà hoảng loạn thì đòi chuyển tiền. Nhóm bị nhắm nhiều nhất là học sinh, sinh viên 17-20 tuổi.",
+    "summary_en": "The Ministry of Public Security explains that 'online kidnapping' is really fraud: scammers stage a fake police office with uniforms and forged summonses or arrest warrants, then video-call via Zalo, Viber or Zoom saying the victim is linked to a money-laundering or drug case. They make the victim isolate and cut contact with family, hand over social-media passwords so the scammers can tell the family they've been 'kidnapped', suggest ways to raise money (borrow, take it from home, lie to parents), buy travel tickets to a chosen place and demand sensitive photos or pleading videos; once everyone panics, they demand payment. Most targets are 17-20-year-old students.",
+    "red_flags": [
+      "Video call from a 'police office' with uniforms and arrest papers",
+      "Told to isolate yourself and cut contact with family",
+      "Asked for your social-media passwords",
+      "Coached on how to get money from friends or parents",
+      "Sent tickets to travel somewhere alone",
+      "Asked for sensitive photos or a 'help me' video"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "romance-001",
+    "scam_type": "romance",
+    "entry_kind": "incident_report",
+    "source_name": "VnExpress",
+    "published_date": "2025-04-02",
+    "source_url": "https://vnexpress.net/mat-9-ty-dong-vi-tin-loi-ban-trai-tren-mang-dau-tu-tien-ao-4869247.html",
+    "headline": "Mất 9 tỷ đồng vì tin lời 'bạn trai trên mạng' đầu tư tiền ảo",
+    "summary_vi": "Theo Công an Hà Nội, một người đàn ông làm quen qua mạng, tạo quan hệ tình cảm rồi hướng dẫn nạn nhân đầu tư tiền ảo trên một hệ thống do hắn giới thiệu. Lúc đầu khoản nhỏ có lãi và rút được, nên nạn nhân nạp tiền lớn; khi số dư \"lãi\" trên hệ thống tăng vọt thì không rút được, hệ thống đòi nộp thêm 5% tổng số dư mới cho rút.",
+    "summary_en": "Hanoi police report a man who struck up an online relationship and then guided the victim into crypto 'investing' on a platform he recommended. Small early deposits showed profits and could be withdrawn, so the victim put in much more; once the displayed 'profit' ballooned, withdrawals were blocked and the platform demanded 5% of the total balance before any withdrawal.",
+    "red_flags": [
+      "Online romantic partner steers you into investing",
+      "Investment platform that they recommend",
+      "Small early withdrawals work, building trust",
+      "Huge displayed profits you cannot withdraw",
+      "Must pay a 'fee' or percentage before withdrawing"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "romance-002",
+    "scam_type": "romance",
+    "entry_kind": "incident_report",
+    "source_name": "Thanh Niên",
+    "published_date": "2024-10-11",
+    "source_url": "https://thanhnien.vn/my-nhan-ke-du-do-dau-tu-tien-ao-185241010223750277.htm",
+    "headline": "'Mỹ nhân kế' dụ dỗ đầu tư tiền ảo",
+    "summary_vi": "Kẻ gian lập tài khoản giả là phụ nữ xinh đẹp trên trang hẹn hò, trò chuyện tâm sự một thời gian rồi chuyển sang chủ đề tài chính. Nạn nhân được hướng dẫn làm \"thẻ thành viên\" để nạp tiền, tích điểm, nhận lãi; các khoản đầu tiên được trả lại ngay để tạo lòng tin. Khi nạn nhân bỏ số tiền lớn, chúng đòi thêm với lý do \"nâng cấp gói VIP\", \"hoàn trả quỹ hỗ trợ đầu tư\", \"gỡ chế độ an toàn\".",
+    "summary_en": "Scammers create fake profiles of attractive women on dating sites, chat for a while, then turn the conversation to money. The target is guided to buy a 'membership card' to deposit, earn points and get interest; the first payouts arrive quickly to build trust. Once a large amount is in, they demand more for a 'VIP upgrade', 'repaying the investment support fund' or 'removing safety mode'.",
+    "red_flags": [
+      "Attractive stranger on a dating site turns talk to money",
+      "'Membership card' or points system to deposit into",
+      "Quick small payouts at the start",
+      "New fees: 'VIP upgrade', 'support fund', 'remove safety mode'"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "romance-003",
+    "scam_type": "romance",
+    "entry_kind": "incident_report",
+    "source_name": "VnExpress",
+    "published_date": "2026-06-04",
+    "source_url": "https://vnexpress.net/canh-sat-ngan-nguoi-phu-nu-chuyen-1-3-ty-dong-cho-tuong-my-tren-mang-5082089.html",
+    "headline": "Cảnh sát ngăn người phụ nữ chuyển 1,3 tỷ đồng cho 'Tướng Mỹ' trên mạng",
+    "summary_vi": "Kẻ gian dựng hình ảnh một \"tướng quân đội Mỹ\" thành đạt đang làm nhiệm vụ ở nước ngoài, chủ động làm quen và xây dựng quan hệ tình cảm qua mạng. Sau đó hắn hứa gửi ngoại tệ và quà giá trị lớn về Việt Nam, nhưng đòi nạn nhân chuyển tiền đóng phí để \"Liên hợp quốc\" cho phép đơn vị vận chuyển đưa hàng vào. Nhân viên ngân hàng thấy dấu hiệu bất thường, báo công an và giao dịch được dừng kịp.",
+    "summary_en": "The scammer built the persona of a successful 'US Army general' deployed abroad, made contact and developed an online romance. He then promised to send foreign cash and expensive gifts to Vietnam, but required the target to pay fees so 'the United Nations' would let the courier bring the package in. Bank staff noticed the unusual transfer, called police and it was stopped in time.",
+    "red_flags": [
+      "Online admirer claims to be a foreign military officer abroad",
+      "Promises to send cash or valuable gifts",
+      "You must pay release, shipping or 'United Nations' fees first",
+      "Large transfer to an account they provide"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "loan-001",
+    "scam_type": "loan",
+    "entry_kind": "official_warning",
+    "source_name": "Tuổi Trẻ",
+    "published_date": "2023-11-27",
+    "source_url": "https://tuoitre.vn/cong-an-tp-hcm-canh-bao-nguy-co-chiem-doat-tai-san-khi-vay-tien-qua-app-20231127134228746.htm",
+    "headline": "Công an TP.HCM cảnh báo nguy cơ chiếm đoạt tài sản khi vay tiền qua app",
+    "summary_vi": "Công an TP.HCM cảnh báo các app, website cho vay giả danh thương hiệu tổ chức tín dụng, quảng cáo lãi thấp, 0%, không cần thế chấp, giải ngân siêu tốc. Khi \"thẩm định hồ sơ\", chúng đòi thông tin cá nhân và bắt cài app được quyền truy cập danh bạ, mạng xã hội, ảnh căn cước. Một kiểu lừa là báo đã giải ngân trên giao diện nhưng không rút được do \"sai thông tin\", rồi đòi chuyển tiền \"xác minh\"; nếu không nộp thì dọa đưa vào nợ xấu, \"báo công an\" hoặc nhắn tin bôi nhọ tới người trong danh bạ.",
+    "summary_en": "Ho Chi Minh City police warn about lending apps and sites that borrow the names of real lenders and advertise low or 0% interest, no collateral and instant payout. During 'application review' they collect personal data and require an app with access to contacts, social accounts and ID photos. One trick shows the loan as paid out but 'blocked due to wrong information', then asks for a 'verification' transfer; refusing brings threats of a bad-debt listing, 'reporting you to police' or smear messages to everyone in your contacts.",
+    "red_flags": [
+      "0% interest, no collateral, instant payout",
+      "App demands access to your contacts and social accounts",
+      "Loan shows as paid but is 'blocked', pay to verify",
+      "Threats of bad-debt listing or police",
+      "Messages sent to people in your contact list"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "loan-002",
+    "scam_type": "loan",
+    "entry_kind": "incident_report",
+    "source_name": "Dân Trí",
+    "published_date": "2023-05-29",
+    "source_url": "https://dantri.com.vn/phap-luat/triet-xoa-hang-chuc-app-cho-vay-tien-chuyen-khung-bo-con-no-20230529155737826.htm",
+    "headline": "Triệt xóa hàng chục app cho vay tiền chuyên khủng bố con nợ",
+    "summary_vi": "Công an TP.HCM khởi tố nhân viên một số công ty thu hồi nợ đứng sau hàng chục app cho vay. Nhân viên được cấp điện thoại, sim và mẫu tin nhắn thô tục, kèm thông tin người vay và số điện thoại cha mẹ của họ, để gọi điện, nhắn tin đe dọa cả người vay lẫn người thân. Việc đòi nợ chia theo cấp độ, có cả đe dọa ghép ảnh vợ con người vay để bôi nhọ trên mạng xã hội.",
+    "summary_en": "Ho Chi Minh City police prosecuted staff of debt-collection companies behind dozens of lending apps. Collectors were given phones, SIM cards and abusive message templates plus borrowers' details and their parents' numbers, to call and threaten both borrowers and relatives. Collection escalated in tiers, including threats to post doctored photos of borrowers' family members online.",
+    "red_flags": [
+      "Lending app gets your contacts, including your parents' numbers",
+      "Abusive, threatening calls and messages",
+      "Relatives and friends harassed over your debt",
+      "Threats to post doctored photos online"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "fake_scholarship-001",
+    "scam_type": "fake_scholarship",
+    "entry_kind": "incident_report",
+    "source_name": "Pháp Luật TP.HCM (PLO, trên tuoitre.vn)",
+    "published_date": "2025-11-02",
+    "source_url": "https://tuoitre.vn/plo/dinh-chieu-lua-hoc-bong-du-hoc-hai-sinh-vien-tphcm-mat-hon-4-ty-dong-109879055.htm",
+    "headline": "Dính chiêu lừa học bổng du học, hai sinh viên TP.HCM mất hơn 4 tỷ đồng",
+    "summary_vi": "Phòng Cảnh sát hình sự Công an TP.HCM cảnh báo một đường dây giả danh chương trình học bổng du học quốc tế (Canada, Trung Quốc), liên lạc qua Zalo, Facebook, Telegram. Sinh viên được bảo phải nộp \"lệ phí\" và \"chứng minh tài chính\", bị thao túng tới mức rời nhà, cắt liên lạc với gia đình, tự quay video và gửi ảnh nhạy cảm; sau đó gia đình nhận tin nhắn đòi tiền \"chuộc người\". Công an gọi đây là biến tướng mới của \"bắt cóc online\".",
+    "summary_en": "Ho Chi Minh City criminal police warn of a ring posing as international study-abroad scholarship programs (Canada, China), reaching students via Zalo, Facebook and Telegram. Students were told to pay 'fees' and 'proof of funds', then manipulated into leaving home, cutting off family, filming themselves and sending sensitive images; families then received 'ransom' demands. Police call it a new variant of 'online kidnapping'.",
+    "red_flags": [
+      "Scholarship that requires fees or 'proof of funds' transfers",
+      "Contact only through Zalo, Facebook or Telegram",
+      "Told to leave home and stop contacting family",
+      "Asked to send sensitive photos or videos",
+      "Family then asked for 'ransom'"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "fake_scholarship-002",
+    "scam_type": "fake_scholarship",
+    "entry_kind": "incident_report",
+    "source_name": "VnExpress",
+    "published_date": "2025-02-04",
+    "source_url": "https://vnexpress.net/ba-dai-hoc-bi-gia-mao-de-tuyen-sinh-du-hoc-4845725.html",
+    "headline": "Ba đại học bị giả mạo để tuyển sinh du học",
+    "summary_vi": "Nhiều đại học lớn ở Hà Nội cảnh báo văn bản giả mạo chữ ký hiệu trưởng và con dấu, quảng cáo chương trình trao đổi sinh viên ở Đài Loan, Nhật Bản, Mỹ. Hồ sơ yêu cầu mã sinh viên, email, số điện thoại, bài luận, hồ sơ tài chính và sao kê chứng minh số dư hàng trăm triệu đồng. Các trường khẳng định văn bản là giả và chỉ thông tin qua kênh chính thức.",
+    "summary_en": "Several major Hanoi universities warned of documents forging their rectors' signatures and seals to advertise student-exchange programs in Taiwan, Japan and the US. Applicants were asked for student ID, email, phone number, an essay, a financial file and a bank statement proving a balance of hundreds of millions of VND. The universities confirmed the documents were fake and said they only announce programs through official channels.",
+    "red_flags": [
+      "Exchange or scholarship notice with a pasted-in signature and seal",
+      "Asks for personal data plus a large 'proof of funds' balance",
+      "Not announced on the university's official channels"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "fake_scholarship-003",
+    "scam_type": "fake_scholarship",
+    "entry_kind": "incident_report",
+    "source_name": "VietnamNet",
+    "published_date": "2025-05-09",
+    "source_url": "https://vietnamnet.vn/sinh-vien-trung-hoc-bong-du-hoc-phia-sau-la-bay-giang-lua-200-trieu-dong-2399300.html",
+    "headline": "Sinh viên trúng học bổng du học, phía sau là bẫy giăng lừa 200 triệu đồng",
+    "summary_vi": "Công an Đà Nẵng cảnh báo thông báo giả mạo trường đại học báo sinh viên \"trúng tuyển\" chương trình trao đổi ở Nhật Bản, miễn học phí và nhà ở, nhưng phải chứng minh tài chính bằng cách chuyển tiền vào một tài khoản được chỉ định. Kẻ gian còn lập email, mạng xã hội giả phòng Hợp tác quốc tế và gọi điện cho sinh viên, giục chuyển tiền ngay vì \"đang có danh sách chờ, chậm sẽ mất suất\".",
+    "summary_en": "Da Nang police warn of fake university notices telling students they were 'accepted' to a Japan exchange program with free tuition and housing, but had to prove funds by depositing money into a specified account. Scammers also run fake International Cooperation Office emails and social accounts and phone students, pushing them to pay immediately because 'there's a waiting list and you'll lose your place'.",
+    "red_flags": [
+      "Unexpected 'you've been accepted' notice",
+      "Must deposit money into a specified account to 'prove funds'",
+      "Fake international-office email or social account",
+      "'Waiting list, pay now or lose your place'"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "fake_job-001",
+    "scam_type": "fake_job",
+    "entry_kind": "incident_report",
+    "source_name": "VnExpress",
+    "published_date": "2025-02-06",
+    "source_url": "https://vnexpress.net/24-nguoi-bi-lua-sang-campuchia-lam-viec-duoc-dua-ve-nuoc-4846572.html",
+    "headline": "24 người bị lừa sang Campuchia làm việc được đưa về nước",
+    "summary_vi": "Công an Kiên Giang cho biết một nhóm người Việt được giới thiệu việc qua mạng xã hội với lời mời \"không cần kinh nghiệm\", \"thu nhập nghìn đô\", \"việc nhẹ lương cao\". Họ bị yêu cầu sang Campuchia bằng đường tiểu ngạch, bị đưa vào các cơ sở do người nước ngoài điều hành, bị ép gọi điện lừa đảo và bị đánh nếu không đạt chỉ tiêu hoặc tìm cách bỏ trốn.",
+    "summary_en": "Kien Giang police say a group of Vietnamese were offered jobs on social media promising 'no experience needed', 'earn thousands of dollars' and 'easy work, high pay'. They were told to cross into Cambodia through unofficial routes, then held in compounds run by foreigners, forced to make scam calls and beaten if they missed quotas or tried to escape.",
+    "red_flags": [
+      "'No experience needed, earn thousands of dollars, easy work'",
+      "Job found only through social media",
+      "Recruiter insists you travel abroad for the job",
+      "Asked to cross the border unofficially"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "fake_job-002",
+    "scam_type": "fake_job",
+    "entry_kind": "incident_report",
+    "source_name": "Tuổi Trẻ",
+    "published_date": "2025-03-13",
+    "source_url": "https://tuoitre.vn/bi-lua-5-ti-dong-vi-lam-cong-tac-vien-chot-don-hang-online-2025031309552476.htm",
+    "headline": "Bị lừa 5 tỉ đồng vì làm cộng tác viên chốt đơn hàng online",
+    "summary_vi": "Công an Hà Nội điều tra vụ một người được một người quen rủ làm \"cộng tác viên chốt đơn hàng online\" để hưởng hoa hồng. Nạn nhân đăng ký qua một đường link, phải chuyển tiền để làm \"nhiệm vụ\", sau đó không rút được tiền ra. Công an nhắc lại rằng các lời mời hưởng hoa hồng, lãi cao kiểu này thường là chiêu lừa đảo.",
+    "summary_en": "Hanoi police investigated a case where an acquaintance invited someone to be an 'online order-confirmation collaborator' earning commission. After registering through a link, the person had to transfer money to complete 'tasks' and then could not withdraw anything. Police repeat that commission and high-return offers like this are usually scams.",
+    "red_flags": [
+      "'Collaborator' job closing or paying for online orders",
+      "You must pay in money to complete tasks",
+      "Sign-up through a link, not a real employer",
+      "Cannot withdraw your money or 'commission'"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "fake_job-003",
+    "scam_type": "fake_job",
+    "entry_kind": "incident_report",
+    "source_name": "Tuổi Trẻ",
+    "published_date": "2023-08-29",
+    "source_url": "https://tuoitre.vn/tuyen-dung-online-lua-dao-nguoi-tim-viec-ky-1-mat-hon-tram-trieu-van-khong-co-viec-20230829101044997.htm",
+    "headline": "Tuyển dụng online lừa đảo người tìm việc - Kỳ 1: Mất hơn trăm triệu vẫn không có việc",
+    "summary_vi": "Phóng sự cho thấy các trang tuyển dụng giả không phỏng vấn trực tiếp mà bắt ứng viên cài app, nạp tiền làm \"khảo sát\" hay \"nhiệm vụ\" trước vòng phỏng vấn, hứa trả lại gấp rưỡi hoặc gấp đôi nhưng không bao giờ rút được. Kẻ gian còn lấy thông tin từ CV đăng trên mạng, gửi email giả danh một công ty lớn với logo và địa chỉ thật, rồi chuyển ứng viên sang Telegram để \"nhân sự\" giao nhiệm vụ; có người còn bị đe dọa sau khi mất tiền.",
+    "summary_en": "This investigation found fake recruiters skip real interviews and instead make applicants install an app and pay into 'surveys' or 'tasks' before the 'interview', promising 1.5-2x back but never allowing withdrawals. Scammers also lift details from CVs posted online, email applicants posing as a large company with its real logo and address, then move them to Telegram where an 'HR officer' assigns tasks; some victims were threatened after losing money.",
+    "red_flags": [
+      "No real interview, only online 'surveys' or tasks",
+      "Must install an app and deposit money to qualify",
+      "Recruiter email using a big company's logo",
+      "Moved to Telegram to talk to 'HR'",
+      "Promised returns of 1.5-2x what you pay"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "investment-001",
+    "scam_type": "investment",
+    "entry_kind": "incident_report",
+    "source_name": "Tuổi Trẻ",
+    "published_date": "2025-06-09",
+    "source_url": "https://tuoitre.vn/lua-dao-chung-khoan-ngay-cang-tinh-vi-dung-app-gia-lay-tien-that-20250609074457175.htm",
+    "headline": "Lừa đảo chứng khoán ngày càng tinh vi: Dựng app giả, lấy tiền thật",
+    "summary_vi": "Công an Hà Nội đã vạch trần ứng dụng chứng khoán giả \"AJB DIRECT\" hiển thị VN-Index, HNX-Index như thật nhưng mọi giao dịch đều lập trình sẵn, không nối với thị trường. Chiêu lừa bắt đầu bằng lời mời vào \"nhóm học đầu tư chứng khoán\" trên Zalo, Telegram, nơi \"chuyên gia\" giả liên tục \"phím hàng\", cho giao dịch thử và hiện lãi ảo mỗi ngày, hứa lợi nhuận rất cao; đến khi rút tiền thì bị chặn, bị xóa khỏi nhóm.",
+    "summary_en": "Hanoi police exposed a fake stock app, 'AJB DIRECT', that displayed real-looking VN-Index and HNX-Index data while every trade was pre-programmed and unconnected to the market. It starts with an invitation to a 'stock-investing class' on Zalo or Telegram, where fake 'experts' keep tipping stocks, offer trial trades and show daily paper profits with promises of huge returns; when the victim tries to withdraw, they are blocked and removed from the group.",
+    "red_flags": [
+      "Invitation to a free 'stock-investing class' group on Zalo or Telegram",
+      "'Experts' tipping hot stocks",
+      "Trading app not from a licensed brokerage",
+      "Daily profits shown in the app but no withdrawals",
+      "Promised returns far above the market"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "investment-002",
+    "scam_type": "investment",
+    "entry_kind": "incident_report",
+    "source_name": "VietnamNet",
+    "published_date": "2026-01-17",
+    "source_url": "https://vietnamnet.vn/pha-duong-day-lua-dao-dau-tu-tien-ao-gia-danh-nasdaq-chiem-doat-14-ty-dong-2482760.html",
+    "headline": "Phá đường dây lừa đảo đầu tư tiền ảo giả danh Nasdaq, chiếm đoạt 14 tỷ đồng",
+    "summary_vi": "Công an Đà Nẵng triệt phá một đường dây điều hành từ một khu ở Bavet (Campuchia), dùng các website giả mạo sàn Nasdaq để mời đầu tư tiền ảo. Nhóm lập các nhóm Zalo, Telegram với hàng chục tài khoản ảo để \"đánh sóng\" tạo niềm tin, dựng kịch bản \"báo lãi\" và giả danh chuyên gia đầu tư dụ nạp tiền; tiền chiếm đoạt được chuyển qua nhiều tài khoản và đổi sang tiền ảo để che giấu.",
+    "summary_en": "Da Nang police broke up a ring run from a compound in Bavet, Cambodia, that used fake 'Nasdaq' exchange websites to sell crypto 'investments'. The group ran Zalo and Telegram groups full of dozens of fake accounts to hype results, scripted 'profit reports' and posed as investment experts to get deposits; stolen funds were moved through many bank accounts and converted to crypto to hide them.",
+    "red_flags": [
+      "Exchange website imitating a famous brand (e.g. Nasdaq)",
+      "Group chat where many members cheer profits",
+      "Scripted 'profit reports' from an 'expert'",
+      "'Experts' pushing you to deposit more"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "investment-003",
+    "scam_type": "investment",
+    "entry_kind": "incident_report",
+    "source_name": "Dân Trí",
+    "published_date": "2026-07-09",
+    "source_url": "https://dantri.com.vn/phap-luat/lo-duong-day-du-dau-tu-tien-ao-huong-dan-nan-nhan-ban-nha-gop-von-20260709122224316.htm",
+    "headline": "Lộ đường dây dụ đầu tư tiền ảo, hướng dẫn nạn nhân bán nhà góp vốn",
+    "summary_vi": "Công an Đà Nẵng triệt phá hệ thống đa cấp tiền ảo nhắm vào người trẻ, sinh viên và người tìm việc: đăng tin tuyển dụng \"việc nhẹ lương cao\" để tiếp cận, khai thác hoàn cảnh từng người và dần cô lập họ với gia đình. Sau đó chúng dụ đầu tư vào các dự án tiền ảo với cam kết lãi cao, hướng dẫn vay mượn, cầm cố, thậm chí bán nhà để góp vốn; các dự án không có hoạt động thật, lấy tiền người sau trả người trước, mạo danh dự án quốc tế với tài liệu, báo cáo kiểm toán giả, rồi khóa chức năng rút tiền khi đã huy động được nhiều.",
+    "summary_en": "Da Nang police dismantled a multi-level crypto scheme aimed at young people, students and job-seekers: it posted 'easy work, high pay' job ads to make contact, studied each person's situation and gradually isolated them from family. It then pushed 'investments' in crypto projects with promised high returns, coaching people to borrow, pawn belongings or even sell their homes; the projects had no real business, paid earlier members with newer members' money, posed as international projects with fake documents and audit reports, and locked withdrawals once enough money came in.",
+    "red_flags": [
+      "Job ad that turns into an 'investment opportunity'",
+      "Recruiter isolates you from family",
+      "Coached to borrow, pawn or sell property to invest",
+      "Commissions for recruiting others",
+      "Glossy 'international project' or audit documents"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "phishing-001",
+    "scam_type": "phishing",
+    "entry_kind": "incident_report",
+    "source_name": "VnExpress",
+    "published_date": "2025-08-24",
+    "source_url": "https://vnexpress.net/ba-tuan-phat-hien-ba-vu-bts-gia-gui-tin-nhan-lua-dao-4930771.html",
+    "headline": "Ba tuần phát hiện ba vụ BTS giả gửi tin nhắn lừa đảo",
+    "summary_vi": "Tại TP HCM, cơ quan quản lý tần số và công an thu giữ trạm phát sóng di động (BTS) giả lắp trên ô tô đang phát tán tin nhắn mang tên thương hiệu của một ngân hàng lớn và một đơn vị bưu chính. Tin nhắn báo điểm thẻ tín dụng sắp hết hạn đổi thưởng hoặc thông tin giao hàng bị sai, kèm đường link dẫn tới trang lừa đảo để lấy thông tin cá nhân và tiền. Đây là vụ thứ ba trong một tháng; nội dung tin nhắn liên tục thay đổi.",
+    "summary_en": "In Ho Chi Minh City, frequency regulators and police seized a fake mobile base station (BTS) mounted in a car that was broadcasting SMS under the brand names of a major bank and a postal company. The texts said credit-card reward points were about to expire or a delivery address was wrong, with a link to a scam site that steals personal data and money. It was the third such case in a month, and the message wording keeps changing.",
+    "red_flags": [
+      "SMS under a real bank or courier name containing a link",
+      "'Your reward points are expiring'",
+      "'Delivery problem, update your address'",
+      "Text pushes you to tap a link for 'instructions'"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "phishing-002",
+    "scam_type": "phishing",
+    "entry_kind": "official_warning",
+    "source_name": "Bộ Công an (Cổng TTĐT)",
+    "published_date": "2025-08-07",
+    "source_url": "https://bocongan.gov.vn/hoi-dap/chi-tiet-cau-hoi/263833f1-47f2-4c17-b7f9-e0a8e37a9527?page=%2Fbo-voi-cong-dan",
+    "headline": "Cảnh báo thủ đoạn lợi dụng việc sáp nhập tỉnh, thành để lừa đảo cài ứng dụng VNeID giả mạo nhằm chiếm đoạt tài sản",
+    "summary_vi": "Cục An ninh mạng (Bộ Công an) cảnh báo: lợi dụng việc sắp xếp đơn vị hành chính từ 1/7/2025, kẻ gian gọi điện (cả qua tổng đài ảo) xưng là cán bộ xã/phường hoặc cảnh sát khu vực, đọc sẵn thông tin cá nhân của người nghe để tạo lòng tin, rồi bảo truy cập đường link hoặc cài ứng dụng VNeID, dịch vụ công giả mạo có mã độc. Khi đã chiếm quyền điều khiển điện thoại, chúng dẫn dụ để lấy mã OTP ngân hàng hoặc bảo nhìn vào camera để lấy dữ liệu khuôn mặt, rồi rút tiền trong tài khoản.",
+    "summary_en": "The Ministry of Public Security's cybersecurity department warns that, exploiting the administrative-boundary changes from 1 July 2025, scammers phone (including via virtual call centers) posing as commune or ward officials or local police, recite the person's personal details to seem legitimate, then tell them to open a link or install a fake VNeID or public-services app containing malware. Once they control the phone, they coax out bank OTPs or get the person to look at the camera to capture face biometrics, then empty the bank account.",
+    "red_flags": [
+      "Call from 'ward officials' or 'local police' about updating your details",
+      "Caller already knows your personal information",
+      "Told to install VNeID or another government app from a link",
+      "Asked for an OTP or to look into the camera",
+      "Government apps not installed from the official app stores"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "phishing-003",
+    "scam_type": "phishing",
+    "entry_kind": "official_warning",
+    "source_name": "Bộ Công an (Cổng TTĐT)",
+    "published_date": "2025-09-16",
+    "source_url": "https://bocongan.gov.vn/bai-viet/canh-bao-lua-dao-chiem-doat-tai-san-tu-su-co-an-ninh-mang-tai-trung-tam-thong-tin-tin-dung-quoc-gia-cic-1757991790",
+    "headline": "Cảnh báo lừa đảo chiếm đoạt tài sản từ sự cố an ninh mạng tại Trung tâm Thông tin tín dụng quốc gia (CIC)",
+    "summary_vi": "Sau sự cố an ninh mạng tại Trung tâm Thông tin tín dụng quốc gia (CIC), Cục Cảnh sát hình sự cảnh báo kẻ gian sẽ gửi tin nhắn, email giả ngân hàng hoặc CIC kiểu \"tài khoản bị lộ, bấm link đổi mật khẩu\", \"giao dịch lạ, nhập mã hủy tại link\", \"tài khoản bị tạm khóa, truy cập để xác thực\". Chúng còn giả tổng đài ngân hàng đòi mã OTP, giả công an mạng báo tài khoản có giao dịch phạm pháp, hoặc rao dịch vụ \"xóa nợ xấu CIC\".",
+    "summary_en": "After a cyber incident at the National Credit Information Centre (CIC), the Criminal Police Department warned that scammers would send fake bank or CIC texts and emails such as 'your account was exposed, click to change your password', 'unusual transaction, enter the cancel code at this link' or 'account locked, verify here'. They may also pose as a bank hotline asking for OTPs, pose as cyber police claiming illegal transactions, or offer to 'erase your CIC bad-debt record'.",
+    "red_flags": [
+      "Message about a data breach with a 'change password' link",
+      "'Unusual transaction, enter cancel code' link",
+      "'Account locked, verify at this link'",
+      "Caller asks for your OTP",
+      "Offers to 'erase bad debt' from credit records"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "other-001",
+    "scam_type": "other",
+    "entry_kind": "incident_report",
+    "source_name": "VnExpress",
+    "published_date": "2024-10-11",
+    "source_url": "https://vnexpress.net/gia-shipper-gui-hang-o-cho-cu-de-lua-nguoi-mua-chuyen-khoan-4802599.html",
+    "headline": "Giả shipper 'gửi hàng ở chỗ cũ' để lừa người mua chuyển khoản",
+    "summary_vi": "Kẻ giả shipper gọi báo giao đơn hàng đúng số tiền của một đơn nạn nhân vừa đặt thật, xin chuyển khoản. Sau đó hắn than \"bạn em nhắn nhầm tài khoản đăng ký hội viên, mỗi tháng sẽ bị trừ vài triệu\", đóng vai sinh viên đáng thương nhờ hủy giúp, gửi link tới trang chat giả của hãng giao hàng, chuyển cho \"trưởng nhóm\", báo tài khoản bị treo vì chưa đăng ký sinh trắc học và xin dùng tài khoản ngân hàng khác; cuối cùng thẻ tín dụng bị rút hàng chục triệu đồng.",
+    "summary_en": "A fake courier called about a delivery whose amount matched an order the victim had really just placed, and asked for a bank transfer. He then claimed 'my friend sent the wrong account for a membership, you'll be charged millions every month', played a pitiful student asking for help to cancel, sent a link to a fake courier support chat, handed over to a 'team leader', said the account was frozen for missing biometrics and asked to use another bank account, until the credit card was drained of tens of millions of VND.",
+    "red_flags": [
+      "Unknown 'courier' asks you to pay by bank transfer",
+      "'Wrong account, you'll be charged a monthly membership'",
+      "Sob story asking you to help cancel",
+      "Link to a 'courier support' chat",
+      "Asked to use another bank account or card"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "other-002",
+    "scam_type": "other",
+    "entry_kind": "incident_report",
+    "source_name": "Bộ Công an (Cổng TTĐT)",
+    "published_date": "2026-05-07",
+    "source_url": "https://bocongan.gov.vn/bai-viet/catp-hai-phong-lat-tay-chieu-tro-lap-trang-fanpage-mao-danh-de-chiem-tien-dat-coc-mua-dien-thoai-may-tinh-dong-ho-1778130949",
+    "headline": "Cảnh giác chiêu trò lập trang fanpage mạo danh để chiếm tiền đặt cọc mua điện thoại, máy tính, đồng hồ",
+    "summary_vi": "Công an Hải Phòng bắt các nhóm lập fanpage mạo danh có tên gần giống trang bán hàng uy tín, dùng logo, ảnh, clip cắt ghép, chạy quảng cáo và có người trực page liên tục. Trang rao điện thoại, máy tính, đồng hồ rẻ hơn thị trường 20-40%, cam kết chính hãng, bảo hành, rồi thuyết phục khách chuyển tiền đặt cọc \"mua hộ\". Nhận tiền xong chúng chặn liên lạc, xóa tin nhắn, đóng hoặc đổi tên trang, hoặc tiếp tục đòi thêm tiền.",
+    "summary_en": "Hai Phong police arrested groups running copycat fanpages with names close to reputable sellers, using stolen logos, photos and edited clips, paid ads and round-the-clock chat staff. The pages advertised phones, laptops and watches 20-40% below market price with 'genuine, full warranty' promises, then pushed buyers to pay a deposit for a 'buy-on-your-behalf' order. After taking the deposit they blocked the buyer, deleted chats, closed or renamed the page, or asked for more money.",
+    "red_flags": [
+      "Prices 20-40% below market",
+      "Page name almost matches a well-known seller",
+      "Deposit required before you receive the goods",
+      "'Buying on your behalf' (mua hộ) arrangement",
+      "Paid ads and 24/7 chat staff to look professional"
+    ],
+    "retrieved_at": "2026-10-07"
+  },
+  {
+    "id": "other-003",
+    "scam_type": "other",
+    "entry_kind": "incident_report",
+    "source_name": "VietnamNet",
+    "published_date": "2022-02-08",
+    "source_url": "https://vietnamnet.vn/nen-lam-gi-khi-dinh-bay-co-tinh-chuyen-tien-nham-814037.html",
+    "headline": "Dính 'bẫy' cố tình chuyển tiền nhầm",
+    "summary_vi": "Kẻ gian cố ý \"chuyển nhầm\" một khoản tiền vào tài khoản của người từng tìm hiểu vay tiền trên mạng, rồi một tài khoản Zalo lạ nhắn rằng đó là khoản vay đã được giải ngân và đòi trả kèm lãi cao. Khi không đòi được, chúng gửi thông tin bôi nhọ \"nợ tiền\" tới bạn bè, người thân qua Facebook, Zalo. Một biến thể khác dùng trang web giả ngân hàng, giả nhân viên ngân hàng \"hỗ trợ trả lại tiền chuyển nhầm\" để lấy thông tin đăng nhập. Cục An ninh mạng khuyên tuyệt đối không dùng khoản tiền đó; bài báo khuyên làm việc với ngân hàng để đối chiếu sao kê rồi mới hoàn trả.",
+    "summary_en": "Scammers deliberately 'mis-transfer' money into the account of someone who had looked at online loans; a stranger on Zalo then says it was a disbursed loan and demands it back with high interest. When that fails, they send 'this person owes money' smear posts to the victim's friends and family on Facebook and Zalo. In another variant, a fake bank website and fake bank staff 'help return the mistaken transfer' to steal login details. The police cyber unit says never to spend the money; the article advises checking the statement with the bank before returning anything.",
+    "red_flags": [
+      "Unexpected money arrives from a stranger",
+      "Stranger says it was a loan and demands interest",
+      "Pressure to send it back directly, not through the bank",
+      "Link to 'bank support' to reverse the transfer",
+      "Threats to message your friends and family"
+    ],
+    "retrieved_at": "2026-10-07"
+  }
+]
