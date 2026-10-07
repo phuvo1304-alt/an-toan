@@ -300,52 +300,50 @@ Then wait for my "go" before writing code.
 ## 14. Known issues (each to be scoped and fixed as its own slice)
 
 ### 14.1 analyze-scam: red-flag titles don't always match their quotes
-- **Status (2026-10-07): PARTLY FIXED, NOT RESOLVED for screenshots.** Fix tried,
-  measured, not yet deployed to production. Awaiting review.
-- **Found:** 2026-10-06, live 3-image tests of a fake-job chat (1024 and 1280 px).
-- **What happens:** the model blends a multi-step escalation pattern (a small
-  payout first, a deposit demand later) into ONE red flag and quotes the first
-  step. The flag titled "Yêu cầu nạp tiền trước…" (asks you to deposit first)
-  quotes "Nhiệm vụ đầu tiên bạn được trả ngay 40.000đ để làm quen", which is a
-  payment TO the user.
-- **Impact:** the verdict was correct every time, but the app tells the user
-  something untrue about their message.
-- **Fix tried (uncommitted, on staging function `analyze-scam-staging` only):**
-  1. Prompt rule in `index.ts`: one warning sign per flag; title and explanation
-     must describe what the quote says; split escalation patterns, or quote
-     the risky line.
-  2. `quotes.ts` + `test/quotes_test.ts`: drop any flag whose quote is not in
-     the input (accent-sensitive, tolerant of quote marks/spacing/"…"). Runs for
-     Text and Voice only. Screenshots have no input text to compare against.
-- **Measured (21 live runs, Haiku 4.5, vi):**
+- **Status:** text and voice are FIXED and confirmed in production (2026-10-07,
+  function v16; rollback target v15 = function code at commit ec78660).
+  Screenshots are NOT fixed. Same root cause as 14.2, see below.
+- **Found:** 2026-10-06, live 3-image tests of a fake-job chat. A flag titled
+  "Yêu cầu nạp tiền trước…" (asks you to deposit first) quoted "Nhiệm vụ đầu
+  tiên bạn được trả ngay 40.000đ để làm quen", which is a payment TO the user.
+  The verdict was right, but the app told the user something untrue about
+  their own message.
+- **Fix (commit 2138873):**
+  1. Prompt rule in `index.ts`: one warning sign per flag; the title and
+     explanation must describe what the quote says; split escalation patterns,
+     or quote the risky line.
+  2. `quotes.ts` (tests: `test/quotes_test.ts`): drops any flag whose quote is
+     not in the user's text (accent-sensitive). Runs for Text and Voice only.
+     It logs the number dropped, never the content.
+- **Evidence, text/voice:** wrong-meaning flags 1 → 0 and quotes not in the
+  input 0 → 0 over 6 staging runs (Training scenarios ctv_order_boosting and
+  police_holding_account, 3 runs each before and after). Then 2 production
+  runs (ctv text, a speech-to-text style OTP-scam transcript): 9 flags, 0
+  mismatches, 0 quotes missing from the input.
+- **Screenshots, still open:** the 40.000đ payout was still called a deposit in
+  4/6 staging runs (before: 3/3) and in the production smoke run. This is not a
+  prompt problem: the model misreads the image content (e.g. it reverses who
+  pays whom, reads "gốc" as "cơ bản"/"góc") before any quote logic runs, and
+  the quote check cannot run because there is no input text to compare against.
+  Tracked under **14.2** as one root cause; no more prompt tweaks for this.
 
-  | Scenario | Runs before/after | Wrong-meaning flags before → after | Bad quotes before → after | Avg flags before → after |
-  |---|---|---|---|---|
-  | 3-image fake-job chat | 3 / 6 | 4 (1.33/run) → 6 (1.0/run) | 4 → 4 (not caught: image input) | 5.67 → 5.33 |
-  | Training: ctv_order_boosting (text) | 3 / 3 | 1 → 0 | 0 → 0 | 5.33 → 5.0 |
-  | Training: police_holding_account (text) | 3 / 3 | 0 → 0 | 0 → 0 | 5.0 → 4.33 |
-
-  "Wrong-meaning" = the title or explanation says something the quote does not
-  say. The exact original bug (the 40.000đ payout called a deposit) dropped from
-  3/3 runs to 4/6 runs. 1 of the 6 got it right ("Hứa trả tiền trước để tạo lòng
-  tin"), and 1 left it out.
-- **Still failing (screenshots only):**
-  - The 40.000đ payout is still called a deposit in 4/6 runs.
-  - "trong 15 phút" (you must pay within 15 min) is read as "you get refunded or
-    paid within 15 min" in 4/6 runs.
-  - Misread quotes ("1.9.000.000đ", "ngập", "chủ trang") appear in 4/6 runs and
-    reach the user, because the quote check cannot run on images.
-- **Text input:** zero mismatches and zero failed quotes after the fix.
-- **Options (not tried, need a decision):** a stronger model for image checks
-  (more cost per check); have the model transcribe the screenshots first, then
-  analyse and quote-check that text (two calls, slower); or show image-check
-  quotes as "đoạn AI đọc được" (as read by AI) instead of exact quotes.
-
-### 14.2 Image checks: Vietnamese diacritics sometimes misread
-- **Found:** 2026-10-06, same tests. "Tuyển" read as "Tuyên", "gốc" as "góc",
-  "ạ?" as "q?", "tim" as "tìm".
+### 14.2 Image checks: the model misreads screenshot content
+- **Found:** 2026-10-06. Diacritics misread ("Tuyển" as "Tuyên", "gốc" as
+  "góc", "ạ?" as "q?", "tim" as "tìm", "nạp" as "ngập") and numbers garbled
+  ("1.900.000đ" as "1.9.000.000đ").
+- **Also causes 14.1 on screenshots:** the model misreads what the chat says
+  (a payout TO the user read as a deposit; "you must pay within 15 minutes"
+  read as "you get refunded within 15 minutes"), so red flags describe things
+  the chat does not say. Misread quotes reach the user because the quote
+  check needs text input. Measured 2026-10-07: misread quotes in 4/6 runs,
+  wrong-meaning flags 6 across 6 runs.
 - **Not a resize problem:** the images were clearly legible; misreads persisted
   at 1280 px and partly at 1568 px (Haiku 4.5's maximum), with lossless PNG.
-  They vary between runs. Verdicts were not affected.
-- **Possible fix (a cost decision):** a stronger / high-resolution model for
-  image checks, tested against the same scenario before switching.
+  They vary between runs. Verdicts (likely_scam, 92) were not affected.
+- **Deferred options (a model/architecture and cost decision; none tried):**
+  1. A stronger model for image checks only (more cost per check). Test it
+     against the same 3-image scenario before switching.
+  2. Two steps: transcribe the screenshots to text first, then analyse that
+     text and run the quote check on it (two calls: slower and pricier).
+  3. Label image-check quotes as "đoạn AI đọc được" ("as read by AI") instead
+     of exact quotes (needs a client change).
