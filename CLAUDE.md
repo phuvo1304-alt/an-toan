@@ -300,26 +300,46 @@ Then wait for my "go" before writing code.
 ## 14. Known issues (each to be scoped and fixed as its own slice)
 
 ### 14.1 analyze-scam: red-flag titles don't always match their quotes
+- **Status (2026-10-07): PARTLY FIXED, NOT RESOLVED for screenshots.** Fix tried,
+  measured, not yet deployed to production. Awaiting review.
 - **Found:** 2026-10-06, live 3-image tests of a fake-job chat (1024 and 1280 px).
 - **What happens:** the model blends a multi-step escalation pattern (a small
   payout first, a deposit demand later) into ONE red flag and quotes the first
-  step. In 4 of 4 runs, the flag titled "Yêu cầu nạp tiền trước để làm việc"
-  (asks you to deposit money first) quoted "Nhiệm vụ đầu tiên bạn được trả ngay
-  40.000đ để làm quen" — a payment TO the user. One explanation even said
-  "yêu cầu nạp 40.000đ", which is false.
+  step. The flag titled "Yêu cầu nạp tiền trước…" (asks you to deposit first)
+  quotes "Nhiệm vụ đầu tiên bạn được trả ngay 40.000đ để làm quen", which is a
+  payment TO the user.
 - **Impact:** the verdict was correct every time, but the app tells the user
   something untrue about their message.
-- **Cause:** the system prompt only requires `quote` to be an exact snippet.
-  Nothing ties a flag's title/explanation to what its quote actually says, or
-  limits a flag to one warning sign.
-- **Suggested prompt wording (not applied, untested):** "Each red flag covers
-  one warning sign. Its quote must be the words that show that sign, and its
-  title and explanation must describe what the quoted words actually say. If a
-  pattern spans several messages (for example, a small payout first and a
-  deposit later), quote the line with the risky request."
-- **Fixing it needs:** prompt change in `supabase/functions/analyze-scam/index.ts`,
-  redeploy, and a re-test with the same 3-image scenario (check every flag's
-  title against its quote).
+- **Fix tried (uncommitted, on staging function `analyze-scam-staging` only):**
+  1. Prompt rule in `index.ts`: one warning sign per flag; title and explanation
+     must describe what the quote says; split escalation patterns, or quote
+     the risky line.
+  2. `quotes.ts` + `test/quotes_test.ts`: drop any flag whose quote is not in
+     the input (accent-sensitive, tolerant of quote marks/spacing/"…"). Runs for
+     Text and Voice only. Screenshots have no input text to compare against.
+- **Measured (21 live runs, Haiku 4.5, vi):**
+
+  | Scenario | Runs before/after | Wrong-meaning flags before → after | Bad quotes before → after | Avg flags before → after |
+  |---|---|---|---|---|
+  | 3-image fake-job chat | 3 / 6 | 4 (1.33/run) → 6 (1.0/run) | 4 → 4 (not caught: image input) | 5.67 → 5.33 |
+  | Training: ctv_order_boosting (text) | 3 / 3 | 1 → 0 | 0 → 0 | 5.33 → 5.0 |
+  | Training: police_holding_account (text) | 3 / 3 | 0 → 0 | 0 → 0 | 5.0 → 4.33 |
+
+  "Wrong-meaning" = the title or explanation says something the quote does not
+  say. The exact original bug (the 40.000đ payout called a deposit) dropped from
+  3/3 runs to 4/6 runs. 1 of the 6 got it right ("Hứa trả tiền trước để tạo lòng
+  tin"), and 1 left it out.
+- **Still failing (screenshots only):**
+  - The 40.000đ payout is still called a deposit in 4/6 runs.
+  - "trong 15 phút" (you must pay within 15 min) is read as "you get refunded or
+    paid within 15 min" in 4/6 runs.
+  - Misread quotes ("1.9.000.000đ", "ngập", "chủ trang") appear in 4/6 runs and
+    reach the user, because the quote check cannot run on images.
+- **Text input:** zero mismatches and zero failed quotes after the fix.
+- **Options (not tried, need a decision):** a stronger model for image checks
+  (more cost per check); have the model transcribe the screenshots first, then
+  analyse and quote-check that text (two calls, slower); or show image-check
+  quotes as "đoạn AI đọc được" (as read by AI) instead of exact quotes.
 
 ### 14.2 Image checks: Vietnamese diacritics sometimes misread
 - **Found:** 2026-10-06, same tests. "Tuyển" read as "Tuyên", "gốc" as "góc",
