@@ -10,6 +10,7 @@
 
 import { imageContentBlocks, parseImages } from "./images.ts";
 import { preCheck } from "./patterns.ts";
+import { keepVerifiedFlags } from "./quotes.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
@@ -86,6 +87,12 @@ RULES
 - If the content is too short, empty, or not analyzable, return risk_level "suspicious", scam_type "none",
   and use confidence_note to ask for more context. Do not guess.
 - "quote" must be an exact short snippet copied from the content, or an empty string if there is none.
+- Each red flag must cover exactly ONE warning sign. Its quote must be the exact words that show that sign,
+  and its title and explanation must accurately describe what those quoted words say. Never attribute a
+  claim to a quote that the quote does not make (for example, do not call a line where the user is PAID
+  money a "deposit request"). If a scam pattern spans several messages (for example, a small payout offered
+  first and a deposit demanded later), make them separate flags; or, if you combine them into one flag,
+  quote the specific line that contains the risky request being described, not an earlier, different line.
 - risk_score is 0-100 and must match risk_level: safe 0-30, suspicious 31-69, likely_scam 70-100.
 
 COMMON VIETNAM SCAM PATTERNS TO KNOW
@@ -342,6 +349,17 @@ Deno.serve(async (req) => {
     }
 
     const result = sanitizeResult(parsed, lang);
+
+    // Hard backstop for the prompt rule above: a quote the user did not actually
+    // send must never reach them as "proof". Text/Voice checks only: screenshot
+    // checks send no text to compare against. Log the count, never the content.
+    if (images.length === 0 && text) {
+      const { kept, dropped } = keepVerifiedFlags(result.red_flags, text);
+      if (dropped > 0) {
+        console.warn("quote check", JSON.stringify({ dropped, of: result.red_flags.length }));
+        result.red_flags = kept;
+      }
+    }
     return json(result);
   } catch (e) {
     // Claude took longer than TOTAL_TIMEOUT_MS (all attempts together).
