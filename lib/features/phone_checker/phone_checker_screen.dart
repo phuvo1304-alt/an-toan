@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import 'phone_api.dart';
 
@@ -198,32 +200,22 @@ class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
-    final textTheme = Theme.of(context).textTheme;
-    final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(title: Text(t.phoneTitle)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpace.md),
           children: [
             // Community data, not verification (CLAUDE.md section 2.2).
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(Icons.groups_outlined, color: scheme.primary),
-                const SizedBox(width: 8),
-                Expanded(child: Text(t.phoneCommunityNote)),
-              ],
-            ),
-            const SizedBox(height: 16),
+            StatusBanner(message: t.phoneCommunityNote, kind: BannerKind.info),
+            const SizedBox(height: AppSpace.md),
             TextField(
               controller: _phoneController,
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
                 labelText: t.phoneNumberLabel,
                 hintText: t.phoneNumberHint,
-                border: const OutlineInputBorder(),
                 prefixIcon: const Icon(Icons.phone_outlined),
               ),
               onSubmitted: (_) => _check(),
@@ -232,17 +224,13 @@ class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
             FilledButton.icon(
               onPressed: _checking ? null : _check,
               icon: _checking
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
+                  ? const ButtonSpinner()
                   : const Icon(Icons.search),
               label: Text(t.phoneCheck),
             ),
             if (_checkError != null) ...[
               const SizedBox(height: 12),
-              _Message(text: _checkError!, isError: true),
+              StatusBanner(message: _checkError!),
             ],
             if (_summary != null) ...[
               const SizedBox(height: 16),
@@ -254,16 +242,14 @@ class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
             ],
             if (_disputeMessage != null) ...[
               const SizedBox(height: 12),
-              _Message(text: _disputeMessage!, isError: _disputeIsError),
+              StatusBanner(
+                  message: _disputeMessage!,
+                  kind: _disputeIsError ? BannerKind.error : BannerKind.success),
             ],
-            const SizedBox(height: 24),
-            const Divider(),
-            const SizedBox(height: 8),
+            const Divider(height: AppSpace.xl * 1.5),
 
             // ---- Report form ------------------------------------------------
-            Text(t.phoneReportTitle,
-                style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
+            SectionTitle(t.phoneReportTitle),
             Text(t.phoneReportIntro),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
@@ -272,7 +258,6 @@ class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
               isExpanded: true,
               decoration: InputDecoration(
                 labelText: t.phoneCategoryLabel,
-                border: const OutlineInputBorder(),
               ),
               items: [
                 for (final c in reportCategories)
@@ -287,28 +272,23 @@ class _PhoneCheckerScreenState extends ConsumerState<PhoneCheckerScreen> {
               maxLines: 3,
               decoration: InputDecoration(
                 labelText: t.phoneDescriptionLabel,
-                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 4),
             OutlinedButton.icon(
               onPressed: _submitting ? null : _submit,
               icon: _submitting
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
+                  ? const ButtonSpinner()
                   : const Icon(Icons.flag_outlined),
               label: Text(t.phoneSubmit),
             ),
             if (_reportError != null) ...[
               const SizedBox(height: 12),
-              _Message(text: _reportError!, isError: true),
+              StatusBanner(message: _reportError!),
             ],
             if (_reportSent) ...[
               const SizedBox(height: 12),
-              _Message(text: t.phoneReportSuccess, isError: false),
+              StatusBanner(message: t.phoneReportSuccess, kind: BannerKind.success),
             ],
           ],
         ),
@@ -353,31 +333,38 @@ class _SummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final textTheme = Theme.of(context).textTheme;
+    final scheme = Theme.of(context).colorScheme;
     final hasReports = summary.reportCount > 0;
+    // Reports are community data, not a verdict: the card stays neutral and
+    // only the icon signals caution (always next to the words).
+    final iconColor = hasReports ? context.risk.suspicious : scheme.onSurfaceVariant;
 
     return Card(
+      margin: EdgeInsets.zero,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpace.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(hasReports ? Icons.report_outlined : Icons.info_outline),
-                const SizedBox(width: 8),
+                Icon(hasReports ? Icons.report_outlined : Icons.info_outline,
+                    color: iconColor, size: AppIconSize.lg),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     hasReports
                         ? t.phoneReportedBy(summary.reportCount)
                         : t.phoneNoReports,
-                    style: textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: textTheme.titleMedium,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            if (!hasReports) Text(t.phoneNoReportsNote),
+            const SizedBox(height: 12),
+            if (!hasReports)
+              Text(t.phoneNoReportsNote,
+                  style: textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
             if (hasReports) ...[
               for (final c in summary.categories)
                 Padding(
@@ -389,19 +376,16 @@ class _SummaryCard extends StatelessWidget {
                 Text(t.phoneLastReported(MaterialLocalizations.of(context)
                     .formatMediumDate(summary.lastReportedAt!.toLocal()))),
               ],
-              const SizedBox(height: 8),
-              Text(t.phoneReportsNote, style: textTheme.bodySmall),
+              const SizedBox(height: 12),
+              Text(t.phoneReportsNote,
+                  style: textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
               const SizedBox(height: 4),
               Align(
                 alignment: Alignment.centerLeft,
                 child: TextButton.icon(
                   onPressed: disputing ? null : onDispute,
                   icon: disputing
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
+                      ? const ButtonSpinner()
                       : const Icon(Icons.outlined_flag),
                   label: Text(t.phoneDisputeAction),
                 ),
@@ -410,26 +394,6 @@ class _SummaryCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _Message extends StatelessWidget {
-  final String text;
-  final bool isError;
-  const _Message({required this.text, required this.isError});
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final color = isError ? scheme.error : scheme.primary;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(isError ? Icons.error_outline : Icons.check_circle_outline, color: color),
-        const SizedBox(width: 8),
-        Expanded(child: Text(text, style: TextStyle(color: color))),
-      ],
     );
   }
 }

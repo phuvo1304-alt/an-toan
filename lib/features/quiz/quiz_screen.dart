@@ -91,10 +91,11 @@ class _StartView extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpace.md),
       children: [
-        const Icon(Icons.quiz_outlined, size: 64),
-        const SizedBox(height: 16),
+        Icon(Icons.quiz_outlined,
+            size: AppIconSize.hero, color: Theme.of(context).colorScheme.primary),
+        const SizedBox(height: AppSpace.md),
         Text(t.quizIntro, style: textTheme.bodyLarge, textAlign: TextAlign.center),
         const SizedBox(height: 24),
         _RecordCard(record: record),
@@ -117,11 +118,13 @@ class _RecordCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Card(
+      margin: EdgeInsets.zero,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpace.md),
         child: Row(
           children: [
-            const Icon(Icons.emoji_events_outlined, size: 32),
+            Icon(Icons.emoji_events_outlined,
+                size: AppIconSize.lg, color: Theme.of(context).colorScheme.primary),
             const SizedBox(width: 12),
             Expanded(
               child: record.hasPlayed
@@ -166,7 +169,7 @@ class _QuestionView extends StatelessWidget {
     final done = session.index + (session.isAnswered ? 1 : 0);
 
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpace.md),
       children: [
         // Progress, score and streak
         Row(
@@ -183,18 +186,22 @@ class _QuestionView extends StatelessWidget {
             Text(t.quizStreak(session.streak)),
           ],
         ),
-        const SizedBox(height: 8),
-        LinearProgressIndicator(value: done / session.total),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpace.sm),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          child: LinearProgressIndicator(value: done / session.total),
+        ),
+        const SizedBox(height: AppSpace.lg),
 
         // The message to judge
         Card(
+          margin: EdgeInsets.zero,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSpace.md),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.sms_outlined),
+                Icon(Icons.sms_outlined, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(question.message(lang), style: textTheme.bodyLarge),
@@ -203,7 +210,7 @@ class _QuestionView extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpace.lg),
 
         if (!session.isAnswered) ...[
           Text(t.quizPrompt, style: textTheme.titleMedium),
@@ -215,9 +222,6 @@ class _QuestionView extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           OutlinedButton.icon(
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size.fromHeight(52), // large tap target
-            ),
             icon: const Icon(Icons.check_circle_outline),
             label: Text(t.quizAnswerNotScam),
             onPressed: () => onAnswer(false),
@@ -255,23 +259,26 @@ class _Feedback extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final textTheme = Theme.of(context).textTheme;
-    final color = correct ? RiskColors.safe : RiskColors.scam;
+    final risk = context.risk;
+    final color = correct ? risk.safe : risk.scam;
+    final container = correct ? risk.safeContainer : risk.scamContainer;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpace.md),
           decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(16),
+            color: container,
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            border: Border.all(color: color.withValues(alpha: 0.45), width: 1.5),
           ),
           child: Row(
             children: [
               Icon(
                 correct ? Icons.check_circle : Icons.cancel,
-                color: Colors.white,
-                size: 36,
+                color: color,
+                size: AppIconSize.lg,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -281,13 +288,13 @@ class _Feedback extends StatelessWidget {
                     Text(
                       correct ? t.quizCorrect : t.quizWrong,
                       style: textTheme.titleLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        color: color,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
                       isScam ? t.quizItWasScam : t.quizItWasNotScam,
-                      style: textTheme.bodyMedium?.copyWith(color: Colors.white),
+                      style: textTheme.bodyMedium?.copyWith(color: color),
                     ),
                   ],
                 ),
@@ -295,7 +302,7 @@ class _Feedback extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpace.md),
         Text(explanation, style: textTheme.bodyLarge),
       ],
     );
@@ -324,16 +331,19 @@ class _SummaryView extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpace.md),
       children: [
-        const Icon(Icons.flag_outlined, size: 64),
+        Icon(Icons.flag_outlined,
+            size: AppIconSize.hero, color: Theme.of(context).colorScheme.primary),
         const SizedBox(height: 8),
         Text(t.quizSummaryTitle,
             style: textTheme.headlineSmall, textAlign: TextAlign.center),
         const SizedBox(height: 16),
         Text(
           t.quizScore(session.correct, session.total),
-          style: textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: Theme.of(context).colorScheme.primary),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
@@ -344,7 +354,7 @@ class _SummaryView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.star, color: RiskColors.suspicious),
+              Icon(Icons.star, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 6),
               Text(t.quizNewRecord,
                   style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
@@ -357,7 +367,6 @@ class _SummaryView extends StatelessWidget {
         FilledButton(onPressed: onPlayAgain, child: Text(t.quizPlayAgain)),
         const SizedBox(height: 12),
         OutlinedButton(
-          style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(52)),
           onPressed: onHome,
           child: Text(t.quizBackHome),
         ),

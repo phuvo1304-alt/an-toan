@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/theme.dart';
 import '../../core/locale_provider.dart';
 import '../../l10n/app_localizations.dart';
 import 'training_data.dart';
@@ -20,7 +21,7 @@ class TrainingListScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(t.trainingTitle)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpace.md),
           children: [
             Text(t.trainingIntro, style: textTheme.bodyLarge),
             const SizedBox(height: 16),
@@ -28,13 +29,15 @@ class TrainingListScreen extends ConsumerWidget {
               Card(
                 margin: const EdgeInsets.only(bottom: 12),
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
                   onTap: () => context.push('/training/${scenario.id}'),
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppSpace.md),
                     child: Row(
                       children: [
-                        const Icon(Icons.school_outlined, size: 32),
+                        Icon(Icons.school_outlined,
+                            size: AppIconSize.lg,
+                            color: Theme.of(context).colorScheme.primary),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
@@ -83,7 +86,7 @@ class _TypeBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: tertiary ? scheme.tertiaryContainer : scheme.secondaryContainer,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
       child: Text(label,
           style: TextStyle(

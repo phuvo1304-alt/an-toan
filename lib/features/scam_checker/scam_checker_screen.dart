@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets.dart';
 import '../../core/locale_provider.dart';
 import '../../l10n/app_localizations.dart';
 import 'audio_tab.dart';
@@ -177,7 +179,7 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpace.md),
           children: [
             SizedBox(
               height: 260,
@@ -190,10 +192,7 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
                     expands: true,
                     maxLength: 4000,
                     textAlignVertical: TextAlignVertical.top,
-                    decoration: InputDecoration(
-                      hintText: t.pasteHint,
-                      border: const OutlineInputBorder(),
-                    ),
+                    decoration: InputDecoration(hintText: t.pasteHint),
                   ),
                   _imageTab(t),
                   AudioTab(
@@ -210,46 +209,32 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.lock_outline, size: 18, color: scheme.outline),
-                const SizedBox(width: 8),
+                Icon(Icons.lock_outline,
+                    size: AppIconSize.sm, color: scheme.onSurfaceVariant),
+                const SizedBox(width: AppSpace.sm),
                 Expanded(
                   child: Text(
                     t.privacyNote,
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall
-                        ?.copyWith(color: scheme.outline),
+                        ?.copyWith(color: scheme.onSurfaceVariant),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpace.md),
             if (_errorText != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-                child: Row(
-                  children: [
-                    Icon(Icons.error_outline, color: scheme.error),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _errorText!,
-                        style: TextStyle(color: scheme.error),
-                      ),
-                    ),
-                  ],
-                ),
+                child: StatusBanner(message: _errorText!),
               ),
             FilledButton.icon(
               // Not while the Voice tab is still listening: stop first, then check.
               onPressed:
                   _loading || _audioListening || _preparingImages ? null : _check,
               icon: _loading
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
+                  ? const ButtonSpinner()
                   : const Icon(Icons.shield_outlined),
               label: Text(_loading ? t.checking : t.checkButton),
             ),
@@ -268,22 +253,21 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
       decoration: BoxDecoration(
         color: scheme.surfaceContainerLow,
         border: Border.all(color: scheme.outline),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
       ),
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(AppSpace.sm),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
             child: items.isEmpty && !_preparingImages
-                ? Center(
-                    child: Text(t.noImageSelected, style: TextStyle(color: scheme.outline)))
+                ? EmptyState(icon: Icons.image_outlined, message: t.noImageSelected)
                 : Row(
                     children: [
                       for (var i = 0; i < maxImages; i++)
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.all(4),
+                            padding: const EdgeInsets.all(AppSpace.xs),
                             child: i < items.length
                                 ? _Thumbnail(
                                     key: ValueKey('thumb-${items[i].id}'),
@@ -302,7 +286,7 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
           ),
           if (items.length > 1)
             Padding(
-              padding: const EdgeInsets.only(top: 4),
+              padding: const EdgeInsets.only(top: AppSpace.xs),
               child: Text(t.imagesOrderHint,
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
@@ -310,7 +294,7 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
                       .bodySmall
                       ?.copyWith(color: scheme.onSurfaceVariant)),
             ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpace.xs),
           OutlinedButton.icon(
             onPressed: busy || _images.isFull ? null : _addImages,
             icon: const Icon(Icons.add_photo_alternate_outlined),
@@ -349,14 +333,14 @@ class _Thumbnail extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           // Screenshots are tall; show their TOP, where a chat's messages start,
           // so each thumbnail is recognizable (the middle is often blank).
           child: Image.memory(bytes, fit: BoxFit.cover, alignment: Alignment.topCenter),
         ),
         Positioned(
-          left: 4,
-          top: 4,
+          left: AppSpace.xs,
+          top: AppSpace.xs,
           child: Container(
             width: 26,
             height: 26,

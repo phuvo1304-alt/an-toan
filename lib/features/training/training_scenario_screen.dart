@@ -57,7 +57,7 @@ class _TrainingScenarioScreenState extends ConsumerState<TrainingScenarioScreen>
       appBar: AppBar(title: Text(widget.scenario.title(lang))),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpace.md),
           children: [
             Text(session.submitted ? (session.suspiciousCount == 0 ? t.trainingResultIntroSafe : t.trainingResultIntro) : t.trainingInstructions,
                 style: textTheme.bodyLarge),
@@ -131,18 +131,21 @@ class _SegmentView extends StatelessWidget {
     final textStyle = Theme.of(context).textTheme.bodyLarge!;
 
     // Result colors always come with an icon and a label, never color alone.
-    final (Color? color, IconData? icon, String? label) = switch (status) {
-      _SegmentStatus.caught => (RiskColors.safe, Icons.check_circle, t.trainingCaughtLabel),
-      _SegmentStatus.missed => (RiskColors.scam, Icons.error, t.trainingMissedLabel),
-      _SegmentStatus.falsePositive =>
-        (RiskColors.suspicious, Icons.info, t.trainingFalsePositiveLabel),
-      _ => (null, null, null),
+    final risk = context.risk;
+    final (Color? color, Color? container, IconData? icon, String? label) = switch (status) {
+      _SegmentStatus.caught =>
+        (risk.safe, risk.safeContainer, Icons.check_circle, t.trainingCaughtLabel),
+      _SegmentStatus.missed =>
+        (risk.scam, risk.scamContainer, Icons.error, t.trainingMissedLabel),
+      _SegmentStatus.falsePositive => (risk.suspicious, risk.suspiciousContainer,
+          Icons.info, t.trainingFalsePositiveLabel),
+      _ => (null, null, null, null),
     };
     final selected = status == _SegmentStatus.selected;
     final showResult = color != null;
 
     final Color? background = showResult
-        ? color.withValues(alpha: 0.12)
+        ? container
         : selected
             ? scheme.secondaryContainer
             : null;
@@ -166,7 +169,7 @@ class _SegmentView extends StatelessWidget {
             decoration: BoxDecoration(
               color: background,
               border: border,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -227,7 +230,7 @@ class _Summary extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpace.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

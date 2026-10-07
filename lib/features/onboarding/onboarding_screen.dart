@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/theme.dart';
 import '../../core/locale_provider.dart';
 import '../../core/onboarding_provider.dart';
 import '../../l10n/app_localizations.dart';
@@ -73,7 +74,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             ),
             _Dots(count: _pageCount, current: _page),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpace.md),
               child: SizedBox(
                 width: double.infinity,
                 child: FilledButton(
@@ -101,19 +102,28 @@ class _Slide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final scheme = Theme.of(context).colorScheme;
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpace.lg, vertical: AppSpace.md),
       child: Column(
         children: [
-          const SizedBox(height: 24),
-          Icon(icon, size: 72, color: Theme.of(context).colorScheme.primary),
-          const SizedBox(height: 24),
-          Text(title,
-              textAlign: TextAlign.center,
-              style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+          const SizedBox(height: AppSpace.lg),
+          Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              color: scheme.primaryContainer,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: AppIconSize.hero, color: scheme.onPrimaryContainer),
+          ),
+          const SizedBox(height: AppSpace.lg),
+          Text(title, textAlign: TextAlign.center, style: textTheme.headlineSmall),
           const SizedBox(height: 12),
-          Text(body, textAlign: TextAlign.center, style: textTheme.bodyLarge),
-          if (extra != null) ...[const SizedBox(height: 24), extra!],
+          Text(body,
+              textAlign: TextAlign.center,
+              style: textTheme.bodyLarge?.copyWith(color: scheme.onSurfaceVariant)),
+          if (extra != null) ...[const SizedBox(height: AppSpace.lg), extra!],
         ],
       ),
     );

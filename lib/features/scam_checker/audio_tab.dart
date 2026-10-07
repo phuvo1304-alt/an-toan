@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets.dart';
 import '../../core/locale_provider.dart';
 import '../../l10n/app_localizations.dart';
 import 'speech_service.dart';
@@ -252,7 +254,8 @@ class _AudioTabState extends ConsumerState<AudioTab> {
               tooltip: _listening ? t.recordStop : t.recordStart,
               onPressed: micUsable ? _toggle : null,
               style: _listening
-                  ? IconButton.styleFrom(backgroundColor: scheme.error)
+                  ? IconButton.styleFrom(
+                      backgroundColor: scheme.error, foregroundColor: scheme.onError)
                   : null,
               icon: Icon(_listening ? Icons.stop : Icons.mic),
             ),
@@ -275,24 +278,17 @@ class _AudioTabState extends ConsumerState<AudioTab> {
           ],
         ),
         if (_listening) ...[
-          const SizedBox(height: 6),
-          LinearProgressIndicator(value: _countdown.progress),
-        ],
-        if (problem != null) ...[
-          const SizedBox(height: 6),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(Icons.info_outline, size: 18, color: scheme.error),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(problem,
-                    style: textTheme.bodySmall?.copyWith(color: scheme.error)),
-              ),
-            ],
+          const SizedBox(height: AppSpace.sm),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.sm),
+            child: LinearProgressIndicator(value: _countdown.progress),
           ),
         ],
-        const SizedBox(height: 8),
+        if (problem != null) ...[
+          const SizedBox(height: AppSpace.sm),
+          StatusBanner(message: problem),
+        ],
+        const SizedBox(height: AppSpace.sm),
         Expanded(
           child: TextField(
             controller: widget.controller,
@@ -302,10 +298,7 @@ class _AudioTabState extends ConsumerState<AudioTab> {
             expands: true,
             maxLength: 4000,
             textAlignVertical: TextAlignVertical.top,
-            decoration: InputDecoration(
-              hintText: t.transcriptHint,
-              border: const OutlineInputBorder(),
-            ),
+            decoration: InputDecoration(hintText: t.transcriptHint),
           ),
         ),
       ],

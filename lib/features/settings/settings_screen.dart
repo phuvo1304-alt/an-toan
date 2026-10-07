@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets.dart';
 import '../../core/locale_provider.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -39,10 +41,9 @@ class SettingsScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(t.settings)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpace.md),
           children: [
-            Text(t.language, style: textTheme.titleMedium),
-            const SizedBox(height: 8),
+            SectionTitle(t.language),
             SegmentedButton<String>(
               segments: [
                 ButtonSegment(value: 'vi', label: Text(t.languageVi)),
@@ -51,21 +52,22 @@ class SettingsScreen extends ConsumerWidget {
               selected: {locale.languageCode},
               onSelectionChanged: (s) => notifier.setLanguage(s.first),
             ),
-            const SizedBox(height: 16),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.privacy_tip_outlined),
-              title: Text(t.privacyPolicy),
-              trailing: const Icon(Icons.open_in_new),
-              onTap: () => _openPrivacyPolicy(context),
+            const SizedBox(height: AppSpace.lg),
+            Card(
+              clipBehavior: Clip.antiAlias,
+              child: ListTile(
+                minVerticalPadding: 12,
+                leading: const Icon(Icons.privacy_tip_outlined),
+                title: Text(t.privacyPolicy, style: textTheme.titleSmall),
+                trailing: const Icon(Icons.open_in_new, size: 20),
+                onTap: () => _openPrivacyPolicy(context),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(t.disclaimerTitle, style: textTheme.titleMedium),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpace.sm),
+            SectionTitle(t.disclaimerTitle),
             Text(t.disclaimerBody),
-            const SizedBox(height: 24),
-            Text(t.officialHelpTitle, style: textTheme.titleMedium),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpace.lg),
+            SectionTitle(t.officialHelpTitle),
             Text(t.officialHelpBody),
           ],
         ),
