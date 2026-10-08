@@ -125,6 +125,16 @@ class AppLocalizationsVi extends AppLocalizations {
   String get notVerified => 'Chưa thể xác minh';
 
   @override
+  String get realCasesTitle => 'Trường hợp thực tế đã được báo cáo';
+
+  @override
+  String get realCasesDisclaimer =>
+      'Đây là các trường hợp khác đã được báo cáo với chiêu thức tương tự, không phải bằng chứng về tin nhắn của bạn.';
+
+  @override
+  String get readArticle => 'Đọc bài báo';
+
+  @override
   String get checkAnother => 'Kiểm tra tin khác';
 
   @override

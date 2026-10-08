@@ -320,6 +320,24 @@ abstract class AppLocalizations {
   /// **'Chưa thể xác minh'**
   String get notVerified;
 
+  /// No description provided for @realCasesTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Trường hợp thực tế đã được báo cáo'**
+  String get realCasesTitle;
+
+  /// No description provided for @realCasesDisclaimer.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đây là các trường hợp khác đã được báo cáo với chiêu thức tương tự, không phải bằng chứng về tin nhắn của bạn.'**
+  String get realCasesDisclaimer;
+
+  /// No description provided for @readArticle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đọc bài báo'**
+  String get readArticle;
+
   /// No description provided for @checkAnother.
   ///
   /// In vi, this message translates to:

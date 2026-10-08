@@ -1,17 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../l10n/app_localizations.dart';
+import 'reference_cases.dart';
 import 'scam_result.dart';
 
-class ResultScreen extends StatelessWidget {
+class ResultScreen extends StatefulWidget {
   final ScamResult result;
   const ResultScreen({super.key, required this.result});
 
   @override
+  State<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends State<ResultScreen> {
+  late final Future<List<ReferenceCase>> _casesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    // Picked once per screen instance: a rebuild (e.g. theme change) must
+    // not reshuffle which two cases are shown.
+    _casesFuture = loadReferenceCases()
+        .then((all) => pickReferenceCases(all, widget.result.scamType));
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final result = widget.result;
     final t = AppLocalizations.of(context)!;
     final textTheme = Theme.of(context).textTheme;
     final scheme = Theme.of(context).colorScheme;
@@ -124,6 +143,39 @@ class ResultScreen extends StatelessWidget {
                 ),
               ),
 
+            // Real reported cases: client-side lookup by scam_type in the
+            // bundled dataset (data/scam_case_reference.json). Never
+            // changes the verdict above and never claims to be about this
+            // specific message — see realCasesDisclaimer.
+            FutureBuilder<List<ReferenceCase>>(
+              future: _casesFuture,
+              builder: (context, snapshot) {
+                final cases = snapshot.data ?? const [];
+                if (cases.isEmpty) return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.only(top: AppSpace.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SectionTitle(t.realCasesTitle),
+                      Text(
+                        t.realCasesDisclaimer,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpace.sm),
+                      ...cases.map((c) => _ReferenceCaseCard(
+                            caseData: c,
+                            languageCode: result.language,
+                          )),
+                    ],
+                  ),
+                );
+              },
+            ),
+
             if (result.whatToDo.isNotEmpty) ...[
               const SizedBox(height: AppSpace.md),
               SectionTitle(t.whatToDo),
@@ -173,6 +225,93 @@ class ResultScreen extends StatelessWidget {
             FilledButton(
               onPressed: () => context.pop(),
               child: Text(t.checkAnother),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// One entry from the real-case dataset: headline, source, a short
+/// paraphrase snippet, and a tappable link to the original article.
+class _ReferenceCaseCard extends StatelessWidget {
+  final ReferenceCase caseData;
+  final String languageCode;
+
+  const _ReferenceCaseCard({
+    required this.caseData,
+    required this.languageCode,
+  });
+
+  static const _snippetMaxLength = 160;
+
+  Future<void> _openSource(BuildContext context) async {
+    final t = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final uri = Uri.tryParse(caseData.sourceUrl);
+    var opened = false;
+    if (uri != null) {
+      try {
+        opened =
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } catch (_) {
+        opened = false;
+      }
+    }
+    if (!opened && messenger.mounted) {
+      messenger.showSnackBar(SnackBar(content: Text(t.errorGeneric)));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final textTheme = Theme.of(context).textTheme;
+    final scheme = Theme.of(context).colorScheme;
+
+    final summary = caseData.summary(languageCode);
+    final snippet = summary.length > _snippetMaxLength
+        ? '${summary.substring(0, _snippetMaxLength).trimRight()}…'
+        : summary;
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpace.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(caseData.headline, style: textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Text(
+              caseData.sourceName,
+              style: textTheme.labelMedium
+                  ?.copyWith(color: scheme.onSurfaceVariant),
+            ),
+            if (snippet.isNotEmpty) ...[
+              const SizedBox(height: AppSpace.sm),
+              Text(snippet),
+            ],
+            const SizedBox(height: AppSpace.sm),
+            InkWell(
+              borderRadius: BorderRadius.circular(AppRadius.sm),
+              onTap: () => _openSource(context),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      t.readArticle,
+                      style: textTheme.labelLarge
+                          ?.copyWith(color: scheme.primary),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(Icons.open_in_new, size: 16, color: scheme.primary),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

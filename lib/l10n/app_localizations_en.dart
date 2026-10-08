@@ -124,6 +124,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notVerified => 'Could not verify';
 
   @override
+  String get realCasesTitle => 'Real reported cases';
+
+  @override
+  String get realCasesDisclaimer =>
+      'These are other real cases reported with similar tactics, not proof about your message.';
+
+  @override
+  String get readArticle => 'Read article';
+
+  @override
   String get checkAnother => 'Check another';
 
   @override
