@@ -15,6 +15,15 @@ supabase/.temp/
 *-credentials.json
 google-services.json
 GoogleService-Info.plist
+# Codemagic tokens and store credentials (CLAUDE.md section 9): keep them in
+# Codemagic's encrypted environment variables, never in files in the repo.
+codemagic.env
+*.codemagic.env
+.codemagic/
+*play*key*.json
+*play*credential*.json
+*api_key*.txt
+*api-key*.txt
 
 # ---- Flutter / Dart ----
 .dart_tool/

@@ -293,25 +293,14 @@ class _ReferenceCaseCard extends StatelessWidget {
               const SizedBox(height: AppSpace.sm),
               Text(snippet),
             ],
-            const SizedBox(height: AppSpace.sm),
-            InkWell(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              onTap: () => _openSource(context),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      t.readArticle,
-                      style: textTheme.labelLarge
-                          ?.copyWith(color: scheme.primary),
-                    ),
-                    const SizedBox(width: 4),
-                    Icon(Icons.open_in_new, size: 16, color: scheme.primary),
-                  ],
-                ),
-              ),
+            const SizedBox(height: AppSpace.xs),
+            // TextButton (not a bare InkWell) so the app's textButtonTheme
+            // gives it the 48x48 minimum tap target (CLAUDE.md section 7).
+            TextButton.icon(
+              onPressed: () => _openSource(context),
+              iconAlignment: IconAlignment.end,
+              icon: const Icon(Icons.open_in_new, size: 16),
+              label: Text(t.readArticle),
             ),
           ],
         ),

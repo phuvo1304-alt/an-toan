@@ -92,6 +92,24 @@ void main() {
     expect(find.text('Đọc bài báo'), findsWidgets);
   });
 
+  testWidgets('every "Read article" link has a tap target of at least 48x48 '
+      '(CLAUDE.md section 7)', (tester) async {
+    await tester
+        .pumpWidget(_wrap(ResultScreen(result: _result(scamType: 'fake_job'))));
+    await tester.pumpAndSettle();
+
+    final links = find.ancestor(
+      of: find.text('Read article'),
+      matching: find.byWidgetPredicate((w) => w is TextButton),
+    );
+    expect(links, findsWidgets);
+    for (final link in links.evaluate()) {
+      final size = tester.getSize(find.byWidget(link.widget));
+      expect(size.width, greaterThanOrEqualTo(48), reason: 'width $size');
+      expect(size.height, greaterThanOrEqualTo(48), reason: 'height $size');
+    }
+  });
+
   // -- Tapping "Read article" -------------------------------------------------
   //
   // url_launcher talks to the platform over this method channel (see
