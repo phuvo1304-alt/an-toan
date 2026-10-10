@@ -92,7 +92,13 @@ class _ResultScreenState extends State<ResultScreen> {
           risk.scamStrong,
           AppIconSize.xl + 8,
           FontWeight.w800,
-          textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: risk.scamStrong),
+          // `scam`, not `scamStrong`, here: scamStrong is tuned for a WHITE
+          // icon on top of it (icon chip above), not for use as text on the
+          // page background -- in dark mode that combination only reaches
+          // 3.85:1, under WCAG AA's 4.5:1 for this text size. `scam` is
+          // already contrast-documented against page/cards in both modes
+          // (6.17:1 light, 6.72:1 dark, measured against the real theme).
+          textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: risk.scam),
         ),
     };
 

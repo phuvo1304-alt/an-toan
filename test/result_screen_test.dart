@@ -4,6 +4,8 @@
 // asset) by scam_type — flutter_test serves real pubspec assets from disk,
 // so these run against the actual dataset file, not a mock.
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -13,6 +15,21 @@ import 'package:an_toan/app/theme.dart';
 import 'package:an_toan/features/scam_checker/result_screen.dart';
 import 'package:an_toan/features/scam_checker/scam_result.dart';
 import 'package:an_toan/l10n/app_localizations.dart';
+
+/// WCAG relative luminance and contrast ratio, so a future color change to
+/// RiskPalette can't silently reintroduce a text-contrast regression (found
+/// once already: scamStrong, tuned for a white icon on top of it, used
+/// directly as page-background text only reached 3.85:1 in dark mode).
+double _luminance(Color c) {
+  double chan(double v) => v <= 0.03928 ? v / 12.92 : pow((v + 0.055) / 1.055, 2.4).toDouble();
+  return 0.2126 * chan(c.r) + 0.7152 * chan(c.g) + 0.0722 * chan(c.b);
+}
+
+double _contrast(Color a, Color b) {
+  final la = _luminance(a) + 0.05;
+  final lb = _luminance(b) + 0.05;
+  return la > lb ? la / lb : lb / la;
+}
 
 ScamResult _result({
   required String scamType,
@@ -264,7 +281,10 @@ void main() {
       await tester.pumpAndSettle();
       final scamStyle = tester.widget<Text>(find.text(step)).style!;
       expect(scamStyle.fontWeight, FontWeight.bold);
-      expect(scamStyle.color, RiskPalette.light.scamStrong);
+      // `scam`, not `scamStrong`: scamStrong is reserved for the icon chip
+      // (tuned for a white icon on top), not page-background text -- see the
+      // dark-mode contrast test below.
+      expect(scamStyle.color, RiskPalette.light.scam);
       // Bolder AND distinguishable from suspicious's smaller bump.
       expect(scamStyle.fontWeight, isNot(suspiciousStyle.fontWeight));
     });
@@ -286,6 +306,22 @@ void main() {
             (w.decoration as BoxDecoration).shape == BoxShape.circle),
       ));
       expect((chip.decoration as BoxDecoration).color, RiskPalette.dark.scamStrong);
+    });
+
+    test('the what-to-do text color meets WCAG AA (4.5:1) against the real page '
+        'surface, in both light and dark mode', () {
+      // bodyLarge bold (16px) does not qualify for WCAG's "large text" 3:1
+      // exception (needs >=18pt/24px regular or >=14pt/18.67px bold), so the
+      // general 4.5:1 threshold applies here.
+      final whatToDoTextColor = RiskPalette.light.scam; // same field used for both modes
+      final lightSurface = buildTheme(Brightness.light).colorScheme.surface;
+      final darkSurface = buildTheme(Brightness.dark).colorScheme.surface;
+
+      expect(_contrast(RiskPalette.light.scam, lightSurface), greaterThanOrEqualTo(4.5));
+      expect(_contrast(RiskPalette.dark.scam, darkSurface), greaterThanOrEqualTo(4.5));
+      // scamStrong (the icon-chip color) deliberately is NOT used for this
+      // text -- it's tuned for a white icon on top, not page-background text.
+      expect(whatToDoTextColor, isNot(RiskPalette.light.scamStrong));
     });
 
     testWidgets('safe stays calm: no filled icon chip, plain check_circle icon', (tester) async {
