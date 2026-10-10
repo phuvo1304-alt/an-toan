@@ -1,0 +1,1484 @@
+{
+  "generated_at": "2026-10-10T09:45:15.509Z",
+  "model": "claude-haiku-4-5-20251001",
+  "target_url": "https://qhcewuxbtyvcqsjfiizm.supabase.co/functions/v1/analyze-scam",
+  "runs_per_case": 3,
+  "cases": [
+    {
+      "id": "fake_job-eval-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "fake_job",
+      "note": "Classic 'việc nhẹ lương cao' plus deposit-to-get-tasks pattern; should trip the fake_job pre-check.",
+      "pattern_precheck": [
+        "fake_job"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "fake_job",
+          "latency_ms": 11869,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "fake_job",
+          "latency_ms": 11021,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "fake_job",
+          "latency_ms": 10868,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "fake_job"
+        ]
+      }
+    },
+    {
+      "id": "fake_job-eval-02",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "fake_job",
+      "note": "Second fake_job case (this type got the double-up): collaborator recruitment, daily-pay promise and move-to-Telegram pattern.",
+      "pattern_precheck": [
+        "fake_job"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 78,
+          "scam_type": "fake_job",
+          "latency_ms": 11055,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 78,
+          "scam_type": "fake_job",
+          "latency_ms": 14858,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 78,
+          "scam_type": "fake_job",
+          "latency_ms": 12215,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "fake_job"
+        ]
+      }
+    },
+    {
+      "id": "phishing-eval-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "phishing",
+      "note": "Fake e-wallet lock notice with a look-alike link; classic phishing shape.",
+      "pattern_precheck": [
+        "phishing"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "phishing",
+          "latency_ms": 11363,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "phishing",
+          "latency_ms": 11411,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "phishing",
+          "latency_ms": 10982,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "phishing"
+        ]
+      }
+    },
+    {
+      "id": "phishing-eval-02",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "phishing",
+      "note": "Second phishing case (this type got the double-up): fake courier message asking to enter an OTP at a link.",
+      "pattern_precheck": [
+        "phishing",
+        "other"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "phishing",
+          "latency_ms": 11662,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "phishing",
+          "latency_ms": 10135,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "phishing",
+          "latency_ms": 11213,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "phishing"
+        ]
+      }
+    },
+    {
+      "id": "fake_scholarship-eval-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "fake_scholarship",
+      "note": "Scholarship requiring an upfront processing fee and 'priority review' pressure.",
+      "pattern_precheck": [
+        "fake_scholarship"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 85,
+          "scam_type": "fake_scholarship",
+          "latency_ms": 12534,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 85,
+          "scam_type": "fake_scholarship",
+          "latency_ms": 10880,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 85,
+          "scam_type": "fake_scholarship",
+          "latency_ms": 11254,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "fake_scholarship"
+        ]
+      }
+    },
+    {
+      "id": "impersonation-eval-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "impersonation",
+      "note": "Fake police caller script: accusation, holding account, secrecy demand.",
+      "pattern_precheck": [
+        "impersonation"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 98,
+          "scam_type": "impersonation",
+          "latency_ms": 11402,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "impersonation",
+          "latency_ms": 11799,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "impersonation",
+          "latency_ms": 11451,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "impersonation"
+        ]
+      }
+    },
+    {
+      "id": "investment-eval-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "investment",
+      "note": "Guaranteed-return crypto group with referral commissions.",
+      "pattern_precheck": [
+        "investment"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "investment",
+          "latency_ms": 11178,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "investment",
+          "latency_ms": 12731,
+          "quotes_total": 5,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "investment",
+          "latency_ms": 12064,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "investment"
+        ]
+      }
+    },
+    {
+      "id": "romance-eval-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "romance",
+      "note": "Foreign-persona romance scam asking for a customs fee on a parcel.",
+      "pattern_precheck": [
+        "romance"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "romance",
+          "latency_ms": 13680,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "romance",
+          "latency_ms": 13359,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "romance",
+          "latency_ms": 12498,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "romance"
+        ]
+      }
+    },
+    {
+      "id": "loan-eval-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "loan",
+      "note": "No-check fast loan app asking for a fee before payout and access to contacts.",
+      "pattern_precheck": [
+        "loan"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "loan",
+          "latency_ms": 10588,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "loan",
+          "latency_ms": 10775,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "loan",
+          "latency_ms": 9286,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "loan"
+        ]
+      }
+    },
+    {
+      "id": "other-eval-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "other",
+      "note": "Fake failed-delivery SMS asking for a small re-delivery fee through a link.",
+      "pattern_precheck": [
+        "phishing",
+        "other"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "phishing",
+          "latency_ms": 12033,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "phishing",
+          "latency_ms": 12503,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "phishing",
+          "latency_ms": 13003,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "phishing"
+        ]
+      }
+    },
+    {
+      "id": "safe-eval-01",
+      "expected_risk_level": "safe",
+      "note": "Near-miss for fake_job: a real-looking job post with a normal monthly salary, CV by email, in-person interview -- no deposit, no Telegram, no 'easy money' framing.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 35,
+          "scam_type": "fake_job",
+          "latency_ms": 10008,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 35,
+          "scam_type": "fake_job",
+          "latency_ms": 9222,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 35,
+          "scam_type": "fake_job",
+          "latency_ms": 9944,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "suspicious"
+        ],
+        "modal_risk_level": "suspicious",
+        "disagreement": false,
+        "scam_types_seen": [
+          "fake_job"
+        ]
+      }
+    },
+    {
+      "id": "safe-eval-02",
+      "expected_risk_level": "safe",
+      "note": "Near-miss for fake_scholarship: money flows TO the student, no fee, no urgency, through the university's own office.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 6045,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 5426,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 5515,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "safe-eval-03",
+      "expected_risk_level": "safe",
+      "note": "Near-miss for phishing: a routine transaction notice with no link and no lock/urgency threat, just a hotline to call.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 7718,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 6813,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 8521,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "suspicious"
+        ],
+        "modal_risk_level": "suspicious",
+        "disagreement": false,
+        "scam_types_seen": [
+          "phishing"
+        ]
+      }
+    },
+    {
+      "id": "safe-eval-04",
+      "expected_risk_level": "safe",
+      "note": "Near-miss for impersonation/loan scripts: an ordinary small loan request between friends, no fake identity, no OTP, no account-takeover ask.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 5190,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 6034,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 5574,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "safe-eval-05",
+      "expected_risk_level": "safe",
+      "note": "Plain school administrative notice, no money or personal data involved.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 4325,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 4981,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 4620,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "safe-eval-06",
+      "expected_risk_level": "safe",
+      "note": "Near-miss for the 'other' shipping-scam pattern: a successful-delivery confirmation, no fee, no link, no failed-delivery pressure.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 7610,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 7303,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 7614,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "suspicious"
+        ],
+        "modal_risk_level": "suspicious",
+        "disagreement": false,
+        "scam_types_seen": [
+          "phishing"
+        ]
+      }
+    },
+    {
+      "id": "safe-eval-07",
+      "expected_risk_level": "safe",
+      "note": "Routine utility bill through an official app and recognized payment points, no urgency threat or link.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 9124,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 11000,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": false,
+          "error": "HTTP 502: {\"error\":\"upstream_error\"}",
+          "latency_ms": 9711
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "suspicious"
+        ],
+        "modal_risk_level": "suspicious",
+        "disagreement": false,
+        "scam_types_seen": [
+          "phishing"
+        ]
+      }
+    },
+    {
+      "id": "safe-eval-08",
+      "expected_risk_level": "safe",
+      "note": "Ordinary teacher-to-class homework message.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 4359,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 4049,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 3725,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "safe-eval-09",
+      "expected_risk_level": "safe",
+      "note": "Plain internal schedule-change notice.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 3858,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 4356,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 4037,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "safe-eval-10",
+      "expected_risk_level": "safe",
+      "note": "Obvious safe baseline: a family chat message with no financial or personal-data content at all.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 3844,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 3390,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 3491,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "tricky-eval-01",
+      "expected_risk_level": "suspicious",
+      "note": "Too short to judge: no amount, no recipient context, no sender identity. Per the prompt rule this should come back 'suspicious' asking for more context, not a guess.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 35,
+          "scam_type": "none",
+          "latency_ms": 4950,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 35,
+          "scam_type": "other",
+          "latency_ms": 6774,
+          "quotes_total": 1,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "none",
+          "latency_ms": 6373,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "suspicious"
+        ],
+        "modal_risk_level": "suspicious",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none",
+          "other"
+        ]
+      }
+    },
+    {
+      "id": "tricky-eval-02",
+      "expected_risk_level": "suspicious",
+      "note": "Too short/ambiguous: could be a legitimate ID request (delivery, HR form) or the start of identity-document harvesting. No context to tell which.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "impersonation",
+          "latency_ms": 8380,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "impersonation",
+          "latency_ms": 7755,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "impersonation",
+          "latency_ms": 8382,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "suspicious"
+        ],
+        "modal_risk_level": "suspicious",
+        "disagreement": false,
+        "scam_types_seen": [
+          "impersonation"
+        ]
+      }
+    },
+    {
+      "id": "tricky-eval-03",
+      "expected_risk_level": "suspicious",
+      "note": "Ambiguous: reads like a normal courier confirmation, but has no order number, no sender identity and no company name -- not enough to call it safe or a scam.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 8295,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 8222,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 8241,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "suspicious"
+        ],
+        "modal_risk_level": "suspicious",
+        "disagreement": false,
+        "scam_types_seen": [
+          "phishing"
+        ]
+      }
+    },
+    {
+      "id": "tricky-eval-04",
+      "expected_risk_level": "suspicious",
+      "note": "A QUESTION about a possible scam, not a scam message itself -- tests whether the model tells the difference instead of reacting to the words 'đóng phí' alone.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 35,
+          "scam_type": "none",
+          "latency_ms": 6132,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 35,
+          "scam_type": "none",
+          "latency_ms": 5316,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 35,
+          "scam_type": "none",
+          "latency_ms": 5673,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "suspicious"
+        ],
+        "modal_risk_level": "suspicious",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "tricky-eval-05",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "phishing",
+      "note": "Mixed English/Vietnamese phishing message with English UI language set -- tests cross-language handling, not verdict ambiguity (this one really is a clear scam).",
+      "pattern_precheck": [
+        "phishing"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "phishing",
+          "latency_ms": 8844,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "phishing",
+          "latency_ms": 7875,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "phishing",
+          "latency_ms": 8734,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "phishing"
+        ]
+      }
+    },
+    {
+      "id": "tricky-eval-06",
+      "expected_risk_level": "safe",
+      "note": "Mixed English/Vietnamese casual workplace message with no scam content -- tests that code-switching alone doesn't trigger a false positive.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 4618,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 6036,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 4736,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "tricky-eval-07",
+      "expected_risk_level": "safe",
+      "note": "Safe message containing one risky-sounding phrase ('tài khoản...bị khóa tạm thời') that trips the phishing pre-check wording, but there is no link, no OTP ask and no outside party -- just someone describing their own locked account.",
+      "pattern_precheck": [
+        "phishing"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 5194,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 5584,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 5122,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "tricky-eval-08",
+      "expected_risk_level": "safe",
+      "note": "Safe message containing the literal phrase 'không rủi ro', which trips the investment pre-check wording, but it's a school debate-contest prize, not an investment pitch.",
+      "pattern_precheck": [
+        "investment"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 4439,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 4434,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 4680,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "tricky-eval-09",
+      "expected_risk_level": "suspicious",
+      "note": "Scam-shaped (unsolicited prize) with NO actual ask yet -- no link, no fee, no info request. Tests whether the model flags the too-good-to-be-true shape as worth a second look, rather than waiting for an ask that hasn't happened.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "impersonation",
+          "latency_ms": 10037,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "impersonation",
+          "latency_ms": 10233,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "impersonation",
+          "latency_ms": 9578,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "suspicious"
+        ],
+        "modal_risk_level": "suspicious",
+        "disagreement": false,
+        "scam_types_seen": [
+          "impersonation"
+        ]
+      }
+    },
+    {
+      "id": "tricky-eval-10",
+      "expected_risk_level": "suspicious",
+      "note": "Scam-shaped (unsolicited loan approval) with no actual ask yet and no pre-check pattern match -- tests the model's own judgment with no rule-based hint at all.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "loan",
+          "latency_ms": 9910,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "loan",
+          "latency_ms": 9192,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 3,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "loan",
+          "latency_ms": 9691,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "suspicious"
+        ],
+        "modal_risk_level": "suspicious",
+        "disagreement": false,
+        "scam_types_seen": [
+          "loan"
+        ]
+      }
+    }
+  ]
+}

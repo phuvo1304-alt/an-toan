@@ -1,0 +1,253 @@
+[
+  {
+    "id": "fake_job-eval-01",
+    "text": "Tuyển nhân viên nhập liệu tại nhà, việc nhẹ lương cao, không cần kinh nghiệm. Sau khi được nhận vào nhóm, bạn nạp 300.000đ để nhận nhiệm vụ đầu tiên, tiền sẽ hoàn lại kèm hoa hồng 10%.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "fake_job",
+    "note": "Classic 'việc nhẹ lương cao' plus deposit-to-get-tasks pattern; should trip the fake_job pre-check.",
+    "input_type": "text"
+  },
+  {
+    "id": "fake_job-eval-02",
+    "text": "Shop mỹ phẩm cần tuyển cộng tác viên đăng bài kiếm thêm thu nhập, lương 500k/ngày. Ai quan tâm liên hệ qua Telegram @shopmypham để nhận việc ngay.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "fake_job",
+    "note": "Second fake_job case (this type got the double-up): collaborator recruitment, daily-pay promise and move-to-Telegram pattern.",
+    "input_type": "text"
+  },
+  {
+    "id": "phishing-eval-01",
+    "text": "[MoMo] Tài khoản của bạn tạm khóa do phát hiện đăng nhập lạ. Vui lòng xác thực ngay tại momo-xacthuc[.]vip để tránh bị khóa vĩnh viễn trong 24h.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "phishing",
+    "note": "Fake e-wallet lock notice with a look-alike link; classic phishing shape.",
+    "input_type": "text"
+  },
+  {
+    "id": "phishing-eval-02",
+    "text": "Thông báo từ VNPost: Đơn hàng của bạn bị tạm giữ tại kho do thiếu thông tin. Vui lòng nhập mã OTP vừa nhận tại đường dẫn sau để xác minh và nhận lại hàng: vnpost-xacminh.info",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "phishing",
+    "note": "Second phishing case (this type got the double-up): fake courier message asking to enter an OTP at a link.",
+    "input_type": "text"
+  },
+  {
+    "id": "fake_scholarship-eval-01",
+    "text": "Chúc mừng bạn đã trúng học bổng trao đổi văn hóa tại Hàn Quốc năm 2026! Để xác nhận suất học, vui lòng đóng phí xử lý hồ sơ 2.000.000đ trước ngày 15/10 để được ưu tiên xét duyệt visa.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "fake_scholarship",
+    "note": "Scholarship requiring an upfront processing fee and 'priority review' pressure.",
+    "input_type": "text"
+  },
+  {
+    "id": "impersonation-eval-01",
+    "text": "Tôi là cán bộ điều tra Công an TP, số CCCD của chị có liên quan đến một đường dây rửa tiền. Chị cần chuyển tiền vào tài khoản tạm giữ để chứng minh trong sạch, tuyệt đối không kể chuyện này với ai kể cả người nhà.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "impersonation",
+    "note": "Fake police caller script: accusation, holding account, secrecy demand.",
+    "input_type": "text"
+  },
+  {
+    "id": "investment-eval-01",
+    "text": "Tham gia nhóm đầu tư tiền ảo cùng chuyên gia dẫn dắt, lãi cam kết 8%/tuần, không rủi ro, hoàn vốn trong 7 ngày. Giới thiệu thêm bạn nhận hoa hồng 5%.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "investment",
+    "note": "Guaranteed-return crypto group with referral commissions.",
+    "input_type": "text"
+  },
+  {
+    "id": "romance-eval-01",
+    "text": "Em yêu, anh là bác sĩ người Mỹ đang công tác ở châu Phi. Anh đã gửi cho em một kiện hàng có nữ trang và tiền mặt, nhưng hải quan đang giữ, em đóng giúp anh phí hải quan 4 triệu để nhận hàng nhé.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "romance",
+    "note": "Foreign-persona romance scam asking for a customs fee on a parcel.",
+    "input_type": "text"
+  },
+  {
+    "id": "loan-eval-01",
+    "text": "Vay nhanh 15 triệu trong 10 phút, không cần thẩm định, chỉ cần CCCD và cho phép truy cập danh bạ. Đóng phí làm hồ sơ 400.000đ trước khi giải ngân.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "loan",
+    "note": "No-check fast loan app asking for a fee before payout and access to contacts.",
+    "input_type": "text"
+  },
+  {
+    "id": "other-eval-01",
+    "text": "Đơn hàng của bạn không thể giao do địa chỉ sai, vui lòng cập nhật lại địa chỉ và đóng phí giao lại 20.000đ qua link sau trong hôm nay: giaohang-xacnhan[.]click",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "other",
+    "note": "Fake failed-delivery SMS asking for a small re-delivery fee through a link.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-eval-01",
+    "text": "Công ty TNHH ABC tuyển nhân viên kinh doanh toàn thời gian, lương cơ bản 8.000.000đ/tháng cộng thưởng theo doanh số. Ứng viên vui lòng gửi CV qua email hr@abccompany.vn, phỏng vấn trực tiếp tại văn phòng Quận 1.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Near-miss for fake_job: a real-looking job post with a normal monthly salary, CV by email, in-person interview -- no deposit, no Telegram, no 'easy money' framing.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-eval-02",
+    "text": "Trường Đại học XYZ công bố danh sách 20 sinh viên nhận học bổng khuyến học kỳ này, mỗi suất 3.000.000đ, tiền sẽ được chuyển trực tiếp vào tài khoản ngân hàng sinh viên đã đăng ký với phòng công tác sinh viên trong tháng 10. Sinh viên có thắc mắc liên hệ phòng theo email ctsv@xyz.edu.vn.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Near-miss for fake_scholarship: money flows TO the student, no fee, no urgency, through the university's own office.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-eval-03",
+    "text": "Ngân hàng Vietcombank thông báo: Giao dịch chuyển khoản 500.000đ từ tài khoản của bạn đã thành công vào 14:32 ngày 10/10. Nếu không phải bạn thực hiện, vui lòng gọi hotline 1900 54 54 13 để được hỗ trợ.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Near-miss for phishing: a routine transaction notice with no link and no lock/urgency threat, just a hotline to call.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-eval-04",
+    "text": "Ê, cho mình mượn 200k được không, mai mình trả lại, lương về rồi mình gửi ngay.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Near-miss for impersonation/loan scripts: an ordinary small loan request between friends, no fake identity, no OTP, no account-takeover ask.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-eval-05",
+    "text": "Thông báo: Buổi họp phụ huynh học kỳ 1 sẽ diễn ra vào 18h thứ Bảy ngày 18/10 tại phòng họp trường. Phụ huynh vui lòng có mặt đúng giờ.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Plain school administrative notice, no money or personal data involved.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-eval-06",
+    "text": "Đơn hàng #GHTK3298 của bạn đã giao thành công lúc 10:15 sáng nay. Cảm ơn bạn đã mua hàng tại Shopee.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Near-miss for the 'other' shipping-scam pattern: a successful-delivery confirmation, no fee, no link, no failed-delivery pressure.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-eval-07",
+    "text": "Điện lực TP.HCM thông báo: Hóa đơn tiền điện tháng 9 của bạn là 850.000đ, vui lòng thanh toán trước ngày 25/10 qua ứng dụng EVNHCMC hoặc tại các điểm thu hộ.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Routine utility bill through an official app and recognized payment points, no urgency threat or link.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-eval-08",
+    "text": "Cô gửi các em bài tập về nhà môn Toán, nộp lại trước 20h ngày mai qua nhóm Zalo lớp.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Ordinary teacher-to-class homework message.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-eval-09",
+    "text": "Thông báo: Lịch làm việc tuần tới sẽ thay đổi, ca sáng bắt đầu từ 7h30 thay vì 8h. Các bạn chú ý đi làm đúng giờ.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Plain internal schedule-change notice.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-eval-10",
+    "text": "Tối nay nhà mình ăn lẩu nha, mọi người về sớm nhé, mẹ nấu xong rồi.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Obvious safe baseline: a family chat message with no financial or personal-data content at all.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-eval-01",
+    "text": "Chuyển tiền giúp mình.",
+    "language": "vi",
+    "expected_risk_level": "suspicious",
+    "note": "Too short to judge: no amount, no recipient context, no sender identity. Per the prompt rule this should come back 'suspicious' asking for more context, not a guess.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-eval-02",
+    "text": "OK, gửi CCCD ảnh chụp 2 mặt.",
+    "language": "vi",
+    "expected_risk_level": "suspicious",
+    "note": "Too short/ambiguous: could be a legitimate ID request (delivery, HR form) or the start of identity-document harvesting. No context to tell which.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-eval-03",
+    "text": "Anh ơi bên em có đơn hàng, anh xác nhận giúp em thông tin giao hàng được không?",
+    "language": "vi",
+    "expected_risk_level": "suspicious",
+    "note": "Ambiguous: reads like a normal courier confirmation, but has no order number, no sender identity and no company name -- not enough to call it safe or a scam.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-eval-04",
+    "text": "Mình thấy bên bạn có tuyển người làm thêm, có yêu cầu đóng phí ban đầu không?",
+    "language": "vi",
+    "expected_risk_level": "suspicious",
+    "note": "A QUESTION about a possible scam, not a scam message itself -- tests whether the model tells the difference instead of reacting to the words 'đóng phí' alone.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-eval-05",
+    "text": "Hi, your KYC verification is pending, vui lòng click link bên dưới để complete trong 24h nếu không account sẽ bị suspended: kyc-verify[.]top",
+    "language": "en",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "phishing",
+    "note": "Mixed English/Vietnamese phishing message with English UI language set -- tests cross-language handling, not verdict ambiguity (this one really is a clear scam).",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-eval-06",
+    "text": "Hey, nhắc bạn chút, meeting ngày mai dời sang 2pm nha, check lại calendar giúp mình.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Mixed English/Vietnamese casual workplace message with no scam content -- tests that code-switching alone doesn't trigger a false positive.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-eval-07",
+    "text": "Mẹ ơi, tài khoản của con bị khóa tạm thời do con nhập sai mật khẩu 3 lần, con đang đợi ngân hàng mở lại, không cần làm gì đâu mẹ.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Safe message containing one risky-sounding phrase ('tài khoản...bị khóa tạm thời') that trips the phishing pre-check wording, but there is no link, no OTP ask and no outside party -- just someone describing their own locked account.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-eval-08",
+    "text": "Nhóm lớp mình vừa thắng giải 'không rủi ro' trong cuộc thi hùng biện kinh tế, mai liên hệ cô chủ nhiệm nhận quà nha.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "note": "Safe message containing the literal phrase 'không rủi ro', which trips the investment pre-check wording, but it's a school debate-contest prize, not an investment pitch.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-eval-09",
+    "text": "Chúc mừng bạn đã trúng thưởng chương trình khách hàng thân thiết của Tiki! Chi tiết sẽ được nhân viên gọi điện thông báo sau, bạn không cần làm gì lúc này.",
+    "language": "vi",
+    "expected_risk_level": "suspicious",
+    "note": "Scam-shaped (unsolicited prize) with NO actual ask yet -- no link, no fee, no info request. Tests whether the model flags the too-good-to-be-true shape as worth a second look, rather than waiting for an ask that hasn't happened.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-eval-10",
+    "text": "Hồ sơ vay 10 triệu của bạn đã được duyệt tại công ty tài chính ABC. Nhân viên giải ngân sẽ gọi điện hướng dẫn bạn các bước tiếp theo trong hôm nay.",
+    "language": "vi",
+    "expected_risk_level": "suspicious",
+    "note": "Scam-shaped (unsolicited loan approval) with no actual ask yet and no pre-check pattern match -- tests the model's own judgment with no rule-based hint at all.",
+    "input_type": "text"
+  }
+]
