@@ -95,6 +95,10 @@ class ButtonSpinner extends StatelessWidget {
 }
 
 /// Section heading used inside screens ("Red flags", "Report this number"...).
+/// Bigger and bolder than body text on purpose -- every section heading in
+/// the app should read as a clear break, never as skippable inline text.
+/// Still well below the risk banner's own weight (CLAUDE.md section 7/8):
+/// headings organize content, they don't compete with the hero.
 class SectionTitle extends StatelessWidget {
   final String text;
   const SectionTitle(this.text, {super.key});
@@ -102,8 +106,14 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpace.sm),
-      child: Text(text, style: Theme.of(context).textTheme.titleMedium),
+      padding: const EdgeInsets.only(top: AppSpace.xs, bottom: AppSpace.md),
+      child: Text(
+        text,
+        style: Theme.of(context)
+            .textTheme
+            .titleLarge
+            ?.copyWith(fontWeight: FontWeight.w700),
+      ),
     );
   }
 }
