@@ -440,7 +440,6 @@ class _ReferenceCaseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final textTheme = Theme.of(context).textTheme;
-    final scheme = Theme.of(context).colorScheme;
 
     final summary = caseData.summary(languageCode);
     final snippet = summary.length > _snippetMaxLength
@@ -454,23 +453,25 @@ class _ReferenceCaseCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(caseData.headline, style: textTheme.titleSmall),
-            const SizedBox(height: 4),
-            Text(
-              caseData.sourceName,
-              style: textTheme.labelMedium
-                  ?.copyWith(color: scheme.onSurfaceVariant),
-            ),
+            // Bumped a weight over titleSmall's theme default so the
+            // headline unmistakably reads as the card's main content, with
+            // the source badge and button below clearly secondary to it.
+            Text(caseData.headline,
+                style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: 6),
+            _SourceBadge(sourceName: caseData.sourceName),
             if (snippet.isNotEmpty) ...[
               const SizedBox(height: AppSpace.sm),
               Text(snippet),
             ],
             const SizedBox(height: AppSpace.xs),
-            // FilledButton.tonalIcon (not a plain text link) so this reads as
-            // a real, inviting button -- filled background + icon -- rather
-            // than disabled-looking text. Keeps the theme's 48x48 minimum
-            // tap target (CLAUDE.md section 7) via filledButtonTheme.
-            FilledButton.tonalIcon(
+            // Plain FilledButton (not .tonal) -- a solid scheme.primary fill
+            // with white/onPrimary text+icon reads as "this is clickable"
+            // far more than a pale tint does. Still the theme's default
+            // FilledButton colors (no hardcoded color here), so it keeps the
+            // same 48x48 minimum tap target (CLAUDE.md section 7) via
+            // filledButtonTheme.
+            FilledButton.icon(
               onPressed: () => _openSource(context),
               iconAlignment: IconAlignment.end,
               icon: const Icon(Icons.open_in_new, size: 16),
@@ -478,6 +479,41 @@ class _ReferenceCaseCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// A small bordered pill naming the outlet a reference case came from (e.g.
+/// "Tuổi Trẻ"), with a newspaper icon -- gives the source more visual weight
+/// than a plain grey subtitle, so the card visibly says "this is from a real
+/// outlet" rather than relying on size/color alone to earn a tap.
+class _SourceBadge extends StatelessWidget {
+  final String sourceName;
+  const _SourceBadge({required this.sourceName});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpace.sm, vertical: 4),
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerHighest,
+        border: Border.all(color: scheme.outlineVariant),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.newspaper, size: 14, color: scheme.onSurfaceVariant),
+          const SizedBox(width: 4),
+          Text(
+            sourceName,
+            style: textTheme.labelMedium
+                ?.copyWith(color: scheme.onSurfaceVariant, fontWeight: FontWeight.w600),
+          ),
+        ],
       ),
     );
   }

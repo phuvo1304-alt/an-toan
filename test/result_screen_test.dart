@@ -137,6 +137,60 @@ void main() {
     }
   });
 
+  testWidgets('"Read article" uses a solid scheme.primary fill, not a pale tint',
+      (tester) async {
+    await tester
+        .pumpWidget(_wrap(ResultScreen(result: _result(scamType: 'fake_job'))));
+    await tester.pumpAndSettle();
+
+    final material = tester.widget<Material>(find
+        .descendant(
+          of: find.widgetWithText(FilledButton, 'Read article').first,
+          matching: find.byType(Material),
+        )
+        .first);
+    final scheme = buildTheme(Brightness.light).colorScheme;
+    expect(material.color, scheme.primary);
+  });
+
+  testWidgets(
+      'each reference card shows a source badge (bordered pill with a '
+      'newspaper icon), one per card', (tester) async {
+    await tester
+        .pumpWidget(_wrap(ResultScreen(result: _result(scamType: 'fake_job'))));
+    await tester.pumpAndSettle();
+
+    final badgeIcons = find.byIcon(Icons.newspaper);
+    expect(badgeIcons, findsWidgets);
+    // One badge per "Read article" button, i.e. one per reference card.
+    expect(tester.widgetList(badgeIcons).length,
+        tester.widgetList(find.text('Read article')).length);
+
+    final badge = find.ancestor(
+      of: badgeIcons.first,
+      matching: find.byWidgetPredicate((w) =>
+          w is Container &&
+          w.decoration is BoxDecoration &&
+          (w.decoration as BoxDecoration).border != null),
+    );
+    expect(badge, findsWidgets);
+  });
+
+  testWidgets('a reference card\'s headline is bold, reading as the card\'s '
+      'main content', (tester) async {
+    await tester
+        .pumpWidget(_wrap(ResultScreen(result: _result(scamType: 'fake_job'))));
+    await tester.pumpAndSettle();
+
+    // Headlines come from the real bundled dataset, so find by style rather
+    // than exact text: titleSmall's theme weight (w600) bumped to w700.
+    final headlineTexts = tester
+        .widgetList<Text>(find.byType(Text))
+        .where((t) => t.style?.fontWeight == FontWeight.w700)
+        .toList();
+    expect(headlineTexts, isNotEmpty);
+  });
+
   // -- Tapping "Read article" -------------------------------------------------
   //
   // url_launcher talks to the platform over this method channel (see
