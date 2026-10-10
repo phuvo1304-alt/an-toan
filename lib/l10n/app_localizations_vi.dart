@@ -59,6 +59,21 @@ class AppLocalizationsVi extends AppLocalizations {
   String get languageEn => 'English';
 
   @override
+  String get textSize => 'Cỡ chữ';
+
+  @override
+  String get textSizeSmall => 'Nhỏ';
+
+  @override
+  String get textSizeMedium => 'Vừa';
+
+  @override
+  String get textSizeLarge => 'Lớn';
+
+  @override
+  String get textSizeExtraLarge => 'Rất lớn';
+
+  @override
   String get disclaimerTitle => 'Lưu ý quan trọng';
 
   @override

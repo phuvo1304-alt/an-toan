@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../core/locale_provider.dart';
+import '../../core/text_scale_provider.dart';
 import '../../l10n/app_localizations.dart';
 
 /// Public privacy policy page (GitHub Pages, served from docs/ on main).
@@ -35,6 +36,8 @@ class SettingsScreen extends ConsumerWidget {
     final t = AppLocalizations.of(context)!;
     final locale = ref.watch(localeProvider);
     final notifier = ref.read(localeProvider.notifier);
+    final textSize = ref.watch(textScaleProvider);
+    final textScaleNotifier = ref.read(textScaleProvider.notifier);
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -51,6 +54,19 @@ class SettingsScreen extends ConsumerWidget {
               ],
               selected: {locale.languageCode},
               onSelectionChanged: (s) => notifier.setLanguage(s.first),
+            ),
+            const SizedBox(height: AppSpace.lg),
+            SectionTitle(t.textSize),
+            SegmentedButton<TextSizeOption>(
+              segments: [
+                ButtonSegment(value: TextSizeOption.small, label: Text(t.textSizeSmall)),
+                ButtonSegment(value: TextSizeOption.medium, label: Text(t.textSizeMedium)),
+                ButtonSegment(value: TextSizeOption.large, label: Text(t.textSizeLarge)),
+                ButtonSegment(
+                    value: TextSizeOption.extraLarge, label: Text(t.textSizeExtraLarge)),
+              ],
+              selected: {textSize},
+              onSelectionChanged: (s) => textScaleNotifier.setOption(s.first),
             ),
             const SizedBox(height: AppSpace.lg),
             Card(

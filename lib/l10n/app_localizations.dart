@@ -194,6 +194,36 @@ abstract class AppLocalizations {
   /// **'English'**
   String get languageEn;
 
+  /// No description provided for @textSize.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cỡ chữ'**
+  String get textSize;
+
+  /// No description provided for @textSizeSmall.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhỏ'**
+  String get textSizeSmall;
+
+  /// No description provided for @textSizeMedium.
+  ///
+  /// In vi, this message translates to:
+  /// **'Vừa'**
+  String get textSizeMedium;
+
+  /// No description provided for @textSizeLarge.
+  ///
+  /// In vi, this message translates to:
+  /// **'Lớn'**
+  String get textSizeLarge;
+
+  /// No description provided for @textSizeExtraLarge.
+  ///
+  /// In vi, this message translates to:
+  /// **'Rất lớn'**
+  String get textSizeExtraLarge;
+
   /// No description provided for @disclaimerTitle.
   ///
   /// In vi, this message translates to:
