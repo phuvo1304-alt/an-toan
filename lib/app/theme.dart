@@ -56,6 +56,13 @@ class RiskPalette extends ThemeExtension<RiskPalette> {
   final Color scam;
   final Color scamContainer;
 
+  /// A more saturated/darker red used ONLY for the likely_scam emphasis
+  /// treatment on the result screen (icon chip fill, hero border) -- never
+  /// for suspicious or safe, so the three-tier distinction stays visible and
+  /// likely_scam reads as visually unmistakable. Chosen to give a white icon
+  /// drawn on top of it at least 4.5:1 contrast in both light and dark mode.
+  final Color scamStrong;
+
   const RiskPalette({
     required this.safe,
     required this.safeContainer,
@@ -63,6 +70,7 @@ class RiskPalette extends ThemeExtension<RiskPalette> {
     required this.suspiciousContainer,
     required this.scam,
     required this.scamContainer,
+    required this.scamStrong,
   });
 
   static const light = RiskPalette(
@@ -72,6 +80,7 @@ class RiskPalette extends ThemeExtension<RiskPalette> {
     suspiciousContainer: Color(0xFFFEF3C7),
     scam: Color(0xFFB91C1C),
     scamContainer: Color(0xFFFEE2E2),
+    scamStrong: Color(0xFF7F1D1D), // ~10:1 with white on top
   );
 
   static const dark = RiskPalette(
@@ -81,6 +90,7 @@ class RiskPalette extends ThemeExtension<RiskPalette> {
     suspiciousContainer: Color(0xFF3A2B08),
     scam: Color(0xFFF87171),
     scamContainer: Color(0xFF3D1616),
+    scamStrong: Color(0xFFDC2626), // ~4.8:1 with white on top
   );
 
   @override
@@ -91,6 +101,7 @@ class RiskPalette extends ThemeExtension<RiskPalette> {
     Color? suspiciousContainer,
     Color? scam,
     Color? scamContainer,
+    Color? scamStrong,
   }) =>
       RiskPalette(
         safe: safe ?? this.safe,
@@ -99,6 +110,7 @@ class RiskPalette extends ThemeExtension<RiskPalette> {
         suspiciousContainer: suspiciousContainer ?? this.suspiciousContainer,
         scam: scam ?? this.scam,
         scamContainer: scamContainer ?? this.scamContainer,
+        scamStrong: scamStrong ?? this.scamStrong,
       );
 
   @override
@@ -111,6 +123,7 @@ class RiskPalette extends ThemeExtension<RiskPalette> {
       suspiciousContainer: Color.lerp(suspiciousContainer, other.suspiciousContainer, t)!,
       scam: Color.lerp(scam, other.scam, t)!,
       scamContainer: Color.lerp(scamContainer, other.scamContainer, t)!,
+      scamStrong: Color.lerp(scamStrong, other.scamStrong, t)!,
     );
   }
 }

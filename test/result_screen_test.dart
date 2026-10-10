@@ -14,9 +14,13 @@ import 'package:an_toan/features/scam_checker/result_screen.dart';
 import 'package:an_toan/features/scam_checker/scam_result.dart';
 import 'package:an_toan/l10n/app_localizations.dart';
 
-ScamResult _result({required String scamType, String language = 'en'}) =>
+ScamResult _result({
+  required String scamType,
+  String language = 'en',
+  RiskLevel riskLevel = RiskLevel.likelyScam,
+}) =>
     ScamResult(
-      riskLevel: RiskLevel.likelyScam,
+      riskLevel: riskLevel,
       riskScore: 80,
       summary: 'This looks like a scam.',
       redFlags: const [],
@@ -26,13 +30,17 @@ ScamResult _result({required String scamType, String language = 'en'}) =>
       language: language,
     );
 
-Widget _wrap(Widget child, {Locale locale = const Locale('en')}) {
+Widget _wrap(
+  Widget child, {
+  Locale locale = const Locale('en'),
+  Brightness brightness = Brightness.light,
+}) {
   return MaterialApp(
     locale: locale,
     // ResultScreen reads the app's RiskPalette theme extension via
     // context.risk; without it, Theme.of(context).extension<RiskPalette>()
     // is null and the `!` in theme.dart throws.
-    theme: buildTheme(Brightness.light),
+    theme: buildTheme(brightness),
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -175,5 +183,126 @@ void main() {
     await tapFirstReadArticle(tester);
 
     expect(find.text(errorText), findsOneWidget);
+  });
+
+  // -- Visual urgency by risk level (CLAUDE.md section 7/8) -------------------
+  //
+  // likely_scam gets a deliberately stronger treatment than suspicious, which
+  // itself gets a smaller, distinct bump over safe -- never flattening the
+  // three tiers into two, and never via color alone (icon + text always
+  // accompany it). The risk_score number itself is untouched by any of this.
+  group('visual urgency by risk level', () {
+    BoxDecoration heroDecoration(WidgetTester tester) =>
+        (tester.widget<Container>(find.byKey(const Key('resultHero'))).decoration
+            as BoxDecoration);
+
+    double? heroBorderWidth(WidgetTester tester) =>
+        heroDecoration(tester).border?.top.width;
+
+    testWidgets('likely_scam: gpp_bad icon in a filled scamStrong chip, not the plain dangerous icon',
+        (tester) async {
+      await tester.pumpWidget(_wrap(
+          ResultScreen(result: _result(scamType: 'fake_job')))); // defaults to likelyScam
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.gpp_bad), findsOneWidget);
+      expect(find.byIcon(Icons.dangerous), findsNothing);
+
+      final chip = tester.widget<Container>(find.ancestor(
+        of: find.byIcon(Icons.gpp_bad),
+        matching: find.byWidgetPredicate((w) =>
+            w is Container &&
+            w.decoration is BoxDecoration &&
+            (w.decoration as BoxDecoration).shape == BoxShape.circle),
+      ));
+      final decoration = chip.decoration as BoxDecoration;
+      expect(decoration.color, RiskPalette.light.scamStrong);
+    });
+
+    testWidgets('likely_scam: thicker hero border than suspicious, which is thicker than safe',
+        (tester) async {
+      await tester.pumpWidget(_wrap(ResultScreen(
+          result: _result(scamType: 'fake_job', riskLevel: RiskLevel.safe))));
+      await tester.pumpAndSettle();
+      final safeWidth = heroBorderWidth(tester)!;
+
+      await tester.pumpWidget(_wrap(ResultScreen(
+          result: _result(scamType: 'fake_job', riskLevel: RiskLevel.suspicious))));
+      await tester.pumpAndSettle();
+      final suspiciousWidth = heroBorderWidth(tester)!;
+
+      await tester.pumpWidget(_wrap(ResultScreen(
+          result: _result(scamType: 'fake_job', riskLevel: RiskLevel.likelyScam))));
+      await tester.pumpAndSettle();
+      final scamWidth = heroBorderWidth(tester)!;
+
+      expect(safeWidth, lessThan(suspiciousWidth));
+      expect(suspiciousWidth, lessThan(scamWidth));
+    });
+
+    testWidgets('what-to-do text gets bolder for likely_scam, a smaller bump for suspicious, '
+        'unstyled for safe', (tester) async {
+      const step = 'Do not send money.';
+      // scamType 'other' has no reference-case cards (see reference_cases_test.dart),
+      // so the what-to-do section stays within the ListView's lazily-built
+      // range without needing to scroll it into view first.
+
+      await tester.pumpWidget(_wrap(
+          ResultScreen(result: _result(scamType: 'other', riskLevel: RiskLevel.safe))));
+      await tester.pumpAndSettle();
+      final safeStyle = tester.widget<Text>(find.text(step)).style;
+      expect(safeStyle, isNull);
+
+      await tester.pumpWidget(_wrap(
+          ResultScreen(result: _result(scamType: 'other', riskLevel: RiskLevel.suspicious))));
+      await tester.pumpAndSettle();
+      final suspiciousStyle = tester.widget<Text>(find.text(step)).style!;
+      expect(suspiciousStyle.fontWeight, FontWeight.w600);
+
+      await tester.pumpWidget(_wrap(
+          ResultScreen(result: _result(scamType: 'other', riskLevel: RiskLevel.likelyScam))));
+      await tester.pumpAndSettle();
+      final scamStyle = tester.widget<Text>(find.text(step)).style!;
+      expect(scamStyle.fontWeight, FontWeight.bold);
+      expect(scamStyle.color, RiskPalette.light.scamStrong);
+      // Bolder AND distinguishable from suspicious's smaller bump.
+      expect(scamStyle.fontWeight, isNot(suspiciousStyle.fontWeight));
+    });
+
+    testWidgets('renders likely_scam without error in dark mode too', (tester) async {
+      await tester.pumpWidget(_wrap(
+        ResultScreen(result: _result(scamType: 'fake_job', riskLevel: RiskLevel.likelyScam)),
+        brightness: Brightness.dark,
+      ));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.byIcon(Icons.gpp_bad), findsOneWidget);
+      final chip = tester.widget<Container>(find.ancestor(
+        of: find.byIcon(Icons.gpp_bad),
+        matching: find.byWidgetPredicate((w) =>
+            w is Container &&
+            w.decoration is BoxDecoration &&
+            (w.decoration as BoxDecoration).shape == BoxShape.circle),
+      ));
+      expect((chip.decoration as BoxDecoration).color, RiskPalette.dark.scamStrong);
+    });
+
+    testWidgets('safe stays calm: no filled icon chip, plain check_circle icon', (tester) async {
+      await tester.pumpWidget(_wrap(
+          ResultScreen(result: _result(scamType: 'fake_job', riskLevel: RiskLevel.safe))));
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+      // No circular filled chip behind the icon for safe.
+      final iconAncestorContainers = find.ancestor(
+        of: find.byIcon(Icons.check_circle),
+        matching: find.byWidgetPredicate((w) =>
+            w is Container &&
+            w.decoration is BoxDecoration &&
+            (w.decoration as BoxDecoration).shape == BoxShape.circle),
+      );
+      expect(iconAncestorContainers, findsNothing);
+    });
   });
 }

@@ -36,13 +36,64 @@ class _ResultScreenState extends State<ResultScreen> {
     final scheme = Theme.of(context).colorScheme;
     final risk = context.risk;
 
-    final (Color color, Color container, IconData icon, String label) =
-        switch (result.riskLevel) {
-      RiskLevel.safe => (risk.safe, risk.safeContainer, Icons.check_circle, t.riskSafe),
-      RiskLevel.suspicious =>
-        (risk.suspicious, risk.suspiciousContainer, Icons.warning_amber_rounded, t.riskSuspicious),
-      RiskLevel.likelyScam =>
-        (risk.scam, risk.scamContainer, Icons.dangerous, t.riskLikelyScam),
+    // One switch drives every risk-dependent visual: colors always come from
+    // the RiskPalette theme extension (never hardcoded here), so light/dark
+    // mode and the three-tier distinction stay consistent. likely_scam gets
+    // a deliberately stronger treatment (filled icon chip in the darker/more
+    // saturated `scamStrong`, a thicker border, a bigger and more alarming
+    // icon, bolder label and what-to-do text); suspicious gets a smaller,
+    // distinct bump (slightly thicker border, semi-bold label and
+    // what-to-do text, but no filled chip); safe is unchanged and stays
+    // calm. The risk_score number and bar below are never altered -- only
+    // this framing is.
+    final (
+      Color color,
+      Color container,
+      IconData icon,
+      String label,
+      double borderWidth,
+      double borderAlpha,
+      Color? iconChipColor,
+      double iconSize,
+      FontWeight labelWeight,
+      TextStyle? whatToDoStyle,
+    ) = switch (result.riskLevel) {
+      RiskLevel.safe => (
+          risk.safe,
+          risk.safeContainer,
+          Icons.check_circle,
+          t.riskSafe,
+          1.5,
+          0.45,
+          null,
+          AppIconSize.xl,
+          FontWeight.w600,
+          null,
+        ),
+      RiskLevel.suspicious => (
+          risk.suspicious,
+          risk.suspiciousContainer,
+          Icons.warning_amber_rounded,
+          t.riskSuspicious,
+          2.0,
+          0.6,
+          null,
+          AppIconSize.xl,
+          FontWeight.w700,
+          textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+        ),
+      RiskLevel.likelyScam => (
+          risk.scam,
+          risk.scamContainer,
+          Icons.gpp_bad,
+          t.riskLikelyScam,
+          3.0,
+          0.9,
+          risk.scamStrong,
+          AppIconSize.xl + 8,
+          FontWeight.w800,
+          textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: risk.scamStrong),
+        ),
     };
 
     return Scaffold(
@@ -54,23 +105,35 @@ class _ResultScreenState extends State<ResultScreen> {
             // ---- Risk hero: the visual anchor of the screen.
             // Color + icon + words + number + bar, never color alone.
             Container(
+              key: const Key('resultHero'),
               padding: const EdgeInsets.all(AppSpace.lg),
               decoration: BoxDecoration(
                 color: container,
                 borderRadius: BorderRadius.circular(AppRadius.xl),
-                border: Border.all(color: color.withValues(alpha: 0.45), width: 1.5),
+                border: Border.all(
+                    color: (iconChipColor ?? color).withValues(alpha: borderAlpha),
+                    width: borderWidth),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Icon(icon, color: color, size: AppIconSize.xl),
+                      if (iconChipColor != null)
+                        Container(
+                          width: iconSize + 16,
+                          height: iconSize + 16,
+                          decoration: BoxDecoration(color: iconChipColor, shape: BoxShape.circle),
+                          child: Icon(icon, color: Colors.white, size: iconSize),
+                        )
+                      else
+                        Icon(icon, color: color, size: iconSize),
                       const SizedBox(width: AppSpace.md),
                       Expanded(
                         child: Text(
                           label,
-                          style: textTheme.headlineSmall?.copyWith(color: color),
+                          style: textTheme.headlineSmall
+                              ?.copyWith(color: color, fontWeight: labelWeight),
                         ),
                       ),
                     ],
@@ -204,7 +267,7 @@ class _ResultScreenState extends State<ResultScreen> {
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 3),
-                          child: Text(result.whatToDo[i]),
+                          child: Text(result.whatToDo[i], style: whatToDoStyle),
                         ),
                       ),
                     ],
