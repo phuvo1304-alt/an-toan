@@ -31,9 +31,16 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
   void initState() {
     super.initState();
     // Picked once per screen instance: a rebuild (e.g. theme change) must
-    // not reshuffle which two cases are shown.
-    _casesFuture = loadReferenceCases()
-        .then((all) => pickReferenceCases(all, widget.result.scamType));
+    // not re-rank which cases are shown.
+    _casesFuture = loadReferenceCases().then((all) => pickReferenceCases(
+          all,
+          widget.result.scamType,
+          redFlagText: widget.result.redFlags
+              .map((f) => '${f.title} ${f.explanation}')
+              .toList(),
+          summary: widget.result.summary,
+          language: widget.result.language,
+        ));
 
     _barController = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
     _barAnimation = CurvedAnimation(parent: _barController, curve: Curves.easeOut);
@@ -318,12 +325,39 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                     builder: (context, snapshot) {
                       final cases = snapshot.data ?? const [];
                       if (cases.isEmpty) return const SizedBox.shrink();
-                      return Padding(
-                        padding: const EdgeInsets.only(top: AppSpace.md),
+                      // A subtle trust-blue tint/border (never a risk color)
+                      // so this group visually invites a look without
+                      // competing with the risk banner above -- supporting
+                      // evidence, not the main event.
+                      return Container(
+                        margin: const EdgeInsets.only(top: AppSpace.md),
+                        padding: const EdgeInsets.all(AppSpace.md),
+                        decoration: BoxDecoration(
+                          color: scheme.primaryContainer.withValues(alpha: 0.15),
+                          border: Border.all(color: scheme.primary.withValues(alpha: 0.35)),
+                          borderRadius: BorderRadius.circular(AppRadius.lg),
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SectionTitle(t.realCasesTitle),
+                            Row(
+                              children: [
+                                Semantics(
+                                  label: t.realCasesIconLabel,
+                                  child: Icon(Icons.fact_check_outlined,
+                                      color: scheme.primary, size: AppIconSize.md),
+                                ),
+                                const SizedBox(width: AppSpace.sm),
+                                Expanded(
+                                  child: Text(
+                                    t.realCasesTitle,
+                                    style: textTheme.titleMedium?.copyWith(
+                                        color: scheme.primary, fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: AppSpace.xs),
                             Text(
                               t.realCasesDisclaimer,
                               style: textTheme.bodySmall?.copyWith(

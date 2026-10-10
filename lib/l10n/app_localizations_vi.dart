@@ -143,6 +143,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get realCasesTitle => 'Trường hợp thực tế đã được báo cáo';
 
   @override
+  String get realCasesIconLabel => 'Báo cáo đã xác minh';
+
+  @override
   String get realCasesDisclaimer =>
       'Đây là các trường hợp khác đã được báo cáo với chiêu thức tương tự, không phải bằng chứng về tin nhắn của bạn.';
 

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/services.dart' show AssetBundle, rootBundle;
 
@@ -92,22 +91,111 @@ void resetReferenceCasesCacheForTest() {
   _loading = null;
 }
 
-/// Picks up to [max] entries matching [scamType], at random, so repeat
-/// checks of the same category don't always show the identical two cases.
+// ---------------------------------------------------------------------------
+// Relevance ranking.
+//
+// Same convention as normalizeForMatch in
+// supabase/functions/analyze-scam/quotes.ts: lowercase, unify curly
+// quotes/dashes, collapse whitespace, KEEP accents (Vietnamese text that
+// drops or confuses accents is a known source of bugs in this codebase --
+// CLAUDE.md §14.1/14.2). One deliberate gap from that convention: Dart's
+// core library has no built-in Unicode NFC normalization (unlike
+// `String.normalize("NFC")` in the TS version), and this does not pull in a
+// new package just for that. Both this dataset and the model's JSON output
+// are UTF-8 text that in practice already arrives pre-composed, so the
+// residual risk is small -- but it is a real, stated gap, not silent parity.
+// ---------------------------------------------------------------------------
+
+String _normalizeForMatch(String s) {
+  return s
+      .toLowerCase()
+      .replaceAll(RegExp('[“”„«»]'), '"')
+      .replaceAll(RegExp('[‘’‚]'), "'")
+      .replaceAll(RegExp('[–—]'), '-')
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
+}
+
+final RegExp _wordPattern = RegExp(r'[\p{L}\p{N}]+', unicode: true);
+
+/// Normalized word tokens, length >= 2 (single letters carry too little
+/// signal for keyword overlap).
+Set<String> _tokens(String s) => _wordPattern
+    .allMatches(_normalizeForMatch(s))
+    .map((m) => m.group(0)!)
+    .where((w) => w.length >= 2)
+    .toSet();
+
+/// Keyword-overlap relevance score: how many normalized word tokens a
+/// candidate case shares with [queryTokens]. Simple and explainable on
+/// purpose -- see [pickReferenceCases]' doc comment. Compares against the
+/// case's own-language summary (always available in both languages);
+/// `red_flags` is English-only in the dataset (see data/README.md), so it
+/// only adds signal when the result language is English too.
+int _relevanceScore(ReferenceCase c, Set<String> queryTokens, String language) {
+  final caseTokens = _tokens(c.summary(language));
+  if (language == 'en') caseTokens.addAll(_tokens(c.redFlags.join(' ')));
+  return caseTokens.intersection(queryTokens).length;
+}
+
+/// Descending by score, then ascending by id -- a deterministic tiebreak so
+/// equal-scoring candidates never depend on incidental list/map order.
+int _byScoreThenId(MapEntry<ReferenceCase, int> a, MapEntry<ReferenceCase, int> b) {
+  final byScore = b.value.compareTo(a.value);
+  return byScore != 0 ? byScore : a.key.id.compareTo(b.key.id);
+}
+
+List<ReferenceCase> _ranked(List<ReferenceCase> candidates, Set<String> queryTokens, String language) {
+  final scored = candidates
+      .map((c) => MapEntry(c, _relevanceScore(c, queryTokens, language)))
+      .toList()
+    ..sort(_byScoreThenId);
+  return scored.map((e) => e.key).toList();
+}
+
+/// Picks up to [max] entries relevant to the current result, ranked instead
+/// of randomized: this used to shuffle same-type matches for variety on
+/// repeat checks, but that's a deliberate tradeoff now dropped in favor of
+/// deterministic relevance.
 ///
-/// Returns an empty list for `"other"`, an empty/unknown [scamType], or any
-/// type with no matching entries — this is a transparency feature, not a
-/// recommendation engine, so showing nothing beats forcing an unrelated
-/// case onto the screen.
+/// [redFlagText] (e.g. each red flag's title + explanation), [summary] and
+/// [language] come from the AI result and form the "query" this ranks
+/// candidates against by keyword overlap (see `_relevanceScore`) -- a
+/// heuristic, not a verified match (realCasesDisclaimer's wording is
+/// unchanged).
+///
+/// Ranking is two tiers, never merged into one list sorted purely by score:
+/// 1. Candidates matching [scamType] exactly, ranked by relevance. These
+///    always come first, regardless of score, so an off-type keyword hit
+///    can never outrank a genuine same-type case.
+/// 2. Only when tier 1 has at least one match but fewer than [max] (a real
+///    category that just doesn't have enough cases yet -- with the default
+///    `max: 2` that's exactly the single-match case): the rest of the
+///    dataset, ranked the same way, fills the remaining slots.
+///
+/// Returns an empty list for `"other"`, an empty [scamType], or any type
+/// with NO matching entries at all (tier 1 empty) — there's no tactic to
+/// compare against there, so this stays a transparency feature, not a
+/// recommendation engine: showing nothing beats forcing an unrelated case
+/// onto the screen.
 List<ReferenceCase> pickReferenceCases(
   List<ReferenceCase> all,
   String scamType, {
   int max = 2,
-  Random? random,
+  List<String> redFlagText = const [],
+  String summary = '',
+  String language = 'vi',
 }) {
   if (scamType.isEmpty || scamType == 'other') return const [];
-  final matches = all.where((c) => c.scamType == scamType).toList();
-  if (matches.length <= max) return matches;
-  matches.shuffle(random ?? Random());
-  return matches.take(max).toList();
+
+  final sameType = all.where((c) => c.scamType == scamType).toList();
+  if (sameType.isEmpty) return const [];
+
+  final queryTokens = _tokens([summary, ...redFlagText].join(' '));
+  final tier1 = _ranked(sameType, queryTokens, language);
+  if (tier1.length >= max) return tier1.take(max).toList();
+
+  final widenedPool = all.where((c) => c.scamType != scamType).toList();
+  final tier2 = _ranked(widenedPool, queryTokens, language).take(max - tier1.length);
+  return [...tier1, ...tier2];
 }

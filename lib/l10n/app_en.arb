@@ -43,6 +43,7 @@
   "whatToDo": "What to do",
   "notVerified": "Could not verify",
   "realCasesTitle": "Real reported cases",
+  "realCasesIconLabel": "Verified report",
   "realCasesDisclaimer": "These are other real cases reported with similar tactics, not proof about your message.",
   "readArticle": "Read article",
   "checkAnother": "Check another",

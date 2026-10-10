@@ -1,15 +1,20 @@
 // Tests for lib/features/scam_checker/reference_cases.dart: parsing the
-// bundled dataset and picking up to 2 entries by scam_type. Pure logic only
+// bundled dataset and picking relevant entries by scam_type. Pure logic only
 // (no asset loading), so these use synthetic fixtures rather than the real
 // data/scam_case_reference.json, which can grow or change independently.
-
-import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:an_toan/features/scam_checker/reference_cases.dart';
 
-ReferenceCase _case(String id, String scamType) => ReferenceCase(
+ReferenceCase _case(
+  String id,
+  String scamType, {
+  String summaryVi = '',
+  String summaryEn = '',
+  List<String> redFlags = const [],
+}) =>
+    ReferenceCase(
       id: id,
       scamType: scamType,
       entryKind: 'incident_report',
@@ -17,9 +22,9 @@ ReferenceCase _case(String id, String scamType) => ReferenceCase(
       sourceUrl: 'https://example.com/$id',
       publishedDate: '2026-01-01',
       headline: 'Headline $id',
-      summaryVi: 'Tóm tắt $id',
-      summaryEn: 'Summary $id',
-      redFlags: const ['flag'],
+      summaryVi: summaryVi.isEmpty ? 'Tóm tắt $id' : summaryVi,
+      summaryEn: summaryEn.isEmpty ? 'Summary $id' : summaryEn,
+      redFlags: redFlags,
     );
 
 void main() {
@@ -78,25 +83,18 @@ void main() {
 
   group('pickReferenceCases', () {
     final dataset = [
-      _case('fake_job-001', 'fake_job'),
-      _case('fake_job-002', 'fake_job'),
-      _case('fake_job-003', 'fake_job'),
-      _case('phishing-001', 'phishing'),
+      _case('fake_job-001', 'fake_job', summaryEn: 'Asked for a deposit before training started.'),
+      _case('fake_job-002', 'fake_job', summaryEn: 'Fake recruiter asked for a registration fee.'),
+      _case('fake_job-003', 'fake_job', summaryEn: 'Promised easy high pay for simple tasks online.'),
+      _case('phishing-001', 'phishing', summaryEn: 'Fake bank link asked for the OTP code.'),
       _case('other-001', 'other'),
     ];
-
-    test('returns matching entries for a known scam_type', () {
-      final picked =
-          pickReferenceCases(dataset, 'phishing', random: Random(1));
-      expect(picked, hasLength(1));
-      expect(picked.single.scamType, 'phishing');
-    });
 
     test('returns empty for "other" even if entries exist', () {
       expect(pickReferenceCases(dataset, 'other'), isEmpty);
     });
 
-    test('returns empty for an unmatched scam_type', () {
+    test('returns empty for an unmatched scam_type (no tactic to compare against)', () {
       expect(pickReferenceCases(dataset, 'does_not_exist_in_dataset'), isEmpty);
     });
 
@@ -104,40 +102,126 @@ void main() {
       expect(pickReferenceCases(dataset, ''), isEmpty);
     });
 
-    test('caps at 2 entries when more than 2 match', () {
-      final picked =
-          pickReferenceCases(dataset, 'fake_job', random: Random(42));
-      expect(picked.length, 2);
+    test('ranks same-type matches by keyword overlap with the result, best first', () {
+      final picked = pickReferenceCases(
+        dataset,
+        'fake_job',
+        max: 3,
+        summary: 'The recruiter asked for a registration fee before the interview.',
+        language: 'en',
+      );
+      expect(picked.map((c) => c.id).toList(), [
+        'fake_job-002', // shares "recruiter", "asked", "for", "registration", "fee"
+        'fake_job-001', // shares "asked", "for", "before" only
+        'fake_job-003', // shares "for" only -- weakest, tiebroken by id if needed
+      ]);
+    });
+
+    test('caps at max entries when more same-type matches exist', () {
+      final picked = pickReferenceCases(dataset, 'fake_job', max: 2);
+      expect(picked, hasLength(2));
       expect(picked.map((c) => c.id).toSet().length, 2); // no duplicates
       for (final c in picked) {
         expect(c.scamType, 'fake_job');
       }
     });
 
-    test('respects a custom max', () {
-      final picked =
-          pickReferenceCases(dataset, 'fake_job', max: 1, random: Random(7));
-      expect(picked, hasLength(1));
+    test('with no query signal, same-type matches tiebreak deterministically by id', () {
+      final picked = pickReferenceCases(dataset, 'fake_job', max: 3);
+      expect(picked.map((c) => c.id).toList(),
+          ['fake_job-001', 'fake_job-002', 'fake_job-003']);
     });
 
-    test('returns all matches when there are fewer than max', () {
-      final picked = pickReferenceCases(dataset, 'phishing', max: 2);
-      expect(picked, hasLength(1));
+    test('is deterministic across repeated calls (no more randomize-for-variety)', () {
+      final first = pickReferenceCases(dataset, 'fake_job', max: 2)
+          .map((c) => c.id)
+          .toList();
+      for (var i = 0; i < 5; i++) {
+        final again = pickReferenceCases(dataset, 'fake_job', max: 2)
+            .map((c) => c.id)
+            .toList();
+        expect(again, first);
+      }
     });
 
-    test('random selection varies across calls, not always the same pair',
-        () {
-      final pairs = List.generate(
-        30,
-        (i) => (pickReferenceCases(dataset, 'fake_job', random: Random(i))
-                .map((c) => c.id)
-                .toList()
-              ..sort())
-            .join(','),
-      ).toSet();
-      // 3 candidates choose 2 -> 3 possible pairs; over 30 seeds we should
-      // see more than one of them, confirming it isn't a fixed pair.
-      expect(pairs.length, greaterThan(1));
+    group('widened fallback tier', () {
+      test(
+          'fills remaining slots from the rest of the dataset when there is '
+          'exactly one same-type match (fewer than max, but not zero)', () {
+        final sparse = [
+          _case('loan-001', 'loan', summaryEn: 'Loan app demanded an upfront fee.'),
+          _case('fake_job-001', 'fake_job'),
+          _case('phishing-001', 'phishing', summaryEn: 'Fake bank asked for an upfront fee too.'),
+        ];
+
+        final picked = pickReferenceCases(
+          sparse,
+          'loan',
+          max: 2,
+          summary: 'The lender demanded an upfront fee before approving anything.',
+          language: 'en',
+        );
+
+        expect(picked, hasLength(2));
+        // Same-type match always first, regardless of score.
+        expect(picked.first.id, 'loan-001');
+        // Widened tier fills the rest, ranked by the same keyword overlap --
+        // phishing-001 shares "upfront fee", fake_job-001 shares nothing.
+        expect(picked.last.id, 'phishing-001');
+      });
+
+      test('does not widen when there are zero same-type matches (unknown scam_type)', () {
+        final sparse = [
+          _case('fake_job-001', 'fake_job'),
+          _case('phishing-001', 'phishing'),
+        ];
+        expect(pickReferenceCases(sparse, 'investment', max: 2), isEmpty);
+      });
+
+      test('does not widen when same-type matches already fill max', () {
+        final picked = pickReferenceCases(dataset, 'phishing', max: 1);
+        expect(picked, hasLength(1));
+        expect(picked.single.scamType, 'phishing');
+      });
+
+      test('same-type tier always ranks above widened matches, even with a '
+          'weaker score than an off-type candidate', () {
+        final sparse = [
+          _case('loan-001', 'loan', summaryEn: 'Plain entry with no keyword overlap at all.'),
+          _case('phishing-001', 'phishing',
+              summaryEn: 'Upfront fee upfront fee upfront fee demanded immediately.'),
+        ];
+
+        final picked = pickReferenceCases(
+          sparse,
+          'loan',
+          max: 2,
+          summary: 'Upfront fee demanded immediately.',
+          language: 'en',
+        );
+
+        // phishing-001 scores far higher on keyword overlap, but loan-001
+        // is same-type and must still come first.
+        expect(picked.map((c) => c.id).toList(), ['loan-001', 'phishing-001']);
+      });
+    });
+
+    test('uses red_flags as extra signal only when the result language is English', () {
+      final withFlags = [
+        _case('fake_job-001', 'fake_job',
+            summaryEn: 'Generic summary.', redFlags: const ['upfront deposit required']),
+        _case('fake_job-002', 'fake_job', summaryEn: 'Another generic summary.'),
+      ];
+
+      final en = pickReferenceCases(withFlags, 'fake_job',
+          max: 2, summary: 'upfront deposit required', language: 'en');
+      expect(en.first.id, 'fake_job-001');
+
+      // Same query, but 'vi': red_flags (English-only) must not be consulted,
+      // so neither case has any real signal and the id tiebreak applies.
+      final vi = pickReferenceCases(withFlags, 'fake_job',
+          max: 2, summary: 'upfront deposit required', language: 'vi');
+      expect(vi.map((c) => c.id).toList(), ['fake_job-001', 'fake_job-002']);
     });
   });
 }

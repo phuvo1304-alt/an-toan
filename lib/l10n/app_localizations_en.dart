@@ -142,6 +142,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get realCasesTitle => 'Real reported cases';
 
   @override
+  String get realCasesIconLabel => 'Verified report';
+
+  @override
   String get realCasesDisclaimer =>
       'These are other real cases reported with similar tactics, not proof about your message.';
 

@@ -356,6 +356,12 @@ abstract class AppLocalizations {
   /// **'Trường hợp thực tế đã được báo cáo'**
   String get realCasesTitle;
 
+  /// No description provided for @realCasesIconLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Báo cáo đã xác minh'**
+  String get realCasesIconLabel;
+
   /// No description provided for @realCasesDisclaimer.
   ///
   /// In vi, this message translates to:
