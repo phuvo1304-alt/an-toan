@@ -35,13 +35,15 @@ ScamResult _result({
   required String scamType,
   String language = 'en',
   RiskLevel riskLevel = RiskLevel.likelyScam,
+  List<RedFlag> redFlags = const [],
+  List<String> whatToDo = const ['Do not send money.'],
 }) =>
     ScamResult(
       riskLevel: riskLevel,
       riskScore: 80,
       summary: 'This looks like a scam.',
-      redFlags: const [],
-      whatToDo: const ['Do not send money.'],
+      redFlags: redFlags,
+      whatToDo: whatToDo,
       scamType: scamType,
       confidenceNote: '',
       language: language,
@@ -125,7 +127,7 @@ void main() {
 
     final links = find.ancestor(
       of: find.text('Read article'),
-      matching: find.byWidgetPredicate((w) => w is TextButton),
+      matching: find.byWidgetPredicate((w) => w is FilledButton),
     );
     expect(links, findsWidgets);
     for (final link in links.evaluate()) {
@@ -216,8 +218,9 @@ void main() {
     double? heroBorderWidth(WidgetTester tester) =>
         heroDecoration(tester).border?.top.width;
 
-    testWidgets('likely_scam: gpp_bad icon in a filled scamStrong chip, not the plain dangerous icon',
-        (tester) async {
+    testWidgets(
+        'likely_scam: solid scamStrong full-bleed fill (hazard-label banner), '
+        'not the plain dangerous icon', (tester) async {
       await tester.pumpWidget(_wrap(
           ResultScreen(result: _result(scamType: 'fake_job')))); // defaults to likelyScam
       await tester.pumpAndSettle();
@@ -225,36 +228,54 @@ void main() {
       expect(find.byIcon(Icons.gpp_bad), findsOneWidget);
       expect(find.byIcon(Icons.dangerous), findsNothing);
 
-      final chip = tester.widget<Container>(find.ancestor(
-        of: find.byIcon(Icons.gpp_bad),
-        matching: find.byWidgetPredicate((w) =>
-            w is Container &&
-            w.decoration is BoxDecoration &&
-            (w.decoration as BoxDecoration).shape == BoxShape.circle),
-      ));
-      final decoration = chip.decoration as BoxDecoration;
-      expect(decoration.color, RiskPalette.light.scamStrong);
+      // The whole hero banner is the solid fill now (no separate icon chip).
+      expect(heroDecoration(tester).color, RiskPalette.light.scamStrong);
+      // White icon/text on top of it -- verified for contrast below.
+      final icon = tester.widget<Icon>(find.byIcon(Icons.gpp_bad));
+      expect(icon.color, Colors.white);
+      // True full-bleed: no outer margin, square corners.
+      final hero = tester.widget<Container>(find.byKey(const Key('resultHero')));
+      expect(hero.margin, EdgeInsets.zero);
+      expect(heroDecoration(tester).borderRadius, BorderRadius.circular(0));
     });
 
-    testWidgets('likely_scam: thicker hero border than suspicious, which is thicker than safe',
-        (tester) async {
+    testWidgets(
+        'likely_scam: bigger icon and thicker risk bar than suspicious, which is '
+        'bigger/thicker than safe', (tester) async {
+      Size iconSize(WidgetTester t, IconData icon) => t.getSize(find.byIcon(icon));
+      double barHeight(WidgetTester t) =>
+          t.widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator)).minHeight!;
+
       await tester.pumpWidget(_wrap(ResultScreen(
           result: _result(scamType: 'fake_job', riskLevel: RiskLevel.safe))));
       await tester.pumpAndSettle();
-      final safeWidth = heroBorderWidth(tester)!;
+      final safeIcon = iconSize(tester, Icons.check_circle).width;
+      final safeBar = barHeight(tester);
+      final safeBorder = heroBorderWidth(tester);
 
       await tester.pumpWidget(_wrap(ResultScreen(
           result: _result(scamType: 'fake_job', riskLevel: RiskLevel.suspicious))));
       await tester.pumpAndSettle();
-      final suspiciousWidth = heroBorderWidth(tester)!;
+      final suspiciousIcon = iconSize(tester, Icons.warning_amber_rounded).width;
+      final suspiciousBar = barHeight(tester);
+      final suspiciousBorder = heroBorderWidth(tester);
 
       await tester.pumpWidget(_wrap(ResultScreen(
           result: _result(scamType: 'fake_job', riskLevel: RiskLevel.likelyScam))));
       await tester.pumpAndSettle();
-      final scamWidth = heroBorderWidth(tester)!;
+      final scamIcon = iconSize(tester, Icons.gpp_bad).width;
+      final scamBar = barHeight(tester);
+      final scamBorder = heroBorderWidth(tester);
 
-      expect(safeWidth, lessThan(suspiciousWidth));
-      expect(suspiciousWidth, lessThan(scamWidth));
+      expect(safeIcon, lessThan(suspiciousIcon));
+      expect(suspiciousIcon, lessThan(scamIcon));
+      expect(safeBar, lessThan(suspiciousBar));
+      expect(suspiciousBar, lessThan(scamBar));
+      // safe and suspicious both still show an outlined hero; likely_scam's
+      // solid full-bleed fill carries the emphasis on its own and has none.
+      expect(safeBorder, isNotNull);
+      expect(suspiciousBorder, isNotNull);
+      expect(scamBorder, isNull);
     });
 
     testWidgets('what-to-do text gets bolder for likely_scam, a smaller bump for suspicious, '
@@ -298,14 +319,7 @@ void main() {
 
       expect(tester.takeException(), isNull);
       expect(find.byIcon(Icons.gpp_bad), findsOneWidget);
-      final chip = tester.widget<Container>(find.ancestor(
-        of: find.byIcon(Icons.gpp_bad),
-        matching: find.byWidgetPredicate((w) =>
-            w is Container &&
-            w.decoration is BoxDecoration &&
-            (w.decoration as BoxDecoration).shape == BoxShape.circle),
-      ));
-      expect((chip.decoration as BoxDecoration).color, RiskPalette.dark.scamStrong);
+      expect(heroDecoration(tester).color, RiskPalette.dark.scamStrong);
     });
 
     test('the what-to-do text color meets WCAG AA (4.5:1) against the real page '
@@ -319,9 +333,17 @@ void main() {
 
       expect(_contrast(RiskPalette.light.scam, lightSurface), greaterThanOrEqualTo(4.5));
       expect(_contrast(RiskPalette.dark.scam, darkSurface), greaterThanOrEqualTo(4.5));
-      // scamStrong (the icon-chip color) deliberately is NOT used for this
-      // text -- it's tuned for a white icon on top, not page-background text.
+      // scamStrong (the hero's solid full-bleed fill) deliberately is NOT
+      // used for this text -- it's tuned for white text/icon on top of it,
+      // not for page-background text.
       expect(whatToDoTextColor, isNot(RiskPalette.light.scamStrong));
+    });
+
+    test(
+        'the likely_scam hero\'s white text/icon meets WCAG AA (4.5:1) against '
+        'its own scamStrong fill, in both light and dark mode', () {
+      expect(_contrast(Colors.white, RiskPalette.light.scamStrong), greaterThanOrEqualTo(4.5));
+      expect(_contrast(Colors.white, RiskPalette.dark.scamStrong), greaterThanOrEqualTo(4.5));
     });
 
     testWidgets('safe stays calm: no filled icon chip, plain check_circle icon', (tester) async {
@@ -339,6 +361,51 @@ void main() {
             (w.decoration as BoxDecoration).shape == BoxShape.circle),
       );
       expect(iconAncestorContainers, findsNothing);
+    });
+
+    testWidgets(
+        '"what to do" is reordered before red flags for suspicious/likely_scam, '
+        'but stays after them for safe', (tester) async {
+      final flags = [
+        RedFlag(title: 'Suspicious flag', explanation: 'Why', quote: ''),
+      ];
+
+      Future<double> whatToDoY(WidgetTester t, RiskLevel level) async {
+        await t.pumpWidget(_wrap(ResultScreen(
+            result: _result(scamType: 'other', riskLevel: level, redFlags: flags))));
+        await t.pumpAndSettle();
+        return t.getTopLeft(find.text('Do not send money.')).dy;
+      }
+
+      Future<double> flagY(WidgetTester t, RiskLevel level) async {
+        await t.pumpWidget(_wrap(ResultScreen(
+            result: _result(scamType: 'other', riskLevel: level, redFlags: flags))));
+        await t.pumpAndSettle();
+        return t.getTopLeft(find.text('Suspicious flag')).dy;
+      }
+
+      expect(await whatToDoY(tester, RiskLevel.suspicious),
+          lessThan(await flagY(tester, RiskLevel.suspicious)));
+      expect(await whatToDoY(tester, RiskLevel.likelyScam),
+          lessThan(await flagY(tester, RiskLevel.likelyScam)));
+      expect(await whatToDoY(tester, RiskLevel.safe),
+          greaterThan(await flagY(tester, RiskLevel.safe)));
+    });
+
+    testWidgets(
+        'risk bar skips its entrance animation and jumps straight to the final '
+        'value when the OS asks for reduced motion', (tester) async {
+      await tester.pumpWidget(MediaQuery(
+        data: const MediaQueryData(disableAnimations: true),
+        child: _wrap(ResultScreen(result: _result(scamType: 'other'))),
+      ));
+      // A single pump (no settle): if the animation were still running from
+      // 0, the bar would not yet be at its target value.
+      await tester.pump();
+
+      final bar = tester.widget<LinearProgressIndicator>(
+          find.byType(LinearProgressIndicator));
+      expect(bar.value, closeTo(0.8, 0.001)); // riskScore: 80 in _result()
     });
   });
 }

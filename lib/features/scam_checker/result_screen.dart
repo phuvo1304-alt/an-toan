@@ -16,8 +16,16 @@ class ResultScreen extends StatefulWidget {
   State<ResultScreen> createState() => _ResultScreenState();
 }
 
-class _ResultScreenState extends State<ResultScreen> {
+class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderStateMixin {
   late final Future<List<ReferenceCase>> _casesFuture;
+
+  // One-time entrance animation for the risk bar filling in (never loops,
+  // never affects risk_score/risk_level -- only how the bar's fill is drawn
+  // in). Skipped (jumps straight to the final value) when the OS asks for
+  // reduced motion, via the current MediaQuery.disableAnimationsOf API.
+  late final AnimationController _barController;
+  late final Animation<double> _barAnimation;
+  bool _barAnimationStarted = false;
 
   @override
   void initState() {
@@ -26,6 +34,30 @@ class _ResultScreenState extends State<ResultScreen> {
     // not reshuffle which two cases are shown.
     _casesFuture = loadReferenceCases()
         .then((all) => pickReferenceCases(all, widget.result.scamType));
+
+    _barController = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
+    _barAnimation = CurvedAnimation(parent: _barController, curve: Curves.easeOut);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // MediaQuery.disableAnimationsOf needs an inherited-widget lookup, which
+    // isn't allowed yet in initState -- didChangeDependencies is the
+    // earliest safe place. Guarded so the animation only ever starts once.
+    if (_barAnimationStarted) return;
+    _barAnimationStarted = true;
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _barController.value = 1;
+    } else {
+      _barController.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _barController.dispose();
+    super.dispose();
   }
 
   @override
@@ -38,108 +70,163 @@ class _ResultScreenState extends State<ResultScreen> {
 
     // One switch drives every risk-dependent visual: colors always come from
     // the RiskPalette theme extension (never hardcoded here), so light/dark
-    // mode and the three-tier distinction stay consistent. likely_scam gets
-    // a deliberately stronger treatment (filled icon chip in the darker/more
-    // saturated `scamStrong`, a thicker border, a bigger and more alarming
-    // icon, bolder label and what-to-do text); suspicious gets a smaller,
-    // distinct bump (slightly thicker border, semi-bold label and
-    // what-to-do text, but no filled chip); safe is unchanged and stays
-    // calm. The risk_score number and bar below are never altered -- only
-    // this framing is.
-    final (
-      Color color,
-      Color container,
-      IconData icon,
-      String label,
-      double borderWidth,
-      double borderAlpha,
-      Color? iconChipColor,
-      double iconSize,
-      FontWeight labelWeight,
-      TextStyle? whatToDoStyle,
-    ) = switch (result.riskLevel) {
+    // mode and the three-tier distinction stay consistent.
+    //
+    // likely_scam gets the full "hazard label" treatment: a solid, saturated
+    // fill (scamStrong) edge-to-edge (zero margin, square corners), white
+    // text/icon/bar on top of it, the biggest icon and headline, the
+    // thickest bar. scamStrong was chosen and measured (not eyeballed) to
+    // give white text/icon at least 4.5:1 contrast on top of it in BOTH
+    // modes: 10.02:1 in light, 4.83:1 in dark (see the WCAG test in
+    // result_screen_test.dart).
+    //
+    // suspicious gets a smaller bump in the same direction: a bigger icon
+    // and thicker bar than before, a smaller inset than safe's (not full
+    // bleed, but tighter), but keeps its calmer pale tint fill -- no solid
+    // white-on-color treatment, so it never reads as seriously as
+    // likely_scam.
+    //
+    // safe is visually unchanged -- same fill, margin, icon size and bar as
+    // before, just structurally moved outside the scrolling list so all
+    // three share one layout.
+    //
+    // The risk_score number and the bar's target value are never altered --
+    // only this framing is.
+    final style = switch (result.riskLevel) {
       RiskLevel.safe => (
-          risk.safe,
-          risk.safeContainer,
-          Icons.check_circle,
-          t.riskSafe,
-          1.5,
-          0.45,
-          null,
-          AppIconSize.xl,
-          FontWeight.w600,
-          null,
+          fill: risk.safeContainer,
+          onFill: risk.safe,
+          accent: risk.safe,
+          border: risk.safe.withValues(alpha: 0.45),
+          borderWidth: 1.5,
+          icon: Icons.check_circle,
+          iconSize: AppIconSize.xl,
+          label: t.riskSafe,
+          labelWeight: FontWeight.w600,
+          headlineStyle: textTheme.headlineSmall,
+          barHeight: 8.0,
+          barColor: risk.safe,
+          barTrackColor: risk.safe.withValues(alpha: 0.18),
+          margin: const EdgeInsets.all(AppSpace.md),
+          radius: AppRadius.xl,
+          whatToDoStyle: null,
+          actionFirst: false,
         ),
       RiskLevel.suspicious => (
-          risk.suspicious,
-          risk.suspiciousContainer,
-          Icons.warning_amber_rounded,
-          t.riskSuspicious,
-          2.0,
-          0.6,
-          null,
-          AppIconSize.xl,
-          FontWeight.w700,
-          textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+          fill: risk.suspiciousContainer,
+          onFill: risk.suspicious,
+          accent: risk.suspicious,
+          border: risk.suspicious.withValues(alpha: 0.6),
+          borderWidth: 2.5,
+          icon: Icons.warning_amber_rounded,
+          iconSize: AppIconSize.xl + 4,
+          label: t.riskSuspicious,
+          labelWeight: FontWeight.w700,
+          headlineStyle: textTheme.headlineSmall,
+          barHeight: 10.0,
+          barColor: risk.suspicious,
+          barTrackColor: risk.suspicious.withValues(alpha: 0.18),
+          margin: const EdgeInsets.symmetric(horizontal: AppSpace.sm),
+          radius: AppRadius.lg,
+          whatToDoStyle: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+          actionFirst: true,
         ),
       RiskLevel.likelyScam => (
-          risk.scam,
-          risk.scamContainer,
-          Icons.gpp_bad,
-          t.riskLikelyScam,
-          3.0,
-          0.9,
-          risk.scamStrong,
-          AppIconSize.xl + 8,
-          FontWeight.w800,
-          // `scam`, not `scamStrong`, here: scamStrong is tuned for a WHITE
-          // icon on top of it (icon chip above), not for use as text on the
-          // page background -- in dark mode that combination only reaches
-          // 3.85:1, under WCAG AA's 4.5:1 for this text size. `scam` is
-          // already contrast-documented against page/cards in both modes
-          // (6.17:1 light, 6.72:1 dark, measured against the real theme).
-          textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: risk.scam),
+          fill: risk.scamStrong,
+          onFill: Colors.white,
+          accent: risk.scam,
+          border: null,
+          borderWidth: 0.0,
+          icon: Icons.gpp_bad,
+          iconSize: AppIconSize.xl + 8,
+          label: t.riskLikelyScam,
+          labelWeight: FontWeight.w800,
+          headlineStyle: textTheme.headlineMedium,
+          barHeight: 14.0,
+          barColor: Colors.white,
+          barTrackColor: Colors.white.withValues(alpha: 0.3),
+          margin: EdgeInsets.zero,
+          radius: 0.0,
+          // This text sits on the PAGE below the banner, not on top of
+          // `fill` -- stays `risk.scam`, already contrast-verified against
+          // the page surface in both modes (6.17:1 light / 6.72:1 dark).
+          // `onFill` (white) is only for content drawn directly on the
+          // solid banner itself.
+          whatToDoStyle: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: risk.scam),
+          actionFirst: true,
         ),
     };
+
+    // "What to do" steps: built once, placed either right after the summary
+    // (suspicious/likely_scam -- act-on-it-now order) or in their original
+    // spot after the reference cases (safe -- nothing urgent to act on).
+    final whatToDoWidgets = result.whatToDo.isEmpty
+        ? const <Widget>[]
+        : [
+            SectionTitle(t.whatToDo),
+            for (var i = 0; i < result.whatToDo.length; i++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Numbered step marker: the order of the steps matters.
+                    Container(
+                      width: 28,
+                      height: 28,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: scheme.primaryContainer,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        '${i + 1}',
+                        style: textTheme.labelLarge?.copyWith(color: scheme.onPrimaryContainer),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 3),
+                        child: Text(result.whatToDo[i], style: style.whatToDoStyle),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ];
 
     return Scaffold(
       appBar: AppBar(title: Text(t.resultTitle)),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpace.md),
+        child: Column(
           children: [
             // ---- Risk hero: the visual anchor of the screen.
             // Color + icon + words + number + bar, never color alone.
             Container(
               key: const Key('resultHero'),
+              width: double.infinity,
+              margin: style.margin,
               padding: const EdgeInsets.all(AppSpace.lg),
               decoration: BoxDecoration(
-                color: container,
-                borderRadius: BorderRadius.circular(AppRadius.xl),
-                border: Border.all(
-                    color: (iconChipColor ?? color).withValues(alpha: borderAlpha),
-                    width: borderWidth),
+                color: style.fill,
+                borderRadius: BorderRadius.circular(style.radius),
+                border: style.border == null
+                    ? null
+                    : Border.all(color: style.border!, width: style.borderWidth),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      if (iconChipColor != null)
-                        Container(
-                          width: iconSize + 16,
-                          height: iconSize + 16,
-                          decoration: BoxDecoration(color: iconChipColor, shape: BoxShape.circle),
-                          child: Icon(icon, color: Colors.white, size: iconSize),
-                        )
-                      else
-                        Icon(icon, color: color, size: iconSize),
+                      Icon(style.icon, color: style.onFill, size: style.iconSize),
                       const SizedBox(width: AppSpace.md),
                       Expanded(
                         child: Text(
-                          label,
-                          style: textTheme.headlineSmall
-                              ?.copyWith(color: color, fontWeight: labelWeight),
+                          style.label,
+                          style: style.headlineStyle
+                              ?.copyWith(color: style.onFill, fontWeight: style.labelWeight),
                         ),
                       ),
                     ],
@@ -147,153 +234,135 @@ class _ResultScreenState extends State<ResultScreen> {
                   const SizedBox(height: AppSpace.md),
                   Text(
                     '${t.scoreLabel}: ${result.riskScore}/100',
-                    style: textTheme.titleSmall?.copyWith(color: color),
+                    style: textTheme.titleSmall?.copyWith(color: style.onFill),
                   ),
                   const SizedBox(height: AppSpace.sm),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(AppRadius.sm),
-                    child: LinearProgressIndicator(
-                      value: (result.riskScore.clamp(0, 100)) / 100,
-                      color: color,
-                      backgroundColor: color.withValues(alpha: 0.18),
-                      minHeight: 8,
+                  AnimatedBuilder(
+                    animation: _barAnimation,
+                    builder: (context, _) => ClipRRect(
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
+                      child: LinearProgressIndicator(
+                        value: (result.riskScore.clamp(0, 100) / 100) * _barAnimation.value,
+                        color: style.barColor,
+                        backgroundColor: style.barTrackColor,
+                        minHeight: style.barHeight,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            if (result.summary.isNotEmpty) ...[
-              const SizedBox(height: AppSpace.lg),
-              Text(result.summary, style: textTheme.bodyLarge),
-            ],
-            const SizedBox(height: AppSpace.lg),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpace.md, AppSpace.lg, AppSpace.md, AppSpace.md),
+                children: [
+                  if (result.summary.isNotEmpty) Text(result.summary, style: textTheme.bodyLarge),
+                  const SizedBox(height: AppSpace.lg),
 
-            SectionTitle(t.redFlags),
-            if (result.redFlags.isEmpty)
-              Text(t.noRedFlags, style: TextStyle(color: scheme.onSurfaceVariant))
-            else
-              ...result.redFlags.map(
-                (f) => Card(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpace.md),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                  if (style.actionFirst) ...[
+                    ...whatToDoWidgets,
+                    if (whatToDoWidgets.isNotEmpty) const SizedBox(height: AppSpace.lg),
+                  ],
+
+                  SectionTitle(t.redFlags),
+                  if (result.redFlags.isEmpty)
+                    Text(t.noRedFlags, style: TextStyle(color: scheme.onSurfaceVariant))
+                  else
+                    ...result.redFlags.map(
+                      (f) => Card(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: Padding(
+                          padding: const EdgeInsets.all(AppSpace.md),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Icon(Icons.flag, color: style.accent, size: 20),
+                                  const SizedBox(width: AppSpace.sm),
+                                  Expanded(child: Text(f.title, style: textTheme.titleSmall)),
+                                ],
+                              ),
+                              const SizedBox(height: AppSpace.sm),
+                              Text(f.explanation),
+                              if (f.quote.isNotEmpty) ...[
+                                const SizedBox(height: AppSpace.sm),
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: AppSpace.sm),
+                                  decoration: BoxDecoration(
+                                    color: scheme.surfaceContainerHighest,
+                                    borderRadius: BorderRadius.circular(AppRadius.sm),
+                                  ),
+                                  child: Text(
+                                    '"${f.quote}"',
+                                    style: const TextStyle(fontStyle: FontStyle.italic),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  // Real reported cases: client-side lookup by scam_type in the
+                  // bundled dataset (data/scam_case_reference.json). Never
+                  // changes the verdict above and never claims to be about this
+                  // specific message — see realCasesDisclaimer.
+                  FutureBuilder<List<ReferenceCase>>(
+                    future: _casesFuture,
+                    builder: (context, snapshot) {
+                      final cases = snapshot.data ?? const [];
+                      if (cases.isEmpty) return const SizedBox.shrink();
+                      return Padding(
+                        padding: const EdgeInsets.only(top: AppSpace.md),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.flag, color: color, size: 20),
-                            const SizedBox(width: AppSpace.sm),
-                            Expanded(child: Text(f.title, style: textTheme.titleSmall)),
+                            SectionTitle(t.realCasesTitle),
+                            Text(
+                              t.realCasesDisclaimer,
+                              style: textTheme.bodySmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpace.sm),
+                            ...cases.map((c) => _ReferenceCaseCard(
+                                  caseData: c,
+                                  languageCode: result.language,
+                                )),
                           ],
                         ),
-                        const SizedBox(height: AppSpace.sm),
-                        Text(f.explanation),
-                        if (f.quote.isNotEmpty) ...[
-                          const SizedBox(height: AppSpace.sm),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: AppSpace.sm),
-                            decoration: BoxDecoration(
-                              color: scheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(AppRadius.sm),
-                            ),
-                            child: Text(
-                              '"${f.quote}"',
-                              style: const TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                ),
+
+                  if (!style.actionFirst && whatToDoWidgets.isNotEmpty) ...[
+                    const SizedBox(height: AppSpace.md),
+                    ...whatToDoWidgets,
+                  ],
+
+                  if (result.confidenceNote.isNotEmpty) ...[
+                    const SizedBox(height: AppSpace.md),
+                    SectionTitle(t.notVerified),
+                    Text(result.confidenceNote),
+                  ],
+
+                  const SizedBox(height: AppSpace.lg),
+                  // Disclaimer on every result.
+                  StatusBanner(message: t.disclaimerBody, kind: BannerKind.info),
+                  const SizedBox(height: AppSpace.lg),
+                  FilledButton(
+                    onPressed: () => context.pop(),
+                    child: Text(t.checkAnother),
+                  ),
+                ],
               ),
-
-            // Real reported cases: client-side lookup by scam_type in the
-            // bundled dataset (data/scam_case_reference.json). Never
-            // changes the verdict above and never claims to be about this
-            // specific message — see realCasesDisclaimer.
-            FutureBuilder<List<ReferenceCase>>(
-              future: _casesFuture,
-              builder: (context, snapshot) {
-                final cases = snapshot.data ?? const [];
-                if (cases.isEmpty) return const SizedBox.shrink();
-                return Padding(
-                  padding: const EdgeInsets.only(top: AppSpace.md),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SectionTitle(t.realCasesTitle),
-                      Text(
-                        t.realCasesDisclaimer,
-                        style: textTheme.bodySmall?.copyWith(
-                          color: scheme.onSurfaceVariant,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpace.sm),
-                      ...cases.map((c) => _ReferenceCaseCard(
-                            caseData: c,
-                            languageCode: result.language,
-                          )),
-                    ],
-                  ),
-                );
-              },
-            ),
-
-            if (result.whatToDo.isNotEmpty) ...[
-              const SizedBox(height: AppSpace.md),
-              SectionTitle(t.whatToDo),
-              for (var i = 0; i < result.whatToDo.length; i++)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Numbered step marker: the order of the steps matters.
-                      Container(
-                        width: 28,
-                        height: 28,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: scheme.primaryContainer,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Text(
-                          '${i + 1}',
-                          style: textTheme.labelLarge
-                              ?.copyWith(color: scheme.onPrimaryContainer),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 3),
-                          child: Text(result.whatToDo[i], style: whatToDoStyle),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-
-            if (result.confidenceNote.isNotEmpty) ...[
-              const SizedBox(height: AppSpace.md),
-              SectionTitle(t.notVerified),
-              Text(result.confidenceNote),
-            ],
-
-            const SizedBox(height: AppSpace.lg),
-            // Disclaimer on every result.
-            StatusBanner(message: t.disclaimerBody, kind: BannerKind.info),
-            const SizedBox(height: AppSpace.lg),
-            FilledButton(
-              onPressed: () => context.pop(),
-              child: Text(t.checkAnother),
             ),
           ],
         ),
@@ -363,9 +432,11 @@ class _ReferenceCaseCard extends StatelessWidget {
               Text(snippet),
             ],
             const SizedBox(height: AppSpace.xs),
-            // TextButton (not a bare InkWell) so the app's textButtonTheme
-            // gives it the 48x48 minimum tap target (CLAUDE.md section 7).
-            TextButton.icon(
+            // FilledButton.tonalIcon (not a plain text link) so this reads as
+            // a real, inviting button -- filled background + icon -- rather
+            // than disabled-looking text. Keeps the theme's 48x48 minimum
+            // tap target (CLAUDE.md section 7) via filledButtonTheme.
+            FilledButton.tonalIcon(
               onPressed: () => _openSource(context),
               iconAlignment: IconAlignment.end,
               icon: const Icon(Icons.open_in_new, size: 16),
