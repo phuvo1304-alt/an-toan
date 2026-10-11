@@ -17,9 +17,9 @@ void main() {
       'investment', 'romance', 'loan', 'other',
     ];
 
-    test('14 scenarios, unique ids, every scam type covered', () {
-      expect(trainingScenarios.length, 14);
-      expect(trainingScenarios.map((s) => s.id).toSet().length, 14);
+    test('22 scenarios, unique ids, every scam type covered', () {
+      expect(trainingScenarios.length, 22);
+      expect(trainingScenarios.map((s) => s.id).toSet().length, 22);
       expect(trainingScenarios.map((s) => s.scamType).toSet(), scamTypes.toSet());
       for (final s in trainingScenarios) {
         expect(scamTypes, contains(s.scamType), reason: s.id);
@@ -78,7 +78,7 @@ void main() {
     test('difficulty mix: 4 easy, several medium, 2+ hard with one hidden flag', () {
       Iterable<TrainingScenario> of(TrainingDifficulty d) =>
           trainingScenarios.where((s) => s.difficulty == d);
-      expect(of(TrainingDifficulty.easy).length, 4);
+      expect(of(TrainingDifficulty.easy).length, 7);
       expect(of(TrainingDifficulty.medium).length, greaterThanOrEqualTo(3));
       expect(of(TrainingDifficulty.hard).where((s) => s.suspiciousSegments.length == 1).length,
           greaterThanOrEqualTo(2));
@@ -275,16 +275,16 @@ void main() {
 
   testWidgets('list shows a difficulty badge on every scenario', (tester) async {
     SharedPreferences.setMockInitialValues({'onboarding_complete': true});
-    tester.view.physicalSize = const Size(800, 4000); // all 14 cards on screen
+    tester.view.physicalSize = const Size(800, 6400); // all 22 cards on screen
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(const ProviderScope(child: AnToanApp()));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Luyện tập'));
     await tester.pumpAndSettle();
-    expect(find.text('Dễ'), findsNWidgets(4));
-    expect(find.text('Vừa'), findsNWidgets(5));
-    expect(find.text('Khó'), findsNWidgets(5));
+    expect(find.text('Dễ'), findsNWidgets(7));
+    expect(find.text('Vừa'), findsNWidgets(9));
+    expect(find.text('Khó'), findsNWidgets(6));
   });
 
   testWidgets('a fully safe scenario shows a sensible result, never "0/0"', (tester) async {

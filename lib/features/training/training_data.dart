@@ -1095,4 +1095,638 @@ const trainingScenarios = <TrainingScenario>[
       ),
     ],
   ),
+
+  // =========================================================================
+  // NEW ARCHETYPES: 8 synthetic composites, written from scratch in the same
+  // spirit as the scenarios above (not real individual cases -- see the file
+  // header's safety notes, same standard as quiz_data.dart, so no per-entry
+  // sourcing citation is needed here unlike data/scam_case_reference.json).
+  // =========================================================================
+
+  // Recognition-only, deliberately. This is the pattern behind real
+  // labor-trafficking cases reported in Vietnam, so this scenario sticks to
+  // the RECOGNIZABLE lure (vague company, no license, in-person pressure,
+  // deposit/ID before any contract) and firm preventive advice. It does NOT
+  // describe what happens to victims after they go -- no abuse, violence or
+  // confinement detail -- that is not needed to recognize the lure, and this
+  // app's users include minors.
+  TrainingScenario(
+    id: 'overseas_job_labor_lure',
+    titleVi: 'Lời mời làm việc ở nước ngoài, hẹn gặp gấp',
+    titleEn: 'An overseas job offer with an urgent in-person meeting',
+    scamType: 'fake_job',
+    difficulty: TrainingDifficulty.easy,
+    segments: [
+      ScenarioSegment(
+        id: 'ovj_intro',
+        textVi: 'Chào em, anh thấy em đăng tin tìm việc làm thêm nên nhắn hỏi thử. ',
+        textEn: 'Hi, I saw your post looking for part-time work, so I am reaching out. ',
+        isSuspicious: false,
+        explanationVi:
+            'Một lời mở đầu bình thường. Tự nó chưa nói lên điều gì, hãy xem công việc là gì ở các câu sau.',
+        explanationEn:
+            'An ordinary opening line. On its own it tells you nothing -- look at what the job actually is next.',
+      ),
+      ScenarioSegment(
+        id: 'ovj_offer',
+        textVi:
+            'Bên anh chuyên đưa lao động phổ thông đi làm việc ở nước ngoài, đợt này cần người gấp cho một xưởng ở Thái Lan. ',
+        textEn:
+            'We specialize in sending general workers abroad, and right now we urgently need people for a factory in Thailand. ',
+        isSuspicious: false,
+        explanationVi:
+            'Xuất khẩu lao động là ngành có thật. Câu này chưa phải dấu hiệu lừa đảo, nhưng hãy chú ý công ty có nói rõ giấy phép và tên công ty không.',
+        explanationEn:
+            'Labor export is a real industry. This is not a red flag by itself, but watch whether the company names itself and its license clearly.',
+      ),
+      ScenarioSegment(
+        id: 'ovj_pay',
+        textVi: 'Lương 2 triệu một tuần, bao ăn ở, chỉ cần sức khỏe tốt, không cần bằng cấp. ',
+        textEn: 'Pay is 2 million VND a week, with meals and housing included -- just need good health, no qualifications. ',
+        isSuspicious: true,
+        explanationVi:
+            'Mức lương này cao bất thường so với công việc phổ thông ở nước ngoài. Lương càng cao càng phi lý là mồi nhử để bạn bỏ qua các dấu hiệu khác.',
+        explanationEn:
+            'This pay is unrealistically high for unskilled work abroad. An implausibly high wage is bait, designed to make you overlook everything else.',
+      ),
+      ScenarioSegment(
+        id: 'ovj_vague',
+        textVi:
+            'Anh không tiện nói rõ tên công ty hay giấy phép qua tin nhắn đâu, cứ yên tâm, gặp trực tiếp anh nói cụ thể hơn. ',
+        textEn:
+            'I cannot share the company name or license over message, don\'t worry, I\'ll explain everything in person. ',
+        isSuspicious: true,
+        explanationVi:
+            'Công ty xuất khẩu lao động thật phải có giấy phép của Bộ Lao động - Thương binh và Xã hội và không ngại nói tên mình. Từ chối nêu tên/giấy phép là dấu hiệu rõ nhất. Hãy tự tra cứu danh sách công ty được cấp phép chính thức -- không dùng số hay trang mà người tuyển dụng đưa cho bạn.',
+        explanationEn:
+            'A real labor-export company has an official government license and has no reason to hide its name. Refusing to name itself or show a license is the clearest sign. Check the official government list of licensed labor-export agencies yourself -- never a number or page the recruiter gives you.',
+      ),
+      ScenarioSegment(
+        id: 'ovj_meet',
+        textVi: 'Em tranh thủ chiều nay qua địa chỉ anh gửi để gặp trực tiếp, ký hợp đồng luôn cho nhanh. ',
+        textEn: 'Come by the address I\'ll send you this afternoon so we can meet and sign the contract right away. ',
+        isSuspicious: true,
+        explanationVi:
+            'Không bao giờ đi một mình để gặp mặt cho một lời mời việc làm, nhất là khi bị hẹn gấp trong cùng ngày. Hãy nói với bố mẹ hoặc người lớn tin cậy địa điểm, giờ giấc, và rủ người đi cùng trước khi quyết định bất cứ điều gì.',
+        explanationEn:
+            'Never go alone to meet someone in person for a job lead, especially on same-day pressure. Tell a parent or trusted adult the place and time, and bring someone with you, before deciding anything.',
+      ),
+      ScenarioSegment(
+        id: 'ovj_deposit',
+        textVi: 'Nhớ mang theo CCCD và hộ chiếu, đặt cọc trước một khoản để giữ suất xuất cảnh. ',
+        textEn: 'Bring your ID card and passport, and pay a deposit up front to hold your spot to travel. ',
+        isSuspicious: true,
+        explanationVi:
+            'Không công ty tuyển dụng thật nào giữ hộ chiếu/CCCD của bạn hay đòi tiền đặt cọc trước khi có hợp đồng lao động rõ ràng. Nếu bạn hoặc người quen gặp tình huống này, hãy báo ngay cho công an (số 113, xem trong mục Cài đặt của ứng dụng) và kể cho gia đình trước khi làm bất cứ bước tiếp theo nào.',
+        explanationEn:
+            'No real employer holds your passport/ID or demands a deposit before a clear labor contract exists. If you or someone you know is in this situation, report it to the police (113, in the app\'s Settings) and tell your family before taking any next step.',
+      ),
+      ScenarioSegment(
+        id: 'ovj_group',
+        textVi: 'Đợt này công ty đưa một nhóm nhỏ đi cùng chuyến cho vui. ',
+        textEn: 'This round, the company is sending a small group together on the same trip. ',
+        isSuspicious: false,
+        explanationVi: 'Một chi tiết thêm, không tự nó là dấu hiệu lừa đảo.',
+        explanationEn: 'An extra detail; not a red flag by itself.',
+      ),
+      ScenarioSegment(
+        id: 'ovj_closing',
+        textVi: 'Có gì em nhắn lại cho anh biết sớm nha.',
+        textEn: 'Let me know soon if you\'re interested.',
+        isSuspicious: false,
+        explanationVi: 'Một câu kết bình thường, không có yêu cầu nguy hiểm.',
+        explanationEn: 'An ordinary closing line, with no dangerous demand in it.',
+      ),
+    ],
+  ),
+
+  // Modeling/casting scam: filed as "other", not "fake_job" -- there is no
+  // ongoing employment relationship or wage being offered, just a one-time
+  // "pay to be discovered" grift, closer to the generic deception "other"
+  // already covers (fake shipper, fake storefront) than to a job offer.
+  TrainingScenario(
+    id: 'fake_modeling_casting',
+    titleVi: 'Lời mời làm người mẫu ảnh, cần đóng phí hồ sơ',
+    titleEn: 'A modeling photoshoot offer requiring a portfolio fee',
+    scamType: 'other',
+    difficulty: TrainingDifficulty.medium,
+    segments: [
+      ScenarioSegment(
+        id: 'mod_intro',
+        textVi:
+            'Chào bạn, mình là quản lý casting của một công ty truyền thông, thấy ảnh bạn trên mạng xã hội rất ưng. ',
+        textEn: 'Hi, I\'m a casting manager at a media company, and I really liked your photos on social media. ',
+        isSuspicious: false,
+        explanationVi:
+            'Một lời mở đầu tâng bốc thường thấy. Tự nó chưa nói lên điều gì, hãy xem họ đòi gì ở các câu sau.',
+        explanationEn:
+            'A flattering opener like this is common. On its own it tells you nothing -- look at what they ask for next.',
+      ),
+      ScenarioSegment(
+        id: 'mod_opportunity',
+        textVi: 'Bên mình đang tìm gương mặt mới cho một chiến dịch quảng cáo mùa này. ',
+        textEn: 'We are looking for new faces for an ad campaign this season. ',
+        isSuspicious: false,
+        explanationVi: 'Casting tìm gương mặt mới là chuyện có thật trong ngành truyền thông.',
+        explanationEn: 'Casting calls for new faces really happen in the media industry.',
+      ),
+      ScenarioSegment(
+        id: 'mod_no_experience',
+        textVi: 'Không cần kinh nghiệm, ai cũng có thể thử sức. ',
+        textEn: 'No experience needed, anyone can give it a try. ',
+        isSuspicious: false,
+        explanationVi:
+            'Nghe thân thiện và dễ tin, nhưng tự nó chưa phải dấu hiệu lừa đảo. Vấn đề thật nằm ở câu tiếp theo.',
+        explanationEn:
+            'This sounds friendly and easy to believe, but on its own it is not a red flag. The real problem is in the next line.',
+      ),
+      ScenarioSegment(
+        id: 'mod_fee',
+        textVi: 'Để vào vòng chụp thử, bạn đóng 650.000đ phí làm hồ sơ và trang điểm chuyên nghiệp. ',
+        textEn: 'To get into the test shoot, you pay a 650,000 VND fee for your portfolio and professional makeup. ',
+        isSuspicious: true,
+        explanationVi:
+            'Công ty người mẫu/casting thật không thu phí để "được phát hiện" hay để thử vai. Tiền chảy theo chiều ngược lại: họ trả bạn, không phải bạn trả họ.',
+        explanationEn:
+            'A real modeling/casting agency never charges you to "get discovered" or to try out. The money should flow the other way: they pay you, not the reverse.',
+      ),
+      ScenarioSegment(
+        id: 'mod_income',
+        textVi: 'Chỉ cần 2 buổi chụp mỗi tháng là có thể thu nhập chục triệu. ',
+        textEn: 'Just 2 shoots a month and you could earn tens of millions of VND. ',
+        isSuspicious: true,
+        explanationVi:
+            'Thu nhập cao bất thường cho vài buổi chụp là mồi nhử để bạn thấy khoản phí nhỏ phía trên là "đáng đầu tư".',
+        explanationEn:
+            'Unrealistically high income for a couple of shoots is bait to make the fee above feel like a worthwhile "investment".',
+      ),
+      ScenarioSegment(
+        id: 'mod_urgency',
+        textVi: 'Suất chụp thử tuần này sắp đầy, bạn đóng phí sớm để giữ chỗ nha. ',
+        textEn: 'This week\'s test-shoot slots are almost full, pay soon to hold your spot. ',
+        isSuspicious: true,
+        explanationVi:
+            'Tạo cảm giác "sắp hết chỗ" là để bạn đóng tiền ngay, trước khi kịp tìm hiểu hay hỏi người lớn.',
+        explanationEn:
+            'Creating a sense that slots are "almost gone" pushes you to pay right away, before you can look into it or ask an adult.',
+      ),
+      ScenarioSegment(
+        id: 'mod_closing',
+        textVi: 'Bạn nhắn lại mình sớm để sắp lịch nhé!',
+        textEn: 'Message me back soon so we can schedule it!',
+        isSuspicious: false,
+        explanationVi: 'Một câu kết thúc giục trả lời, không có yêu cầu nguy hiểm riêng.',
+        explanationEn: 'A closing line nudging a reply, with no separate dangerous demand.',
+      ),
+    ],
+  ),
+
+  // Hijacked-account impersonation: a "friend" (really someone who took over
+  // their account) asks for an urgent transfer on their behalf.
+  TrainingScenario(
+    id: 'hacked_friend_transfer',
+    titleVi: 'Tin nhắn Messenger của bạn thân nhờ chuyển khoản',
+    titleEn: 'A message from your best friend\'s account asking for a transfer',
+    scamType: 'impersonation',
+    difficulty: TrainingDifficulty.easy,
+    segments: [
+      ScenarioSegment(
+        id: 'hak_opener',
+        textVi: 'Ê, đang rảnh không? Tao có chuyện cần nhờ gấp. ',
+        textEn: 'Hey, are you free? I need to ask you something urgent. ',
+        isSuspicious: false,
+        explanationVi: 'Một lời mở đầu bình thường giữa bạn bè. Chưa có yêu cầu gì ở đây.',
+        explanationEn: 'A normal opener between friends. There is no request here yet.',
+      ),
+      ScenarioSegment(
+        id: 'hak_context',
+        textVi: 'Tao đang ở ngoài tiệm, định chuyển khoản mua đồ mà app ngân hàng bị lỗi không vào được. ',
+        textEn: 'I\'m at a shop trying to pay, but my banking app is glitching and won\'t open. ',
+        isSuspicious: false,
+        explanationVi:
+            'App lỗi là chuyện có thể xảy ra thật. Câu này chỉ là bối cảnh, chưa đòi bạn làm gì.',
+        explanationEn:
+            'Apps really do glitch sometimes. This is just context and does not ask anything of you yet.',
+      ),
+      ScenarioSegment(
+        id: 'hak_ask',
+        textVi: 'Mày chuyển giúp tao 1.850.000đ vào số tài khoản này, xong tao gửi lại ngay khi app ổn. ',
+        textEn: 'Can you transfer 1,850,000 VND to this account for me, I\'ll pay you back the moment the app works. ',
+        isSuspicious: true,
+        explanationVi:
+            'Một người bạn bất ngờ nhờ chuyển tiền hộ là dấu hiệu kinh điển của tài khoản bị chiếm: kẻ gian đang dùng tài khoản của bạn bè bạn để lừa chính bạn.',
+        explanationEn:
+            'A friend suddenly asking you to transfer money on their behalf is the classic sign of a hijacked account: someone else is using your friend\'s account to scam you.',
+      ),
+      ScenarioSegment(
+        id: 'hak_mismatch',
+        textVi: 'Số tài khoản tên Nguyễn Văn Khoa, không phải tên tao đâu, tài khoản em họ tao đứng tên giúp á. ',
+        textEn: 'The account is under the name Nguyen Van Khoa, not mine -- it\'s my cousin\'s account. ',
+        isSuspicious: true,
+        explanationVi:
+            'Tên chủ tài khoản không khớp với người bạn quen là một điểm bất thường rõ ràng, được giải thích vội bằng một lý do mơ hồ ("nhờ em họ").',
+        explanationEn:
+            'The account holder\'s name not matching the friend you know is a clear inconsistency, waved away with a vague excuse ("my cousin\'s account").',
+      ),
+      ScenarioSegment(
+        id: 'hak_pressure',
+        textVi: 'Gấp lắm, tiệm sắp đóng cửa rồi. ',
+        textEn: 'It\'s urgent, the shop is about to close. ',
+        isSuspicious: true,
+        explanationVi:
+            'Thúc giục gấp gáp là để bạn chuyển tiền ngay, thay vì gọi điện (không phải nhắn tin) cho người bạn đó để kiểm tra trước.',
+        explanationEn:
+            'Rushing you is meant to make you transfer right away, instead of calling (not messaging) that friend to check first.',
+      ),
+      ScenarioSegment(
+        id: 'hak_social',
+        textVi: 'Lâu rồi hai đứa chưa đi cà phê nhỉ, khi nào rảnh đi nha. ',
+        textEn: 'We haven\'t grabbed coffee in ages, let\'s go sometime. ',
+        isSuspicious: false,
+        explanationVi: 'Một câu chuyện phiếm bình thường, không có yêu cầu gì.',
+        explanationEn: 'Ordinary small talk, with no request in it.',
+      ),
+      ScenarioSegment(
+        id: 'hak_closing',
+        textVi: 'Chuyển xong nhắn tao biết với.',
+        textEn: 'Let me know once you\'ve sent it.',
+        isSuspicious: false,
+        explanationVi: 'Một câu kết thúc, không thêm yêu cầu mới.',
+        explanationEn: 'A closing line, with no new request.',
+      ),
+    ],
+  ),
+
+  // Deepfake voice/video call impersonating a relative. Channel: video call
+  // transcript, same format as bank_call_card_renewal.
+  TrainingScenario(
+    id: 'deepfake_relative_call',
+    titleVi: 'Cuộc gọi video giọng giống hệt chú ruột',
+    titleEn: 'A video call that sounds exactly like your uncle',
+    scamType: 'impersonation',
+    difficulty: TrainingDifficulty.medium,
+    segments: [
+      ScenarioSegment(
+        id: 'dfk_greeting',
+        textVi: '(Cuộc gọi video, hình hơi giật và mờ) Chú đây, chú gọi có việc gấp cần con giúp. ',
+        textEn: '(Video call, the image is a bit choppy and blurry) It\'s your uncle, I need your help with something urgent. ',
+        isSuspicious: false,
+        explanationVi:
+            'Người thân gọi video nhờ việc là chuyện bình thường. Hình ảnh chập chờn cũng có thể chỉ là mạng yếu thật.',
+        explanationEn:
+            'A relative video-calling for help is normal, and a choppy picture can genuinely just be a weak connection.',
+      ),
+      ScenarioSegment(
+        id: 'dfk_excuse',
+        textVi: 'Chú đang đi công tác ở xa, điện thoại chú sắp hết pin nên gọi nhanh thôi. ',
+        textEn: 'I\'m away on a work trip and my phone is almost out of battery, so this has to be quick. ',
+        isSuspicious: false,
+        explanationVi:
+            'Một lý do hợp lý để giải thích cuộc gọi ngắn và hình ảnh không rõ. Không phải dấu hiệu lừa đảo một mình, nhưng hãy để ý nó cũng là lý do tiện lợi để bạn không kịp hỏi kỹ.',
+        explanationEn:
+            'A plausible reason for a short call and unclear picture. Not a red flag alone, but notice it is also a convenient excuse that stops you asking too many questions.',
+      ),
+      ScenarioSegment(
+        id: 'dfk_ask',
+        textVi: 'Chú cần con chuyển gấp 4.000.000đ vào số tài khoản chú nhắn sau, có việc quan trọng chú kể sau. ',
+        textEn: 'I need you to urgently transfer 4,000,000 VND to an account I\'ll message you, I\'ll explain later. ',
+        isSuspicious: true,
+        explanationVi:
+            'Yêu cầu chuyển tiền gấp mà không nói rõ lý do ngay là dấu hiệu rất đáng ngờ, dù giọng hay hình có giống người thân đến đâu.',
+        explanationEn:
+            'An urgent money request with the real reason "explained later" is a serious warning sign, no matter how convincing the voice or face looks.',
+      ),
+      ScenarioSegment(
+        id: 'dfk_no_callback',
+        textVi: 'Đừng gọi lại số này nha, chú đang dùng máy mượn tạm thôi. ',
+        textEn: 'Don\'t call this number back, I\'m just borrowing this phone for now. ',
+        isSuspicious: true,
+        explanationVi:
+            'Chủ động ngăn bạn gọi lại qua kênh quen thuộc để xác minh là một trong những dấu hiệu rõ nhất của mạo danh. Hãy gọi lại đúng số điện thoại bạn đã lưu của người đó.',
+        explanationEn:
+            'Actively discouraging you from calling back through a known channel to verify is one of the clearest impersonation signs. Call the number you already have saved for that person instead.',
+      ),
+      ScenarioSegment(
+        id: 'dfk_secret',
+        textVi: 'Cũng đừng nói với bố mẹ con vội, để chú tự nói sau. ',
+        textEn: 'Don\'t tell your parents yet either, I\'ll explain to them myself later. ',
+        isSuspicious: true,
+        explanationVi:
+            'Bảo giữ bí mật với gia đình là để không ai kịp giúp bạn kiểm tra. Đây chính là lúc nên kể ngay cho người lớn.',
+        explanationEn:
+            'Asking you to keep it from family stops anyone from helping you check. This is exactly when to tell an adult right away.',
+      ),
+      ScenarioSegment(
+        id: 'dfk_checkin',
+        textVi: 'Con khỏe không, lâu rồi không gặp. ',
+        textEn: 'How are you doing, it\'s been a while. ',
+        isSuspicious: false,
+        explanationVi: 'Một câu hỏi thăm bình thường, không có yêu cầu gì.',
+        explanationEn: 'An ordinary check-in question, with no request in it.',
+      ),
+      ScenarioSegment(
+        id: 'dfk_closing',
+        textVi: 'Chuyển xong nhắn chú biết nhé, chú cúp máy đây.',
+        textEn: 'Let me know once you\'ve sent it, I have to go now.',
+        isSuspicious: false,
+        explanationVi: 'Một câu kết thúc cuộc gọi, không thêm yêu cầu mới.',
+        explanationEn: 'A closing line ending the call, with no new request.',
+      ),
+    ],
+  ),
+
+  // QR-code overpayment trick at a food stall: after scanning a swapped QR
+  // code, the victim gets an SMS/app message pushing them toward a look-alike
+  // "refund" link and an OTP.
+  TrainingScenario(
+    id: 'qr_code_overpayment',
+    titleVi: 'Tin nhắn hoàn tiền sau khi quét mã QR ở quán ăn',
+    titleEn: 'A refund text after scanning a QR code at a food stall',
+    scamType: 'phishing',
+    difficulty: TrainingDifficulty.medium,
+    segments: [
+      ScenarioSegment(
+        id: 'qr_context',
+        textVi: '(Bạn vừa quét mã QR để thanh toán tại một quán ăn vỉa hè và nhận được tin nhắn sau:) ',
+        textEn: '(You just scanned a QR code to pay at a street food stall and receive the following message:) ',
+        isSuspicious: false,
+        explanationVi: 'Bối cảnh: bạn vừa thanh toán thật, nên một tin nhắn liên quan không có gì lạ.',
+        explanationEn: 'Context: you just made a real payment, so a related message is not unusual by itself.',
+      ),
+      ScenarioSegment(
+        id: 'qr_overpay',
+        textVi: 'Hệ thống ghi nhận bạn đã thanh toán 220.000đ cho đơn hàng trị giá 85.000đ. ',
+        textEn: 'Our system recorded a payment of 220,000 VND for an order worth 85,000 VND. ',
+        isSuspicious: false,
+        explanationVi:
+            'Lỗi thanh toán dư tiền có thể xảy ra thật. Câu này chỉ là thông báo, chưa đòi bạn làm gì nguy hiểm.',
+        explanationEn:
+            'Overpayment errors can genuinely happen. This sentence only informs you and does not yet ask anything risky.',
+      ),
+      ScenarioSegment(
+        id: 'qr_link',
+        textVi: 'Để nhận lại phần chênh lệch, vui lòng xác nhận tại vi-hoantien-qr[.]shop ',
+        textEn: 'To get the difference back, please confirm at vi-hoantien-qr[.]shop ',
+        isSuspicious: true,
+        explanationVi:
+            'Nhận lại tiền thừa không cần "xác nhận" qua một trang lạ. Đây không phải trang của ví điện tử bạn đang dùng.',
+        explanationEn:
+            'Getting an overpayment back never needs you to "confirm" on some unfamiliar site. This is not your actual wallet\'s page.',
+      ),
+      ScenarioSegment(
+        id: 'qr_otp',
+        textVi: 'và nhập mã OTP vừa gửi về điện thoại để hệ thống đối chiếu giao dịch. ',
+        textEn: 'and enter the OTP just sent to your phone so the system can verify the transaction. ',
+        isSuspicious: true,
+        explanationVi: 'Nhận lại tiền không bao giờ cần mã OTP. Ai có mã này có thể rút tiền khỏi ví của bạn.',
+        explanationEn: 'Receiving money back never needs an OTP. Whoever has that code can take money out of your wallet.',
+      ),
+      ScenarioSegment(
+        id: 'qr_deadline',
+        textVi: 'trong vòng 10 phút, nếu không hệ thống sẽ hủy giao dịch hoàn tiền. ',
+        textEn: 'within 10 minutes, or the system will cancel the refund. ',
+        isSuspicious: true,
+        explanationVi: 'Hạn chót rất ngắn là để bạn làm theo ngay, trước khi kịp nghi ngờ hay hỏi ai.',
+        explanationEn: 'A very short deadline pushes you to act immediately, before you can grow suspicious or ask anyone.',
+      ),
+      ScenarioSegment(
+        id: 'qr_thanks',
+        textVi: 'Cảm ơn bạn đã sử dụng dịch vụ thanh toán QR.',
+        textEn: 'Thank you for using our QR payment service.',
+        isSuspicious: false,
+        explanationVi: 'Một lời cảm ơn thường thấy, không có yêu cầu gì.',
+        explanationEn: 'A common closing thank-you, with no request in it.',
+      ),
+    ],
+  ),
+
+  // Fake university exchange-program recruiter met in person at a school
+  // event, following up by chat -- a different channel/mechanism than the
+  // email-based exchange_dorm_deposit scenario above.
+  TrainingScenario(
+    id: 'fake_exchange_recruiter_event',
+    titleVi: 'Người lạ ở hội chợ hướng nghiệp mời trao đổi học sinh',
+    titleEn: 'A stranger at a career fair invites you to an exchange program',
+    scamType: 'fake_scholarship',
+    difficulty: TrainingDifficulty.medium,
+    segments: [
+      ScenarioSegment(
+        id: 'exr_intro',
+        textVi:
+            'Chào em, hôm nay gặp ở hội chợ hướng nghiệp trường vui quá, anh là đại diện chương trình trao đổi học sinh quốc tế. ',
+        textEn:
+            'Hi, it was great meeting you at the school career fair today -- I represent an international student exchange program. ',
+        isSuspicious: false,
+        explanationVi:
+            'Gặp người giới thiệu chương trình tại một sự kiện trường tổ chức nghe có vẻ đáng tin. Hãy xem chương trình và cách đăng ký cụ thể ra sao.',
+        explanationEn:
+            'Meeting someone at a school-organized event sounds credible. Look at the program details and how you actually apply.',
+      ),
+      ScenarioSegment(
+        id: 'exr_program',
+        textVi: 'Chương trình đưa học sinh giỏi đi trao đổi 1 học kỳ tại Mỹ, có học bổng một phần. ',
+        textEn: 'The program sends top students on a one-semester exchange in the US, with a partial scholarship. ',
+        isSuspicious: false,
+        explanationVi: 'Chương trình trao đổi học sinh có thật và phổ biến. Câu này chỉ là thông tin.',
+        explanationEn: 'Student exchange programs are real and common. This sentence is just information.',
+      ),
+      ScenarioSegment(
+        id: 'exr_vague_org',
+        textVi: 'Tổ chức của anh hợp tác với nhiều trường nhưng chưa có văn phòng đại diện chính thức ở Việt Nam. ',
+        textEn: 'My organization works with many schools but doesn\'t have an official office in Vietnam yet. ',
+        isSuspicious: true,
+        explanationVi:
+            'Một tổ chức giáo dục quốc tế thật thường có văn phòng, website và thông tin kiểm chứng được. "Chưa có văn phòng" là một tổ chức rất khó xác minh.',
+        explanationEn:
+            'A real international education organization usually has an office, a website and verifiable information. "No office yet" means an organization that is very hard to verify.',
+      ),
+      ScenarioSegment(
+        id: 'exr_no_process',
+        textVi: 'Nhìn hồ sơ học tập của em, anh nghĩ em đủ điều kiện nhận suất đặc biệt không cần phỏng vấn. ',
+        textEn: 'Looking at your academic record, I think you qualify for a special spot, no interview needed. ',
+        isSuspicious: true,
+        explanationVi:
+            'Được "chọn" chỉ sau một cuộc trò chuyện ngắn, bỏ qua phỏng vấn hay quy trình xét duyệt, là cách khiến bạn mừng mà quên kiểm tra kỹ.',
+        explanationEn:
+            'Being "selected" after one short conversation, skipping any interview or review process, is designed to make you too excited to check carefully.',
+      ),
+      ScenarioSegment(
+        id: 'exr_fee',
+        textVi: 'Em đóng 2.900.000đ phí xử lý hồ sơ nhanh cho anh qua tài khoản cá nhân để anh giữ suất cho em. ',
+        textEn: 'Pay me a 2,900,000 VND express processing fee to my personal account, and I\'ll hold your spot. ',
+        isSuspicious: true,
+        explanationVi:
+            'Trường và chương trình trao đổi thật không thu tiền qua tài khoản cá nhân của một người đại diện. Đây là dấu hiệu rõ nhất của lừa đảo.',
+        explanationEn:
+            'A real school or exchange program never collects money through a representative\'s personal account. This is the clearest sign of a scam.',
+      ),
+      ScenarioSegment(
+        id: 'exr_social_proof',
+        textVi: 'Chương trình này nhiều anh chị khóa trước cũng đã tham gia rồi. ',
+        textEn: 'Many students from previous years have already joined this program. ',
+        isSuspicious: false,
+        explanationVi:
+            'Một tuyên bố không kiểm chứng được, nhưng tự nó chưa phải dấu hiệu lừa đảo rõ ràng.',
+        explanationEn: 'An unverifiable claim, but not a clear red flag by itself.',
+      ),
+      ScenarioSegment(
+        id: 'exr_closing',
+        textVi: 'Em suy nghĩ rồi nhắn lại anh nha, đừng để lỡ cơ hội.',
+        textEn: 'Think it over and message me back, don\'t miss this opportunity.',
+        isSuspicious: false,
+        explanationVi: 'Một câu thúc giục thường thấy để kết thúc tin nhắn, không có yêu cầu riêng.',
+        explanationEn: 'A common nudging closing line, with no separate request in it.',
+      ),
+    ],
+  ),
+
+  // Gambling/betting app scam: guaranteed-win claims and a "deposit more to
+  // unlock bigger withdrawals" lock-in mechanic.
+  TrainingScenario(
+    id: 'gambling_betting_app',
+    titleVi: 'App cá độ bóng đá hứa thắng chắc',
+    titleEn: 'A football-betting app promising a sure win',
+    scamType: 'investment',
+    difficulty: TrainingDifficulty.easy,
+    segments: [
+      ScenarioSegment(
+        id: 'gam_intro',
+        textVi: 'Ê, có app soi kèo bóng đá xịn lắm, tao chơi tuần nào cũng có tiền. ',
+        textEn: 'Hey, there\'s a really good football-prediction app, I win money every week playing it. ',
+        isSuspicious: false,
+        explanationVi:
+            'Một lời giới thiệu từ bạn bè nghe đáng tin. Hãy xem app này hứa gì ở các câu sau.',
+        explanationEn: 'A tip from a friend sounds trustworthy. Look at what this app actually promises next.',
+      ),
+      ScenarioSegment(
+        id: 'gam_how',
+        textVi: 'Tải app, nạp tiền vào ví trong app là chơi được liền. ',
+        textEn: 'Download the app, deposit into the in-app wallet, and you can start playing right away. ',
+        isSuspicious: false,
+        explanationVi: 'Cách dùng app nghe đơn giản, tự nó chưa phải dấu hiệu lừa đảo.',
+        explanationEn: 'The app sounds simple to use; this alone is not a red flag.',
+      ),
+      ScenarioSegment(
+        id: 'gam_guaranteed',
+        textVi: 'Chuyên gia trong app soi kèo chuẩn 95%, cá là thắng. ',
+        textEn: 'The app\'s experts predict matches with 95% accuracy, a sure win. ',
+        isSuspicious: true,
+        explanationVi:
+            'Không ai đoán kết quả bóng đá chính xác 95%. Lời hứa "thắng chắc" trong cá cược là phi thực tế và luôn là dấu hiệu lừa đảo.',
+        explanationEn:
+            'Nobody predicts football results with 95% accuracy. A "sure win" promise in betting is unrealistic and always a red flag.',
+      ),
+      ScenarioSegment(
+        id: 'gam_deposit_more',
+        textVi: 'Nạp càng nhiều, hệ số thắng càng cao, có gói VIP nhân đôi tiền thắng. ',
+        textEn: 'The more you deposit, the higher your win rate, and there\'s a VIP package that doubles your winnings. ',
+        isSuspicious: true,
+        explanationVi:
+            'Cá cược thật không hoạt động kiểu "nạp nhiều thắng nhiều". Đây là cách dụ bạn bỏ vào ngày càng nhiều tiền.',
+        explanationEn:
+            'Real betting does not work as "deposit more, win more". This is designed to lure you into putting in increasingly more money.',
+      ),
+      ScenarioSegment(
+        id: 'gam_withdraw_fee',
+        textVi: 'Lúc đầu rút thử vài trăm được liền, nhưng muốn rút khoản lớn phải nạp thêm phí kích hoạt ví VIP. ',
+        textEn: 'Small withdrawals work fine at first, but to withdraw a large amount you must pay a fee to activate a VIP wallet. ',
+        isSuspicious: true,
+        explanationVi:
+            'Cho rút một ít lúc đầu để tạo lòng tin, rồi đòi thêm phí mới cho rút khoản lớn, là chiêu giữ tiền của bạn phổ biến nhất.',
+        explanationEn:
+            'Allowing small withdrawals at first to build trust, then demanding a new fee before a big withdrawal, is the most common way these apps keep your money.',
+      ),
+      ScenarioSegment(
+        id: 'gam_classmates',
+        textVi: 'Nhiều đứa trong lớp cũng chơi, vui lắm. ',
+        textEn: 'A bunch of our classmates play it too, it\'s fun. ',
+        isSuspicious: false,
+        explanationVi: 'Nhiều người chơi không có nghĩa là app an toàn hay có thật.',
+        explanationEn: 'Many people playing does not mean the app is safe or legitimate.',
+      ),
+      ScenarioSegment(
+        id: 'gam_closing',
+        textVi: 'Tao gửi link app cho, tải về chơi thử đi.',
+        textEn: 'I\'ll send you the app link, download it and give it a try.',
+        isSuspicious: false,
+        explanationVi: 'Một lời mời bình thường, câu này tự nó không có yêu cầu nguy hiểm.',
+        explanationEn: 'An ordinary invitation; this sentence alone has no dangerous demand.',
+      ),
+    ],
+  ),
+
+  // Fake charity drive: mostly a genuine-sounding local appeal, trained
+  // against over-flagging real donation requests. The ONE hidden flag is the
+  // money going to a PERSONAL account instead of the organization's own.
+  TrainingScenario(
+    id: 'fake_charity_drive',
+    titleVi: 'Lời kêu gọi quyên góp sau cơn bão',
+    titleEn: 'A donation appeal after the storm',
+    scamType: 'other',
+    difficulty: TrainingDifficulty.hard,
+    segments: [
+      ScenarioSegment(
+        id: 'cha_context',
+        textVi: 'Hội Chữ thập đỏ phường đang kêu gọi ủng hộ cho các hộ dân bị ngập lụt tuần qua. ',
+        textEn: 'The ward Red Cross chapter is calling for donations for households flooded last week. ',
+        isSuspicious: false,
+        explanationVi: 'Các đợt quyên góp sau thiên tai là chuyện có thật và thường xuyên.',
+        explanationEn: 'Donation drives after a natural disaster are real and common.',
+      ),
+      ScenarioSegment(
+        id: 'cha_confirmed',
+        textVi: 'Danh sách 40 hộ cần hỗ trợ đã được xác nhận bởi UBND phường. ',
+        textEn: 'The list of 40 households needing help has been confirmed by the ward People\'s Committee. ',
+        isSuspicious: false,
+        explanationVi: 'Một chi tiết cụ thể, kiểm chứng được, thường thấy ở lời kêu gọi thật.',
+        explanationEn: 'A specific, checkable detail, typical of a genuine appeal.',
+      ),
+      ScenarioSegment(
+        id: 'cha_purpose',
+        textVi: 'Số tiền quyên góp sẽ dùng mua gạo, nước sạch và thuốc men khẩn cấp. ',
+        textEn: 'The donations will be used to buy rice, clean water and emergency medicine. ',
+        isSuspicious: false,
+        explanationVi: 'Mục đích sử dụng rõ ràng, hợp lý cho một đợt cứu trợ.',
+        explanationEn: 'A clear, reasonable purpose for a relief drive.',
+      ),
+      ScenarioSegment(
+        id: 'cha_personal_account',
+        textVi:
+            'Mọi người chuyển khoản ủng hộ vào số tài khoản cá nhân của anh Tuấn, thành viên phụ trách quỹ đợt này, thay vì tài khoản của Hội. ',
+        textEn:
+            'Please send donations to Mr. Tuan\'s personal account, the member managing this fund, instead of the chapter\'s own account. ',
+        isSuspicious: true,
+        explanationVi:
+            'Đây là chi tiết duy nhất sai, dễ bỏ qua vì phần còn lại nghe rất thật: tiền quyên góp nên vào tài khoản chính thức của tổ chức, có thể tra cứu và đối chiếu công khai -- không phải tài khoản cá nhân của một thành viên, dù được giải thích hợp lý đến đâu.',
+        explanationEn:
+            'This is the one wrong detail, easy to miss because everything else sounds genuine: donations should go to the organization\'s own official account, which can be publicly checked -- not a member\'s personal account, however reasonable the explanation sounds.',
+      ),
+      ScenarioSegment(
+        id: 'cha_transparency',
+        textVi: 'Sau đợt quyên góp sẽ có danh sách và hóa đơn công khai trên trang của Hội. ',
+        textEn: 'After the drive, a list and receipts will be posted publicly on the chapter\'s page. ',
+        isSuspicious: false,
+        explanationVi:
+            'Một lời hứa minh bạch nghe yên tâm, nhưng nó không thay đổi việc tiền đang được gửi vào một tài khoản cá nhân ở câu trên.',
+        explanationEn:
+            'A promise of transparency sounds reassuring, but it does not change the fact that the money above is going to a personal account.',
+      ),
+      ScenarioSegment(
+        id: 'cha_thanks',
+        textVi: 'Cảm ơn tấm lòng của mọi người trong lúc khó khăn này. ',
+        textEn: 'Thank you all for your generosity during this difficult time. ',
+        isSuspicious: false,
+        explanationVi: 'Một lời cảm ơn chân thành thường thấy ở các lời kêu gọi quyên góp thật.',
+        explanationEn: 'A heartfelt thank-you, common in genuine donation appeals.',
+      ),
+      ScenarioSegment(
+        id: 'cha_closing',
+        textVi: 'Ai có thắc mắc gì cứ liên hệ văn phòng Hội Chữ thập đỏ phường nhé.',
+        textEn: 'If you have any questions, please contact the ward Red Cross office.',
+        isSuspicious: false,
+        explanationVi: 'Hướng dẫn liên hệ văn phòng chính thức là một dấu hiệu tốt.',
+        explanationEn: 'Pointing you to the official office is a good sign.',
+      ),
+    ],
+  ),
 ];
