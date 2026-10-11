@@ -526,4 +526,59 @@ void main() {
       );
     });
   });
+
+  // -- Real-case consequence line (Part B1: warning intensity calibrated by
+  // real evidence, not invented alarm language) -----------------------------
+  //
+  // Reuses the exact same client-side pickReferenceCases() matching as "Real
+  // reported cases" -- never touches the AI prompt. Only for likely_scam,
+  // only when the top match is a confident same-type one (not the widened-
+  // fallback tier).
+  group('real-case consequence line', () {
+    testWidgets(
+        'shows the matched real case\'s headline for likely_scam with a '
+        'confident same-type match', (tester) async {
+      await tester.pumpWidget(_wrap(
+          ResultScreen(result: _result(scamType: 'fake_job', riskLevel: RiskLevel.likelyScam))));
+      await tester.pumpAndSettle();
+
+      // fake_job-002 is pickReferenceCases' top-ranked match for this query
+      // (confirmed directly, not assumed -- see reference_cases_test.dart
+      // for the ranking logic itself).
+      expect(
+        find.text('A real documented case matched this exactly: '
+            '"Bị lừa 5 tỉ đồng vì làm cộng tác viên chốt đơn hàng online" (Tuổi Trẻ).'),
+        findsOneWidget,
+      );
+      expect(find.byIcon(Icons.fact_check_outlined), findsWidgets); // also used by the section heading below
+    });
+
+    testWidgets('never shows it for suspicious, even with the same confident match',
+        (tester) async {
+      await tester.pumpWidget(_wrap(
+          ResultScreen(result: _result(scamType: 'fake_job', riskLevel: RiskLevel.suspicious))));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('A real documented case matched this exactly'), findsNothing);
+    });
+
+    testWidgets('never shows it for safe', (tester) async {
+      await tester.pumpWidget(_wrap(
+          ResultScreen(result: _result(scamType: 'fake_job', riskLevel: RiskLevel.safe))));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('A real documented case matched this exactly'), findsNothing);
+    });
+
+    testWidgets(
+        'shows nothing, and nothing breaks, when there is no confident '
+        'same-type match', (tester) async {
+      await tester.pumpWidget(_wrap(
+          ResultScreen(result: _result(scamType: 'other', riskLevel: RiskLevel.likelyScam))));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.textContaining('A real documented case matched this exactly'), findsNothing);
+    });
+  });
 }

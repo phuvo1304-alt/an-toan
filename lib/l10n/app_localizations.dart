@@ -452,6 +452,12 @@ abstract class AppLocalizations {
   /// **'Liên hệ {orgName} — xem tất cả số liên hệ chính thức trong Cài đặt'**
   String officialContactShortcut(Object orgName);
 
+  /// No description provided for @realCaseConsequence.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã có người gặp đúng chiêu này: \"{headline}\" ({sourceName}).'**
+  String realCaseConsequence(Object headline, Object sourceName);
+
   /// No description provided for @quizTitle.
   ///
   /// In vi, this message translates to:

@@ -59,6 +59,7 @@
   "officialHelpBody": "Nếu bạn đã bị lừa, hãy báo ngay cho gia đình, ngân hàng của bạn và cơ quan công an địa phương. Hãy kiểm tra số liên hệ chính thức mới nhất trên cổng thông tin của cơ quan chức năng.",
   "officialContactsListTitle": "Số liên hệ báo cáo chính thức",
   "officialContactShortcut": "Liên hệ {orgName} — xem tất cả số liên hệ chính thức trong Cài đặt",
+  "realCaseConsequence": "Đã có người gặp đúng chiêu này: \"{headline}\" ({sourceName}).",
   "quizTitle": "Đố vui",
   "quizIntro": "Đọc từng tin nhắn và đoán xem đó có phải lừa đảo không. Sau mỗi câu, bạn sẽ thấy lời giải thích.",
   "quizStart": "Bắt đầu",

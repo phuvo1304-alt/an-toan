@@ -199,6 +199,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String realCaseConsequence(Object headline, Object sourceName) {
+    return 'A real documented case matched this exactly: \"$headline\" ($sourceName).';
+  }
+
+  @override
   String get quizTitle => 'Quiz';
 
   @override

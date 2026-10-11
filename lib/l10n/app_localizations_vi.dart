@@ -199,6 +199,11 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String realCaseConsequence(Object headline, Object sourceName) {
+    return 'Đã có người gặp đúng chiêu này: \"$headline\" ($sourceName).';
+  }
+
+  @override
   String get quizTitle => 'Đố vui';
 
   @override

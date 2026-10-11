@@ -183,6 +183,45 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
         ? const <Widget>[]
         : [
             SectionTitle(t.whatToDo),
+            // Real-case consequence line: ONLY for likely_scam, and only
+            // when pickReferenceCases' top result is a confident same-type
+            // match (not the widened-fallback tier -- see reference_cases.dart).
+            // Reuses the exact same client-side, deterministic matching
+            // already powering "Real reported cases" below; never touches
+            // the AI prompt, so it carries none of index.ts's regression
+            // risk. Deliberately nothing extra for suspicious -- that tier
+            // stays calm, per the lesson from the bank-message false-positive
+            // fix (commit bf52f8b).
+            if (result.riskLevel == RiskLevel.likelyScam)
+              FutureBuilder<List<ReferenceCase>>(
+                future: _casesFuture,
+                builder: (context, snapshot) {
+                  final cases = snapshot.data ?? const [];
+                  if (cases.isEmpty || cases.first.scamType != result.scamType) {
+                    return const SizedBox.shrink();
+                  }
+                  final match = cases.first;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpace.sm),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.fact_check_outlined, size: 16, color: scheme.primary),
+                        const SizedBox(width: AppSpace.sm),
+                        Expanded(
+                          child: Text(
+                            t.realCaseConsequence(match.headline, match.sourceName),
+                            style: textTheme.bodySmall?.copyWith(
+                              color: scheme.onSurfaceVariant,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             for (var i = 0; i < result.whatToDo.length; i++)
               Padding(
                 padding: const EdgeInsets.only(bottom: 12),
