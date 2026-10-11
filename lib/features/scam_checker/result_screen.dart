@@ -9,6 +9,36 @@ import '../settings/official_contacts.dart';
 import 'reference_cases.dart';
 import 'scam_result.dart';
 
+/// The static, scam_type-keyed consequence sentence for the likely_scam
+/// Consequences section (Part C, layer 1) -- l10n ARB strings, never
+/// AI-generated, so this carries zero prompt-change risk. [scamType] is the
+/// AI's own classification (already tested separately); an unrecognized
+/// value (e.g. a future scam_type, or "none"/"" which the prompt never
+/// pairs with likely_scam) falls back to a generic sentence rather than
+/// showing nothing.
+String _consequenceFor(AppLocalizations t, String scamType) {
+  switch (scamType) {
+    case 'fake_job':
+      return t.consequenceFakeJob;
+    case 'fake_scholarship':
+      return t.consequenceFakeScholarship;
+    case 'phishing':
+      return t.consequencePhishing;
+    case 'impersonation':
+      return t.consequenceImpersonation;
+    case 'investment':
+      return t.consequenceInvestment;
+    case 'romance':
+      return t.consequenceRomance;
+    case 'loan':
+      return t.consequenceLoan;
+    case 'other':
+      return t.consequenceOther;
+    default:
+      return t.consequenceGeneric;
+  }
+}
+
 class ResultScreen extends StatefulWidget {
   final ScamResult result;
   const ResultScreen({super.key, required this.result});
@@ -71,6 +101,26 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
   void dispose() {
     _barController.dispose();
     super.dispose();
+  }
+
+  /// Opens a matched reference case's original source (Part D) -- same
+  /// pattern as _ReferenceCaseCard._openSource and Settings' contact links:
+  /// externalApplication mode, generic error snackbar on failure.
+  Future<void> _openMatchSource(BuildContext context, ReferenceCase match) async {
+    final t = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final uri = Uri.tryParse(match.sourceUrl);
+    var opened = false;
+    if (uri != null) {
+      try {
+        opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } catch (_) {
+        opened = false;
+      }
+    }
+    if (!opened && messenger.mounted) {
+      messenger.showSnackBar(SnackBar(content: Text(t.errorGeneric)));
+    }
   }
 
   @override
@@ -183,45 +233,6 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
         ? const <Widget>[]
         : [
             SectionTitle(t.whatToDo),
-            // Real-case consequence line: ONLY for likely_scam, and only
-            // when pickReferenceCases' top result is a confident same-type
-            // match (not the widened-fallback tier -- see reference_cases.dart).
-            // Reuses the exact same client-side, deterministic matching
-            // already powering "Real reported cases" below; never touches
-            // the AI prompt, so it carries none of index.ts's regression
-            // risk. Deliberately nothing extra for suspicious -- that tier
-            // stays calm, per the lesson from the bank-message false-positive
-            // fix (commit bf52f8b).
-            if (result.riskLevel == RiskLevel.likelyScam)
-              FutureBuilder<List<ReferenceCase>>(
-                future: _casesFuture,
-                builder: (context, snapshot) {
-                  final cases = snapshot.data ?? const [];
-                  if (cases.isEmpty || cases.first.scamType != result.scamType) {
-                    return const SizedBox.shrink();
-                  }
-                  final match = cases.first;
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpace.sm),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.fact_check_outlined, size: 16, color: scheme.primary),
-                        const SizedBox(width: AppSpace.sm),
-                        Expanded(
-                          child: Text(
-                            t.realCaseConsequence(match.headline, match.sourceName),
-                            style: textTheme.bodySmall?.copyWith(
-                              color: scheme.onSurfaceVariant,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
             for (var i = 0; i < result.whatToDo.length; i++)
               Padding(
                 padding: const EdgeInsets.only(bottom: 12),
@@ -358,6 +369,100 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                 children: [
                   if (result.summary.isNotEmpty) Text(result.summary, style: textTheme.bodyLarge),
                   const SizedBox(height: AppSpace.lg),
+
+                  // Consequences section: ONLY for likely_scam (never
+                  // suspicious/safe -- those tiers stay calm, per the lesson
+                  // from the bank-message false-positive fix, bf52f8b).
+                  // Supersedes B1's quiet one-line citation (folded in here,
+                  // not duplicated): a static, scam_type-keyed sentence
+                  // (l10n ARB, never AI-generated, so this carries zero
+                  // prompt-change risk) always shows; when pickReferenceCases'
+                  // top result is a confident same-type match (not the
+                  // widened-fallback tier), its real summary and a tappable
+                  // link to the original source are appended too. Never
+                  // changes risk_score/risk_level -- only this framing.
+                  if (result.riskLevel == RiskLevel.likelyScam) ...[
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(AppSpace.md),
+                      decoration: BoxDecoration(
+                        // errorContainer/onErrorContainer is Material 3's own
+                        // guaranteed-contrast error pair (already used by
+                        // StatusBanner's error kind in this app) -- chosen
+                        // deliberately over a RiskPalette color here so the
+                        // text/icon inside this card never needs a fresh,
+                        // hand-verified contrast number.
+                        color: scheme.errorContainer,
+                        border: Border.all(color: risk.scamStrong, width: 2),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.dangerous,
+                                  color: scheme.onErrorContainer, size: AppIconSize.lg),
+                              const SizedBox(width: AppSpace.sm),
+                              Expanded(
+                                child: Text(
+                                  t.consequencesTitle,
+                                  style: textTheme.titleMedium?.copyWith(
+                                    color: scheme.onErrorContainer,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: AppSpace.sm),
+                          Text(
+                            _consequenceFor(t, result.scamType),
+                            style: textTheme.bodyMedium?.copyWith(color: scheme.onErrorContainer),
+                          ),
+                          FutureBuilder<List<ReferenceCase>>(
+                            future: _casesFuture,
+                            builder: (context, snapshot) {
+                              final cases = snapshot.data ?? const [];
+                              if (cases.isEmpty || cases.first.scamType != result.scamType) {
+                                return const SizedBox.shrink();
+                              }
+                              final match = cases.first;
+                              return Padding(
+                                padding: const EdgeInsets.only(top: AppSpace.sm),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      t.realOutcomeLabel,
+                                      style: textTheme.labelLarge
+                                          ?.copyWith(color: scheme.onErrorContainer),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      match.summary(result.language),
+                                      style: textTheme.bodyMedium?.copyWith(
+                                        color: scheme.onErrorContainer,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                    const SizedBox(height: AppSpace.sm),
+                                    FilledButton.tonalIcon(
+                                      onPressed: () => _openMatchSource(context, match),
+                                      iconAlignment: IconAlignment.end,
+                                      icon: const Icon(Icons.open_in_new, size: 16),
+                                      label: Text(t.readOriginalArticle),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppSpace.lg),
+                  ],
 
                   if (style.actionFirst) ...[
                     ...whatToDoWidgets,

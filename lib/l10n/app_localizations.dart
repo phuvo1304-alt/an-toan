@@ -452,11 +452,77 @@ abstract class AppLocalizations {
   /// **'Liên hệ {orgName} — xem tất cả số liên hệ chính thức trong Cài đặt'**
   String officialContactShortcut(Object orgName);
 
-  /// No description provided for @realCaseConsequence.
+  /// No description provided for @consequencesTitle.
   ///
   /// In vi, this message translates to:
-  /// **'Đã có người gặp đúng chiêu này: \"{headline}\" ({sourceName}).'**
-  String realCaseConsequence(Object headline, Object sourceName);
+  /// **'Hậu quả'**
+  String get consequencesTitle;
+
+  /// No description provided for @consequenceFakeJob.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nếu làm theo, bạn có thể mất tiền đã nạp và không lấy lại được, thậm chí gặp nguy hiểm nếu đến gặp trực tiếp hay bị đưa ra nước ngoài.'**
+  String get consequenceFakeJob;
+
+  /// No description provided for @consequenceFakeScholarship.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn có thể mất tiền đã đóng và không bao giờ nhận được học bổng hay thư mời nào.'**
+  String get consequenceFakeScholarship;
+
+  /// No description provided for @consequencePhishing.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nếu bạn nhập mã OTP hoặc mật khẩu, kẻ gian có thể rút hết tiền trong tài khoản ngay lập tức và rất khó lấy lại.'**
+  String get consequencePhishing;
+
+  /// No description provided for @consequenceImpersonation.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn có thể mất toàn bộ số tiền chuyển đi, và việc này có thể dẫn tới đe dọa hoặc ép buộc tiếp theo.'**
+  String get consequenceImpersonation;
+
+  /// No description provided for @consequenceInvestment.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số tiền bạn nạp vào thường mất hoàn toàn, nền tảng thường biến mất hoặc chặn bạn ngay khi bạn muốn rút tiền.'**
+  String get consequenceInvestment;
+
+  /// No description provided for @consequenceRomance.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn có thể mất toàn bộ số tiền đã gửi, và người bạn tin tưởng thường biến mất ngay sau đó.'**
+  String get consequenceRomance;
+
+  /// No description provided for @consequenceLoan.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn có thể mất khoản phí đã đóng mà không bao giờ nhận được tiền vay, và thông tin cá nhân có thể bị dùng để đe dọa bạn hoặc người thân.'**
+  String get consequenceLoan;
+
+  /// No description provided for @consequenceOther.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn có thể mất số tiền đã chuyển và khó lấy lại, vì giao dịch này không qua kênh chính thức nào.'**
+  String get consequenceOther;
+
+  /// No description provided for @consequenceGeneric.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nếu làm theo yêu cầu trong tin nhắn này, bạn có thể mất tiền hoặc thông tin cá nhân mà khó lấy lại được.'**
+  String get consequenceGeneric;
+
+  /// No description provided for @realOutcomeLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thực tế đã từng xảy ra:'**
+  String get realOutcomeLabel;
+
+  /// No description provided for @readOriginalArticle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đọc bài báo gốc'**
+  String get readOriginalArticle;
 
   /// No description provided for @quizTitle.
   ///

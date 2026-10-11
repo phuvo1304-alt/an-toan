@@ -49,11 +49,20 @@ ScamResult _result({
       language: language,
     );
 
+// A tall, generous surface so the longest realistic combination (hero +
+// the Consequences section + what-to-do + red flags + 2 reference cards +
+// confidence note + disclaimer + button) renders in full, not just within
+// the ListView's lazy-build cache range -- the Consequences section added a
+// substantial amount of content above everything else for likely_scam.
 Widget _wrap(
+  WidgetTester tester,
   Widget child, {
   Locale locale = const Locale('en'),
   Brightness brightness = Brightness.light,
 }) {
+  tester.view.physicalSize = const Size(800, 3200);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
   return MaterialApp(
     locale: locale,
     // ResultScreen reads the app's RiskPalette theme extension via
@@ -77,7 +86,7 @@ void main() {
     // fake_job has more than 2 entries in the dataset, so this is never
     // empty regardless of which two get picked at random.
     await tester
-        .pumpWidget(_wrap(ResultScreen(result: _result(scamType: 'fake_job'))));
+        .pumpWidget(_wrap(tester, ResultScreen(result: _result(scamType: 'fake_job'))));
     await tester.pumpAndSettle();
 
     expect(find.text('Real reported cases'), findsOneWidget);
@@ -91,7 +100,7 @@ void main() {
 
   testWidgets('hides the section for scam_type "other"', (tester) async {
     await tester
-        .pumpWidget(_wrap(ResultScreen(result: _result(scamType: 'other'))));
+        .pumpWidget(_wrap(tester, ResultScreen(result: _result(scamType: 'other'))));
     await tester.pumpAndSettle();
 
     expect(find.text('Real reported cases'), findsNothing);
@@ -101,7 +110,7 @@ void main() {
   testWidgets('hides the section for a scam_type with no dataset entries',
       (tester) async {
     await tester.pumpWidget(
-        _wrap(ResultScreen(result: _result(scamType: 'not_a_real_category'))));
+        _wrap(tester, ResultScreen(result: _result(scamType: 'not_a_real_category'))));
     await tester.pumpAndSettle();
 
     expect(find.text('Real reported cases'), findsNothing);
@@ -109,7 +118,7 @@ void main() {
 
   testWidgets('renders in Vietnamese when the result language is vi',
       (tester) async {
-    await tester.pumpWidget(_wrap(
+    await tester.pumpWidget(_wrap(tester,
       ResultScreen(result: _result(scamType: 'fake_job', language: 'vi')),
       locale: const Locale('vi'),
     ));
@@ -122,7 +131,7 @@ void main() {
   testWidgets('every "Read article" link has a tap target of at least 48x48 '
       '(CLAUDE.md section 7)', (tester) async {
     await tester
-        .pumpWidget(_wrap(ResultScreen(result: _result(scamType: 'fake_job'))));
+        .pumpWidget(_wrap(tester, ResultScreen(result: _result(scamType: 'fake_job'))));
     await tester.pumpAndSettle();
 
     final links = find.ancestor(
@@ -140,7 +149,7 @@ void main() {
   testWidgets('"Read article" uses a solid scheme.primary fill, not a pale tint',
       (tester) async {
     await tester
-        .pumpWidget(_wrap(ResultScreen(result: _result(scamType: 'fake_job'))));
+        .pumpWidget(_wrap(tester, ResultScreen(result: _result(scamType: 'fake_job'))));
     await tester.pumpAndSettle();
 
     final material = tester.widget<Material>(find
@@ -157,7 +166,7 @@ void main() {
       'each reference card shows a source badge (bordered pill with a '
       'newspaper icon), one per card', (tester) async {
     await tester
-        .pumpWidget(_wrap(ResultScreen(result: _result(scamType: 'fake_job'))));
+        .pumpWidget(_wrap(tester, ResultScreen(result: _result(scamType: 'fake_job'))));
     await tester.pumpAndSettle();
 
     final badgeIcons = find.byIcon(Icons.newspaper);
@@ -179,7 +188,7 @@ void main() {
   testWidgets('a reference card\'s headline is bold, reading as the card\'s '
       'main content', (tester) async {
     await tester
-        .pumpWidget(_wrap(ResultScreen(result: _result(scamType: 'fake_job'))));
+        .pumpWidget(_wrap(tester, ResultScreen(result: _result(scamType: 'fake_job'))));
     await tester.pumpAndSettle();
 
     // Headlines come from the real bundled dataset, so find by style rather
@@ -218,7 +227,7 @@ void main() {
 
   Future<void> tapFirstReadArticle(WidgetTester tester) async {
     await tester
-        .pumpWidget(_wrap(ResultScreen(result: _result(scamType: 'fake_job'))));
+        .pumpWidget(_wrap(tester, ResultScreen(result: _result(scamType: 'fake_job'))));
     await tester.pumpAndSettle();
     // The cards sit below the fold on the default 800x600 test surface,
     // inside the screen's scrollable ListView; scroll into view first, the
@@ -275,12 +284,18 @@ void main() {
     testWidgets(
         'likely_scam: solid scamStrong full-bleed fill (hazard-label banner), '
         'not the plain dangerous icon', (tester) async {
-      await tester.pumpWidget(_wrap(
+      await tester.pumpWidget(_wrap(tester,
           ResultScreen(result: _result(scamType: 'fake_job')))); // defaults to likelyScam
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.gpp_bad), findsOneWidget);
-      expect(find.byIcon(Icons.dangerous), findsNothing);
+      // Scoped to the hero itself -- Icons.dangerous is legitimately used
+      // elsewhere on the page now, by the Consequences section's own icon.
+      expect(
+        find.descendant(
+            of: find.byKey(const Key('resultHero')), matching: find.byIcon(Icons.dangerous)),
+        findsNothing,
+      );
 
       // The whole hero banner is the solid fill now (no separate icon chip).
       expect(heroDecoration(tester).color, RiskPalette.light.scamStrong);
@@ -300,21 +315,21 @@ void main() {
       double barHeight(WidgetTester t) =>
           t.widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator)).minHeight!;
 
-      await tester.pumpWidget(_wrap(ResultScreen(
+      await tester.pumpWidget(_wrap(tester, ResultScreen(
           result: _result(scamType: 'fake_job', riskLevel: RiskLevel.safe))));
       await tester.pumpAndSettle();
       final safeIcon = iconSize(tester, Icons.check_circle).width;
       final safeBar = barHeight(tester);
       final safeBorder = heroBorderWidth(tester);
 
-      await tester.pumpWidget(_wrap(ResultScreen(
+      await tester.pumpWidget(_wrap(tester, ResultScreen(
           result: _result(scamType: 'fake_job', riskLevel: RiskLevel.suspicious))));
       await tester.pumpAndSettle();
       final suspiciousIcon = iconSize(tester, Icons.warning_amber_rounded).width;
       final suspiciousBar = barHeight(tester);
       final suspiciousBorder = heroBorderWidth(tester);
 
-      await tester.pumpWidget(_wrap(ResultScreen(
+      await tester.pumpWidget(_wrap(tester, ResultScreen(
           result: _result(scamType: 'fake_job', riskLevel: RiskLevel.likelyScam))));
       await tester.pumpAndSettle();
       final scamIcon = iconSize(tester, Icons.gpp_bad).width;
@@ -339,19 +354,19 @@ void main() {
       // so the what-to-do section stays within the ListView's lazily-built
       // range without needing to scroll it into view first.
 
-      await tester.pumpWidget(_wrap(
+      await tester.pumpWidget(_wrap(tester,
           ResultScreen(result: _result(scamType: 'other', riskLevel: RiskLevel.safe))));
       await tester.pumpAndSettle();
       final safeStyle = tester.widget<Text>(find.text(step)).style;
       expect(safeStyle, isNull);
 
-      await tester.pumpWidget(_wrap(
+      await tester.pumpWidget(_wrap(tester,
           ResultScreen(result: _result(scamType: 'other', riskLevel: RiskLevel.suspicious))));
       await tester.pumpAndSettle();
       final suspiciousStyle = tester.widget<Text>(find.text(step)).style!;
       expect(suspiciousStyle.fontWeight, FontWeight.w600);
 
-      await tester.pumpWidget(_wrap(
+      await tester.pumpWidget(_wrap(tester,
           ResultScreen(result: _result(scamType: 'other', riskLevel: RiskLevel.likelyScam))));
       await tester.pumpAndSettle();
       final scamStyle = tester.widget<Text>(find.text(step)).style!;
@@ -365,7 +380,7 @@ void main() {
     });
 
     testWidgets('renders likely_scam without error in dark mode too', (tester) async {
-      await tester.pumpWidget(_wrap(
+      await tester.pumpWidget(_wrap(tester,
         ResultScreen(result: _result(scamType: 'fake_job', riskLevel: RiskLevel.likelyScam)),
         brightness: Brightness.dark,
       ));
@@ -401,7 +416,7 @@ void main() {
     });
 
     testWidgets('safe stays calm: no filled icon chip, plain check_circle icon', (tester) async {
-      await tester.pumpWidget(_wrap(
+      await tester.pumpWidget(_wrap(tester,
           ResultScreen(result: _result(scamType: 'fake_job', riskLevel: RiskLevel.safe))));
       await tester.pumpAndSettle();
 
@@ -425,14 +440,14 @@ void main() {
       ];
 
       Future<double> whatToDoY(WidgetTester t, RiskLevel level) async {
-        await t.pumpWidget(_wrap(ResultScreen(
+        await t.pumpWidget(_wrap(t, ResultScreen(
             result: _result(scamType: 'other', riskLevel: level, redFlags: flags))));
         await t.pumpAndSettle();
         return t.getTopLeft(find.text('Do not send money.')).dy;
       }
 
       Future<double> flagY(WidgetTester t, RiskLevel level) async {
-        await t.pumpWidget(_wrap(ResultScreen(
+        await t.pumpWidget(_wrap(t, ResultScreen(
             result: _result(scamType: 'other', riskLevel: level, redFlags: flags))));
         await t.pumpAndSettle();
         return t.getTopLeft(find.text('Suspicious flag')).dy;
@@ -451,7 +466,7 @@ void main() {
         'value when the OS asks for reduced motion', (tester) async {
       await tester.pumpWidget(MediaQuery(
         data: const MediaQueryData(disableAnimations: true),
-        child: _wrap(ResultScreen(result: _result(scamType: 'other'))),
+        child: _wrap(tester, ResultScreen(result: _result(scamType: 'other'))),
       ));
       // A single pump (no settle): if the animation were still running from
       // 0, the bar would not yet be at its target value.
@@ -471,7 +486,7 @@ void main() {
   // nothing urgent to act on there.
   group('official contact shortcut', () {
     testWidgets('never appears for a safe result', (tester) async {
-      await tester.pumpWidget(_wrap(
+      await tester.pumpWidget(_wrap(tester,
           ResultScreen(result: _result(scamType: 'phishing', riskLevel: RiskLevel.safe))));
       await tester.pumpAndSettle();
 
@@ -482,7 +497,7 @@ void main() {
         'picks the 156 scam-call-reporting contact for phishing, for both '
         'suspicious and likely_scam', (tester) async {
       for (final level in [RiskLevel.suspicious, RiskLevel.likelyScam]) {
-        await tester.pumpWidget(_wrap(
+        await tester.pumpWidget(_wrap(tester,
             ResultScreen(result: _result(scamType: 'phishing', riskLevel: level))));
         await tester.pumpAndSettle();
 
@@ -499,7 +514,7 @@ void main() {
     testWidgets(
         'falls back to the general police line (113) for a category with no '
         'dedicated contact', (tester) async {
-      await tester.pumpWidget(_wrap(ResultScreen(
+      await tester.pumpWidget(_wrap(tester, ResultScreen(
           result: _result(scamType: 'romance', riskLevel: RiskLevel.likelyScam))));
       await tester.pumpAndSettle();
 
@@ -512,7 +527,7 @@ void main() {
 
     testWidgets('renders in Vietnamese when the result language is vi',
         (tester) async {
-      await tester.pumpWidget(_wrap(
+      await tester.pumpWidget(_wrap(tester,
         ResultScreen(result: _result(
             scamType: 'phishing', riskLevel: RiskLevel.likelyScam, language: 'vi')),
         locale: const Locale('vi'),
@@ -527,58 +542,113 @@ void main() {
     });
   });
 
-  // -- Real-case consequence line (Part B1: warning intensity calibrated by
-  // real evidence, not invented alarm language) -----------------------------
-  //
-  // Reuses the exact same client-side pickReferenceCases() matching as "Real
-  // reported cases" -- never touches the AI prompt. Only for likely_scam,
-  // only when the top match is a confident same-type one (not the widened-
-  // fallback tier).
-  group('real-case consequence line', () {
+  // -- Consequences section (Parts C/D/E: a concrete "what happens if you
+  // follow the instructions" section, a real source link, stronger visual
+  // weight -- all likely_scam only). Supersedes B1's quiet one-line
+  // citation, folded in here rather than duplicated. -----------------------
+  group('consequences section', () {
     testWidgets(
-        'shows the matched real case\'s headline for likely_scam with a '
-        'confident same-type match', (tester) async {
-      await tester.pumpWidget(_wrap(
+        'shows the static, scam_type-keyed sentence and a bold warning icon, '
+        'for likely_scam', (tester) async {
+      await tester.pumpWidget(_wrap(tester,
+          ResultScreen(result: _result(scamType: 'loan', riskLevel: RiskLevel.likelyScam))));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Consequences'), findsOneWidget);
+      expect(
+        find.text('You risk losing the fee you paid without ever receiving '
+            'the loan, and your personal information can be used to '
+            'threaten you or your family.'),
+        findsOneWidget,
+      );
+      expect(find.byIcon(Icons.dangerous), findsOneWidget);
+    });
+
+    testWidgets('never shows it for suspicious', (tester) async {
+      await tester.pumpWidget(_wrap(tester,
+          ResultScreen(result: _result(scamType: 'loan', riskLevel: RiskLevel.suspicious))));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Consequences'), findsNothing);
+      expect(find.byIcon(Icons.dangerous), findsNothing);
+    });
+
+    testWidgets('never shows it for safe', (tester) async {
+      await tester.pumpWidget(_wrap(tester,
+          ResultScreen(result: _result(scamType: 'loan', riskLevel: RiskLevel.safe))));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Consequences'), findsNothing);
+      expect(find.byIcon(Icons.dangerous), findsNothing);
+    });
+
+    testWidgets('falls back to the generic sentence for an unrecognized scam_type',
+        (tester) async {
+      await tester.pumpWidget(_wrap(tester, ResultScreen(
+          result: _result(scamType: 'not_a_real_category', riskLevel: RiskLevel.likelyScam))));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Consequences'), findsOneWidget);
+      expect(
+        find.text("If you follow this message's instructions, you risk "
+            'losing money or personal information that is hard to recover.'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets(
+        'appends the matched real case\'s outcome and a working source link, '
+        'for a confident same-type match', (tester) async {
+      final calls = mockLauncher(tester, () => true);
+      await tester.pumpWidget(_wrap(tester,
           ResultScreen(result: _result(scamType: 'fake_job', riskLevel: RiskLevel.likelyScam))));
       await tester.pumpAndSettle();
 
       // fake_job-002 is pickReferenceCases' top-ranked match for this query
       // (confirmed directly, not assumed -- see reference_cases_test.dart
-      // for the ranking logic itself).
+      // for the ranking logic itself). Full exact text, not textContaining:
+      // "Real reported cases" below shows the SAME case's summary too, but
+      // truncated with "…", so a substring match would hit both.
+      expect(find.text('This really happened:'), findsOneWidget);
       expect(
-        find.text('A real documented case matched this exactly: '
-            '"Bị lừa 5 tỉ đồng vì làm cộng tác viên chốt đơn hàng online" (Tuổi Trẻ).'),
+        find.text("Hanoi police investigated a case where an acquaintance "
+            "invited someone to be an 'online order-confirmation "
+            "collaborator' earning commission. After registering through a "
+            "link, the person had to transfer money to complete 'tasks' "
+            "and then could not withdraw anything. Police repeat that "
+            "commission and high-return offers like this are usually "
+            "scams."),
         findsOneWidget,
       );
-      expect(find.byIcon(Icons.fact_check_outlined), findsWidgets); // also used by the section heading below
-    });
 
-    testWidgets('never shows it for suspicious, even with the same confident match',
-        (tester) async {
-      await tester.pumpWidget(_wrap(
-          ResultScreen(result: _result(scamType: 'fake_job', riskLevel: RiskLevel.suspicious))));
+      final link = find.text('Read the original article');
+      expect(link, findsOneWidget);
+      await tester.tap(link);
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('A real documented case matched this exactly'), findsNothing);
-    });
-
-    testWidgets('never shows it for safe', (tester) async {
-      await tester.pumpWidget(_wrap(
-          ResultScreen(result: _result(scamType: 'fake_job', riskLevel: RiskLevel.safe))));
-      await tester.pumpAndSettle();
-
-      expect(find.textContaining('A real documented case matched this exactly'), findsNothing);
+      expect(calls, hasLength(1));
+      expect(calls.single.method, 'launch');
+      final url = (calls.single.arguments as Map)['url'] as String;
+      expect(url, startsWith('https://tuoitre.vn/'));
     });
 
     testWidgets(
-        'shows nothing, and nothing breaks, when there is no confident '
-        'same-type match', (tester) async {
-      await tester.pumpWidget(_wrap(
+        'shows only the static sentence, no outcome/link block, and nothing '
+        'breaks, when there is no confident same-type match', (tester) async {
+      await tester.pumpWidget(_wrap(tester,
           ResultScreen(result: _result(scamType: 'other', riskLevel: RiskLevel.likelyScam))));
       await tester.pumpAndSettle();
 
       expect(tester.takeException(), isNull);
-      expect(find.textContaining('A real documented case matched this exactly'), findsNothing);
+      expect(find.text('Consequences'), findsOneWidget);
+      expect(
+        find.text("You risk losing the money you send with little chance "
+            "of recovery, since this doesn't go through any official channel."),
+        findsOneWidget,
+      );
+      expect(find.text('This really happened:'), findsNothing);
+      expect(find.text('Read the original article'), findsNothing);
     });
   });
 }

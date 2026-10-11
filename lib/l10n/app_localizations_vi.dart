@@ -199,9 +199,49 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String realCaseConsequence(Object headline, Object sourceName) {
-    return 'Đã có người gặp đúng chiêu này: \"$headline\" ($sourceName).';
-  }
+  String get consequencesTitle => 'Hậu quả';
+
+  @override
+  String get consequenceFakeJob =>
+      'Nếu làm theo, bạn có thể mất tiền đã nạp và không lấy lại được, thậm chí gặp nguy hiểm nếu đến gặp trực tiếp hay bị đưa ra nước ngoài.';
+
+  @override
+  String get consequenceFakeScholarship =>
+      'Bạn có thể mất tiền đã đóng và không bao giờ nhận được học bổng hay thư mời nào.';
+
+  @override
+  String get consequencePhishing =>
+      'Nếu bạn nhập mã OTP hoặc mật khẩu, kẻ gian có thể rút hết tiền trong tài khoản ngay lập tức và rất khó lấy lại.';
+
+  @override
+  String get consequenceImpersonation =>
+      'Bạn có thể mất toàn bộ số tiền chuyển đi, và việc này có thể dẫn tới đe dọa hoặc ép buộc tiếp theo.';
+
+  @override
+  String get consequenceInvestment =>
+      'Số tiền bạn nạp vào thường mất hoàn toàn, nền tảng thường biến mất hoặc chặn bạn ngay khi bạn muốn rút tiền.';
+
+  @override
+  String get consequenceRomance =>
+      'Bạn có thể mất toàn bộ số tiền đã gửi, và người bạn tin tưởng thường biến mất ngay sau đó.';
+
+  @override
+  String get consequenceLoan =>
+      'Bạn có thể mất khoản phí đã đóng mà không bao giờ nhận được tiền vay, và thông tin cá nhân có thể bị dùng để đe dọa bạn hoặc người thân.';
+
+  @override
+  String get consequenceOther =>
+      'Bạn có thể mất số tiền đã chuyển và khó lấy lại, vì giao dịch này không qua kênh chính thức nào.';
+
+  @override
+  String get consequenceGeneric =>
+      'Nếu làm theo yêu cầu trong tin nhắn này, bạn có thể mất tiền hoặc thông tin cá nhân mà khó lấy lại được.';
+
+  @override
+  String get realOutcomeLabel => 'Thực tế đã từng xảy ra:';
+
+  @override
+  String get readOriginalArticle => 'Đọc bài báo gốc';
 
   @override
   String get quizTitle => 'Đố vui';

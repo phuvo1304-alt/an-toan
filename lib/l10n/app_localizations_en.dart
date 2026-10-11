@@ -199,9 +199,49 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String realCaseConsequence(Object headline, Object sourceName) {
-    return 'A real documented case matched this exactly: \"$headline\" ($sourceName).';
-  }
+  String get consequencesTitle => 'Consequences';
+
+  @override
+  String get consequenceFakeJob =>
+      'If you go along with this, you risk losing money you\'ve already sent with no way to get it back -- and, for in-person or overseas offers, real danger to your physical safety.';
+
+  @override
+  String get consequenceFakeScholarship =>
+      'You risk losing the money you paid, with no scholarship or invitation ever arriving.';
+
+  @override
+  String get consequencePhishing =>
+      'If you enter the OTP or password, scammers can empty your account immediately, and getting that money back is very difficult.';
+
+  @override
+  String get consequenceImpersonation =>
+      'You risk losing all the money you transfer, and this can escalate into further threats or coercion.';
+
+  @override
+  String get consequenceInvestment =>
+      'Money you deposit is usually lost completely -- these platforms typically vanish or block you the moment you try to withdraw.';
+
+  @override
+  String get consequenceRomance =>
+      'You risk losing everything you send, and the person you trusted usually disappears right after.';
+
+  @override
+  String get consequenceLoan =>
+      'You risk losing the fee you paid without ever receiving the loan, and your personal information can be used to threaten you or your family.';
+
+  @override
+  String get consequenceOther =>
+      'You risk losing the money you send with little chance of recovery, since this doesn\'t go through any official channel.';
+
+  @override
+  String get consequenceGeneric =>
+      'If you follow this message\'s instructions, you risk losing money or personal information that is hard to recover.';
+
+  @override
+  String get realOutcomeLabel => 'This really happened:';
+
+  @override
+  String get readOriginalArticle => 'Read the original article';
 
   @override
   String get quizTitle => 'Quiz';
