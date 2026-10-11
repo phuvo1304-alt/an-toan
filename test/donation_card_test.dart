@@ -80,8 +80,12 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.byType(QrImageView), findsOneWidget);
-    expect(find.textContaining('I built An Toàn'), findsOneWidget);
+    expect(find.textContaining("Hi, I'm Phú, a high school student"), findsOneWidget);
     expect(find.text('Scan to support'), findsOneWidget);
+    // Collapsed by default -- the full two-paragraph story is long enough
+    // that showing it all up front would dominate the card.
+    expect(find.text('Read more'), findsOneWidget);
+    expect(find.text('Show less'), findsNothing);
     // Shown twice by design: once as the story's byline, once next to the
     // QR (the credibility mechanism a real transfer is checked against).
     expect(find.text(_fakeHolderName), findsNWidgets(2));
@@ -163,10 +167,43 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('Mình làm An Toàn'), findsOneWidget);
+    expect(find.textContaining('Chào mọi người, mình là Phú'), findsOneWidget);
     expect(find.text('Quét mã để ủng hộ'), findsOneWidget);
+    expect(find.text('Đọc thêm'), findsOneWidget);
     expect(find.text('Đây là tài khoản cá nhân/gia đình, không phải tổ chức '
         'từ thiện đã đăng ký. Mọi sự hỗ trợ đều hoàn toàn tự nguyện.'), findsOneWidget);
+  });
+
+  testWidgets(
+      'tapping "Read more" reveals the full story and switches to "Show '
+      'less"; tapping it again collapses back', (tester) async {
+    mockClipboard(tester);
+    await setTallSurface(tester);
+    await tester.pumpWidget(_wrap(const DonationCard(
+      bankCode: Bank.acb,
+      accountNumber: _fakeAccountNumber,
+      accountHolderName: _fakeHolderName,
+    )));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Read more'), findsOneWidget);
+    expect(find.textContaining('Thank you for caring about this.'), findsOneWidget);
+
+    await tester.tap(find.text('Read more'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Show less'), findsOneWidget);
+    expect(find.text('Read more'), findsNothing);
+    // The full text was always present in the widget tree (maxLines only
+    // affects painting, not the Text widget's data) -- what changes on tap
+    // is maxLines/overflow, which isn't finder-visible, so the meaningful
+    // assertion here is the toggle label itself, checked above.
+
+    await tester.tap(find.text('Show less'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Read more'), findsOneWidget);
+    expect(find.text('Show less'), findsNothing);
   });
 
   // The avatar initial is derived from the LAST token of the holder's name

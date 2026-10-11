@@ -533,7 +533,7 @@ abstract class AppLocalizations {
   /// No description provided for @donationStory.
   ///
   /// In vi, this message translates to:
-  /// **'Mình làm An Toàn vì một người mình biết đã từng bị lừa mất tiền. Ứng dụng này sẽ luôn miễn phí, không quảng cáo. Nếu nó giúp được bạn, một phần nhỏ ủng hộ sẽ giúp mình trả chi phí máy chủ và AI để duy trì nó.'**
+  /// **'Chào mọi người, mình là Phú, học sinh cấp 3 ở TP.HCM. Mình xây dựng An Toàn sau khi gia đình mình trực tiếp gánh chịu hậu quả của lừa đảo: cô của mình bị lừa sang Campuchia và bị giữ lại đó suốt 2 năm, gia đình mình đã mất hàng trăm triệu đồng để tìm cách đưa cô về. Mình không muốn bất kỳ gia đình nào khác phải trải qua điều đó — mình không thể chịu được khi thấy gia đình sụp đổ vì những chiêu lừa này. Đó là lý do mình tự học lập trình và làm ra An Toàn, một ứng dụng AI miễn phí giúp học sinh, sinh viên Việt Nam và gia đình nhận biết lừa đảo trước khi quá muộn.\n\nAn Toàn hoàn toàn miễn phí và sẽ luôn như vậy — không quảng cáo, không thu phí. Số tiền bạn donate chỉ dùng để trả chi phí máy chủ và AI để app tiếp tục chạy và đến được với nhiều người hơn. Cảm ơn bạn đã quan tâm.'**
   String get donationStory;
 
   /// No description provided for @donationScanInstruction.
@@ -541,6 +541,18 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Quét mã để ủng hộ'**
   String get donationScanInstruction;
+
+  /// No description provided for @donationReadMore.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đọc thêm'**
+  String get donationReadMore;
+
+  /// No description provided for @donationShowLess.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thu gọn'**
+  String get donationShowLess;
 
   /// No description provided for @donationDisclosure.
   ///

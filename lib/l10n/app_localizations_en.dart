@@ -248,10 +248,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get donationStory =>
-      'I built An Toàn because someone I know lost money to a scam. This app will always stay free, with no ads. If it\'s helped you, a small contribution helps cover the server and AI costs that keep it running.';
+      'Hi, I\'m Phú, a high school student in Ho Chi Minh City, Vietnam. I built An Toàn after my own family lived through what these scams can do: my aunt was trafficked to Cambodia and held there for two years, and my family spent hundreds of millions of VND trying to bring her home. I don\'t want any other family to go through that — I can\'t stand watching families fall apart because of these scams. That\'s why I taught myself to code and built An Toàn, a free AI app that helps Vietnamese students and families recognize scams before it\'s too late.\n\nAn Toàn is completely free and will stay that way — no ads, no fees. Donations go straight to the server and AI costs that keep it running and help it reach more people. Thank you for caring about this.';
 
   @override
   String get donationScanInstruction => 'Scan to support';
+
+  @override
+  String get donationReadMore => 'Read more';
+
+  @override
+  String get donationShowLess => 'Show less';
 
   @override
   String get donationDisclosure =>

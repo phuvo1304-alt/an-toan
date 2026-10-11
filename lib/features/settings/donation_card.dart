@@ -28,7 +28,13 @@ import '../../l10n/app_localizations.dart';
 /// pattern this app teaches people to distrust, so a visible, consistent
 /// name at the point of payment is the credibility mechanism this feature
 /// depends on, not polish.
-class DonationCard extends StatelessWidget {
+///
+/// Stateful only for the story's collapsed/expanded toggle: the real story
+/// is two full paragraphs (not the short placeholder this layout was first
+/// drawn against), long enough that showing it in full by default would let
+/// it dominate the whole card and read as a wall of text instead of a
+/// pull-quote -- see `_storyExpanded` below.
+class DonationCard extends StatefulWidget {
   final Bank bankCode;
   final String accountNumber;
   final String accountHolderName;
@@ -58,7 +64,21 @@ class DonationCard extends StatelessWidget {
   }
 
   @override
+  State<DonationCard> createState() => _DonationCardState();
+}
+
+class _DonationCardState extends State<DonationCard> {
+  // Collapsed by default: a short preview keeps the card's visual weight in
+  // proportion to the QR/rows below it. Nothing is ever lost -- "Read more"
+  // reveals the full two-paragraph story in place, "Show less" collapses it
+  // back, and the byline (who's talking) stays visible either way.
+  bool _storyExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
+    final bankCode = widget.bankCode;
+    final accountNumber = widget.accountNumber;
+    final accountHolderName = widget.accountHolderName;
     final t = AppLocalizations.of(context)!;
     final textTheme = Theme.of(context).textTheme;
     final scheme = Theme.of(context).colorScheme;
@@ -91,7 +111,7 @@ class DonationCard extends StatelessWidget {
                     radius: 20,
                     backgroundColor: scheme.tertiary,
                     child: Text(
-                      _initial,
+                      widget._initial,
                       style: textTheme.titleMedium
                           ?.copyWith(color: scheme.onTertiary, fontWeight: FontWeight.w700),
                     ),
@@ -102,14 +122,34 @@ class DonationCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(Icons.format_quote, color: scheme.tertiary, size: AppIconSize.lg),
-                        Text(
-                          t.donationStory,
-                          style: textTheme.bodyLarge?.copyWith(
-                            color: scheme.onTertiaryContainer,
-                            fontStyle: FontStyle.italic,
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            t.donationStory,
+                            maxLines: _storyExpanded ? null : 4,
+                            overflow:
+                                _storyExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                            style: textTheme.bodyLarge?.copyWith(
+                              color: scheme.onTertiaryContainer,
+                              fontStyle: FontStyle.italic,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: AppSpace.sm),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                            onPressed: () => setState(() => _storyExpanded = !_storyExpanded),
+                            style: TextButton.styleFrom(
+                              foregroundColor: scheme.onTertiaryContainer,
+                              padding: EdgeInsets.zero,
+                              alignment: Alignment.centerLeft,
+                            ),
+                            child: Text(_storyExpanded ? t.donationShowLess : t.donationReadMore),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpace.xs),
                         Semantics(
                           label: '${t.donationHolderLabel}: $accountHolderName',
                           child: Text(
@@ -178,7 +218,7 @@ class DonationCard extends StatelessWidget {
               label: t.donationBankLabel,
               value: bankLabel,
               copyLabel: t.donationCopy,
-              onCopy: () => _copy(context, bankLabel),
+              onCopy: () => widget._copy(context, bankLabel),
             ),
             const SizedBox(height: AppSpace.sm),
             _DonationRow(
@@ -186,7 +226,7 @@ class DonationCard extends StatelessWidget {
               label: t.donationAccountLabel,
               value: accountNumber,
               copyLabel: t.donationCopy,
-              onCopy: () => _copy(context, accountNumber),
+              onCopy: () => widget._copy(context, accountNumber),
             ),
             const SizedBox(height: AppSpace.md),
             Row(
