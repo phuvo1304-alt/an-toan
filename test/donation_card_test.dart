@@ -187,7 +187,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Read more'), findsOneWidget);
-    expect(find.textContaining('Thank you for caring about this.'), findsOneWidget);
+    expect(
+        find.textContaining(
+            "so even a small contribution means a lot."),
+        findsOneWidget);
 
     await tester.tap(find.text('Read more'));
     await tester.pumpAndSettle();
