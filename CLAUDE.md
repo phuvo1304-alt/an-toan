@@ -353,3 +353,63 @@ Then wait for my "go" before writing code.
      text and run the quote check on it (two calls: slower and pricier).
   3. Label image-check quotes as "đoạn AI đọc được" ("as read by AI") instead
      of exact quotes (needs a client change).
+
+### 14.3 analyze-scam: scam_type classification is not always stable across identical calls
+- **Status:** confirmed on TEXT input, root cause unconfirmed, no fix
+  attempted. Distinct from 14.1 (red-flag quote/title mismatches) and 14.2
+  (image misreads) -- this is about the `scam_type` field specifically.
+- **Found:** 2026-10-11, investigating a symptom report: the "Real reported
+  cases" section on the result screen (driven entirely by `scam_type`, see
+  `pickReferenceCases` in `reference_cases.dart`) seemed to appear
+  inconsistently for genuinely scam-shaped content. Built a 16-case/2-runs-
+  each stability harness (`data/eval_analyze_scam.ts` against
+  `data/scam_type_stability_cases.json`, our own paraphrases of one or two
+  `data/scam_case_reference.json` entries per category, covering all 8
+  scam_type values) and ran it against production.
+- **Evidence (the actual finding):** 1 of 16 identical back-to-back call
+  pairs (6.25%) returned a DIFFERENT `scam_type` on the second call:
+  `stability-romance-01` (a romance scam that funnels the victim into a fake
+  crypto investment) returned `scam_type: "investment"` on call 1 and
+  `scam_type: "romance"` on call 2 -- identical input, identical risk_level
+  ("likely_scam", score 95 both times), only the category flipped. The other
+  15/16 pairs were internally consistent (same scam_type both times, right
+  or wrong). risk_level itself never disagreed across any pair (0/16).
+- **Two hypotheses this ruled OUT before spending anything:** (A) literal
+  `scam_type: "other"` -- never occurred, 0/32 runs. (B) dataset too thin --
+  ruled out analytically: `pickReferenceCases`' default `max` is 2, and every
+  one of the 7 non-"other" categories already has >= 2 entries (loan: 2, the
+  thinnest), so the widened-fallback tier never needs to activate and no real
+  category can produce an empty section under current data.
+- **An unanticipated, dominant bucket, confounded by test methodology:** 20
+  of the 32 runs (10/16 cases) came back `scam_type: "none"` with
+  `risk_level: "safe"` or `"suspicious"`. Suspected cause: the test inputs
+  were third-person news-report paraphrases ("Theo Công an Hà Nội, một người
+  đàn ông...") describing a scam that happened to someone else, not a
+  first-person message a user actually received -- the model may be
+  correctly judging the text itself contains no live scam attempt against
+  the reader. This is PLAUSIBLE BUT UNCONFIRMED (not yet tested against
+  first-person-phrased inputs), so these 20 results are not counted as
+  evidence for or against the 6.25% instability finding above, which comes
+  only from the within-pair comparison and is unaffected by input phrasing
+  either way.
+- **One taxonomy-adjacent finding, not scored as instability:** our own
+  `other-001` case (a fake-shipper-payment scam, filed as `other` in the
+  dataset) was classified `scam_type: "impersonation"` by the model, both
+  runs, consistently -- a defensible read (the scammer impersonates a
+  delivery "team leader"), but a disagreement with our own taxonomy, not a
+  within-pair flip.
+- **Deferred options (needs a decision, not a prompt tweak tonight):**
+  1. Re-run this harness with first-person-phrased inputs to separate the
+     methodology confound from the real instability rate before deciding
+     anything.
+  2. If a nonzero flip rate holds on realistic inputs too: decide whether
+     `scam_type` needs its own stability safeguard (e.g. a second call,
+     a self-consistency check, or treating adjacent categories as
+     equivalent for the reference-cases lookup) -- a product/cost decision,
+     not a one-line fix.
+  3. Test image modality separately once real screenshot files are
+     available (owner to provide in a follow-up task) -- not yet tested;
+     confirmed that audio is not a separate server-side modality to test
+     (the Voice tab sends its transcript through the same `text` path, so
+     it is indistinguishable from typed text by the time it reaches
+     `analyze-scam`).

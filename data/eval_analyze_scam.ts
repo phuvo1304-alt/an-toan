@@ -27,6 +27,10 @@
 //                       Only needed if `functions serve` enforces JWT (the
 //                       default). Omit it if you started serve with
 //                       --no-verify-jwt.
+//   EVAL_CASES_FILE    Case file to load, relative to this script's own
+//                       directory (default "test_cases.json"). Lets a
+//                       different investigation (e.g. scam_type stability)
+//                       reuse this harness without forking it.
 //   EVAL_RUNS          Runs per case (default 3).
 //   EVAL_DELAY_MS      Delay between calls in ms (default 300), so this is
 //                       never hammering even a local server.
@@ -96,6 +100,7 @@ const RUNS = Number(Deno.env.get("EVAL_RUNS") ?? "3") || 3;
 const DELAY_MS = Number(Deno.env.get("EVAL_DELAY_MS") ?? "300") || 300;
 const MODEL_LABEL = Deno.env.get("CLAUDE_MODEL") ?? "claude-haiku-4-5-20251001";
 const ALLOW_REMOTE = Deno.env.get("ALLOW_REMOTE_EVAL") === "1";
+const CASES_FILE = Deno.env.get("EVAL_CASES_FILE") ?? "test_cases.json";
 
 function fail(msg: string): never {
   console.error(`eval_analyze_scam: ${msg}`);
@@ -212,11 +217,13 @@ async function writeResultsFile(results: CaseResult[]): Promise<string> {
   await Deno.mkdir(dirUrl, { recursive: true });
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
   const modelSlug = MODEL_LABEL.replace(/[^a-zA-Z0-9_.-]/g, "_");
-  const fileUrl = new URL(`./${stamp}_${modelSlug}.json`, dirUrl);
+  const casesSlug = CASES_FILE.replace(/\.json$/, "").replace(/[^a-zA-Z0-9_.-]/g, "_");
+  const fileUrl = new URL(`./${stamp}_${casesSlug}_${modelSlug}.json`, dirUrl);
   const payload = {
     generated_at: new Date().toISOString(),
     model: MODEL_LABEL,
     target_url: ANALYZE_SCAM_URL,
+    cases_file: CASES_FILE,
     runs_per_case: RUNS,
     cases: results,
   };
@@ -225,10 +232,10 @@ async function writeResultsFile(results: CaseResult[]): Promise<string> {
 }
 
 async function run() {
-  const casesUrl = new URL("./test_cases.json", import.meta.url);
+  const casesUrl = new URL(`./${CASES_FILE}`, import.meta.url);
   const cases: TestCase[] = JSON.parse(await Deno.readTextFile(casesUrl));
 
-  console.log(`eval_analyze_scam: ${cases.length} cases x ${RUNS} runs -> ${ANALYZE_SCAM_URL}`);
+  console.log(`eval_analyze_scam: ${cases.length} cases from ${CASES_FILE} x ${RUNS} runs -> ${ANALYZE_SCAM_URL}`);
   console.log(`model label (for the results filename only, not sent to the server): ${MODEL_LABEL}`);
   if (!ANON_KEY) {
     console.log(

@@ -1,0 +1,146 @@
+[
+  {
+    "id": "stability-impersonation-01",
+    "text": "Theo Cục Cảnh sát hình sự, kẻ gian gọi điện hoặc gọi video xưng là công an, viện kiểm sát, tòa án, báo cho học sinh, sinh viên rằng các em dính líu tới một vụ án và sẽ bị bắt nếu không làm theo. Chúng bắt nạn nhân giữ bí mật với gia đình, tự tìm đến nhà nghỉ, khách sạn và làm theo kịch bản có sẵn, rồi đòi chuyển tiền để \"chứng minh vô tội\"; có vụ còn dọa đưa sang Campuchia hoặc hứa cho đi du học.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "impersonation",
+    "note": "Our own paraphrase of impersonation-001 (data/scam_case_reference.json) -- a case we already trust is impersonation.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-impersonation-02",
+    "text": "Bộ Công an giải thích \"bắt cóc online\" thực chất là lừa đảo: kẻ gian dựng phòng làm việc giống trụ sở công an, mặc trang phục công an, dùng giấy triệu tập, lệnh bắt giả và gọi video qua Zalo, Viber, Zoom báo nạn nhân liên quan vụ án rửa tiền, ma túy. Sau đó chúng bắt nạn nhân tự cách ly, cắt liên lạc với gia đình, đưa mật khẩu mạng xã hội để chính chúng nhắn cho gia đình là \"bị bắt cóc\", gợi ý cách kiếm tiền, mua vé cho nạn nhân tự đi tới nơi chỉ định và đòi gửi ảnh nhạy cảm hoặc video cầu cứu; khi cả nhà hoảng loạn thì đòi chuyển tiền.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "impersonation",
+    "note": "Our own paraphrase of impersonation-004 -- a second, independent impersonation case.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-romance-01",
+    "text": "Theo Công an Hà Nội, một người đàn ông làm quen qua mạng, tạo quan hệ tình cảm rồi hướng dẫn nạn nhân đầu tư tiền ảo trên một hệ thống do hắn giới thiệu. Lúc đầu khoản nhỏ có lãi và rút được, nên nạn nhân nạp tiền lớn; khi số dư \"lãi\" trên hệ thống tăng vọt thì không rút được, hệ thống đòi nộp thêm 5% tổng số dư mới cho rút.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "romance",
+    "note": "Our own paraphrase of romance-001 -- note this one leans heavily on investment mechanics (crypto platform, withdrawal fee), so it also doubles as a check on the romance/investment boundary.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-romance-02",
+    "text": "Kẻ gian lập tài khoản giả là phụ nữ xinh đẹp trên trang hẹn hò, trò chuyện tâm sự một thời gian rồi chuyển sang chủ đề tài chính. Nạn nhân được hướng dẫn làm \"thẻ thành viên\" để nạp tiền, tích điểm, nhận lãi; các khoản đầu tiên được trả lại ngay để tạo lòng tin. Khi nạn nhân bỏ số tiền lớn, chúng đòi thêm với lý do \"nâng cấp gói VIP\", \"hoàn trả quỹ hỗ trợ đầu tư\", \"gỡ chế độ an toàn\".",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "romance",
+    "note": "Our own paraphrase of romance-002 -- a second, independent romance case.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-loan-01",
+    "text": "Công an TP.HCM cảnh báo các app, website cho vay giả danh thương hiệu tổ chức tín dụng, quảng cáo lãi thấp, 0%, không cần thế chấp, giải ngân siêu tốc. Khi \"thẩm định hồ sơ\", chúng đòi thông tin cá nhân và bắt cài app được quyền truy cập danh bạ, mạng xã hội, ảnh căn cước. Một kiểu lừa là báo đã giải ngân trên giao diện nhưng không rút được do \"sai thông tin\", rồi đòi chuyển tiền \"xác minh\"; nếu không nộp thì dọa đưa vào nợ xấu.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "loan",
+    "note": "Our own paraphrase of loan-001 -- loan is the dataset's thinnest category (2 entries), relevant to hypothesis B even though it's analytically ruled out at max=2.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-loan-02",
+    "text": "Công an TP.HCM khởi tố nhân viên một số công ty thu hồi nợ đứng sau hàng chục app cho vay. Nhân viên được cấp điện thoại, sim và mẫu tin nhắn thô tục, kèm thông tin người vay và số điện thoại cha mẹ của họ, để gọi điện, nhắn tin đe dọa cả người vay lẫn người thân. Việc đòi nợ chia theo cấp độ, có cả đe dọa ghép ảnh vợ con người vay để bôi nhọ trên mạng xã hội.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "loan",
+    "note": "Our own paraphrase of loan-002 -- the dataset's other loan entry.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-fake_scholarship-01",
+    "text": "Phòng Cảnh sát hình sự Công an TP.HCM cảnh báo một đường dây giả danh chương trình học bổng du học quốc tế, liên lạc qua Zalo, Facebook, Telegram. Sinh viên được bảo phải nộp \"lệ phí\" và \"chứng minh tài chính\", bị thao túng tới mức rời nhà, cắt liên lạc với gia đình, tự quay video và gửi ảnh nhạy cảm; sau đó gia đình nhận tin nhắn đòi tiền \"chuộc người\".",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "fake_scholarship",
+    "note": "Our own paraphrase of fake_scholarship-001.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-fake_scholarship-02",
+    "text": "Nhiều đại học lớn ở Hà Nội cảnh báo văn bản giả mạo chữ ký hiệu trưởng và con dấu, quảng cáo chương trình trao đổi sinh viên ở Đài Loan, Nhật Bản, Mỹ. Hồ sơ yêu cầu mã sinh viên, email, số điện thoại, bài luận, hồ sơ tài chính và sao kê chứng minh số dư hàng trăm triệu đồng. Các trường khẳng định văn bản là giả và chỉ thông tin qua kênh chính thức.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "fake_scholarship",
+    "note": "Our own paraphrase of fake_scholarship-002 -- a second, independent case.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-fake_job-01",
+    "text": "Công an Kiên Giang cho biết một nhóm người Việt được giới thiệu việc qua mạng xã hội với lời mời \"không cần kinh nghiệm\", \"thu nhập nghìn đô\", \"việc nhẹ lương cao\". Họ bị yêu cầu sang Campuchia bằng đường tiểu ngạch, bị đưa vào các cơ sở do người nước ngoài điều hành, bị ép gọi điện lừa đảo và bị đánh nếu không đạt chỉ tiêu hoặc tìm cách bỏ trốn.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "fake_job",
+    "note": "Our own paraphrase of fake_job-001.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-fake_job-02",
+    "text": "Công an Hà Nội điều tra vụ một người được một người quen rủ làm \"cộng tác viên chốt đơn hàng online\" để hưởng hoa hồng. Nạn nhân đăng ký qua một đường link, phải chuyển tiền để làm \"nhiệm vụ\", sau đó không rút được tiền ra. Công an nhắc lại rằng các lời mời hưởng hoa hồng, lãi cao kiểu này thường là chiêu lừa đảo.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "fake_job",
+    "note": "Our own paraphrase of fake_job-002 -- a second, independent case.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-investment-01",
+    "text": "Công an Hà Nội đã vạch trần ứng dụng chứng khoán giả \"AJB DIRECT\" hiển thị VN-Index, HNX-Index như thật nhưng mọi giao dịch đều lập trình sẵn, không nối với thị trường. Chiêu lừa bắt đầu bằng lời mời vào \"nhóm học đầu tư chứng khoán\" trên Zalo, Telegram, nơi \"chuyên gia\" giả liên tục \"phím hàng\", cho giao dịch thử và hiện lãi ảo mỗi ngày, hứa lợi nhuận rất cao; đến khi rút tiền thì bị chặn, bị xóa khỏi nhóm.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "investment",
+    "note": "Our own paraphrase of investment-001.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-investment-02",
+    "text": "Công an Đà Nẵng triệt phá một đường dây điều hành từ một khu ở Bavet (Campuchia), dùng các website giả mạo sàn Nasdaq để mời đầu tư tiền ảo. Nhóm lập các nhóm Zalo, Telegram với hàng chục tài khoản ảo để \"đánh sóng\" tạo niềm tin, dựng kịch bản \"báo lãi\" và giả danh chuyên gia đầu tư dụ nạp tiền; tiền chiếm đoạt được chuyển qua nhiều tài khoản và đổi sang tiền ảo để che giấu.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "investment",
+    "note": "Our own paraphrase of investment-002 -- a second, independent case.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-phishing-01",
+    "text": "Tại TP HCM, cơ quan quản lý tần số và công an thu giữ trạm phát sóng di động (BTS) giả lắp trên ô tô đang phát tán tin nhắn mang tên thương hiệu của một ngân hàng lớn và một đơn vị bưu chính. Tin nhắn báo điểm thẻ tín dụng sắp hết hạn đổi thưởng hoặc thông tin giao hàng bị sai, kèm đường link dẫn tới trang lừa đảo để lấy thông tin cá nhân và tiền.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "phishing",
+    "note": "Our own paraphrase of phishing-001.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-phishing-02",
+    "text": "Cục An ninh mạng cảnh báo: lợi dụng việc sắp xếp đơn vị hành chính, kẻ gian gọi điện xưng là cán bộ xã/phường hoặc cảnh sát khu vực, đọc sẵn thông tin cá nhân của người nghe để tạo lòng tin, rồi bảo truy cập đường link hoặc cài ứng dụng VNeID, dịch vụ công giả mạo có mã độc. Khi đã chiếm quyền điều khiển điện thoại, chúng dẫn dụ để lấy mã OTP ngân hàng hoặc bảo nhìn vào camera để lấy dữ liệu khuôn mặt, rồi rút tiền trong tài khoản.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "phishing",
+    "note": "Our own paraphrase of phishing-002 -- a second, independent case.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-other-01",
+    "text": "Kẻ giả shipper gọi báo giao đơn hàng đúng số tiền của một đơn nạn nhân vừa đặt thật, xin chuyển khoản. Sau đó hắn than \"bạn em nhắn nhầm tài khoản đăng ký hội viên, mỗi tháng sẽ bị trừ vài triệu\", đóng vai sinh viên đáng thương nhờ hủy giúp, gửi link tới trang chat giả của hãng giao hàng, chuyển cho \"trưởng nhóm\", báo tài khoản bị treo vì chưa đăng ký sinh trắc học và xin dùng tài khoản ngân hàng khác; cuối cùng thẻ tín dụng bị rút hàng chục triệu đồng.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "other",
+    "note": "Our own paraphrase of other-001 (fake shipper) -- a deliberately-off-taxonomy case: this one SHOULD come back 'other', so a fraction of our 'section missing' results are expected to be this, not evidence of a bug.",
+    "input_type": "text"
+  },
+  {
+    "id": "stability-other-02",
+    "text": "Công an Hải Phòng bắt các nhóm lập fanpage mạo danh có tên gần giống trang bán hàng uy tín, dùng logo, ảnh, clip cắt ghép, chạy quảng cáo và có người trực page liên tục. Trang rao điện thoại, máy tính, đồng hồ rẻ hơn thị trường 20-40%, cam kết chính hãng, bảo hành, rồi thuyết phục khách chuyển tiền đặt cọc \"mua hộ\". Nhận tiền xong chúng chặn liên lạc, xóa tin nhắn, đóng hoặc đổi tên trang, hoặc tiếp tục đòi thêm tiền.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "other",
+    "note": "Our own paraphrase of other-002 (fake storefront) -- also expected to legitimately come back 'other'.",
+    "input_type": "text"
+  }
+]

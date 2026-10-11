@@ -1,0 +1,652 @@
+{
+  "generated_at": "2026-10-11T04:27:48.362Z",
+  "model": "claude-haiku-4-5-20251001",
+  "target_url": "https://qhcewuxbtyvcqsjfiizm.supabase.co/functions/v1/analyze-scam",
+  "cases_file": "scam_type_stability_cases.json",
+  "runs_per_case": 2,
+  "cases": [
+    {
+      "id": "stability-impersonation-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "impersonation",
+      "note": "Our own paraphrase of impersonation-001 (data/scam_case_reference.json) -- a case we already trust is impersonation.",
+      "pattern_precheck": [
+        "impersonation"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 8208,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 6669,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "stability-impersonation-02",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "impersonation",
+      "note": "Our own paraphrase of impersonation-004 -- a second, independent impersonation case.",
+      "pattern_precheck": [
+        "impersonation"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 7413,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 5813,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "stability-romance-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "romance",
+      "note": "Our own paraphrase of romance-001 -- note this one leans heavily on investment mechanics (crypto platform, withdrawal fee), so it also doubles as a check on the romance/investment boundary.",
+      "pattern_precheck": [
+        "investment"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "investment",
+          "latency_ms": 13069,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 92,
+          "scam_type": "romance",
+          "latency_ms": 15793,
+          "quotes_total": 5,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "investment",
+          "romance"
+        ]
+      }
+    },
+    {
+      "id": "stability-romance-02",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "romance",
+      "note": "Our own paraphrase of romance-002 -- a second, independent romance case.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "romance",
+          "latency_ms": 14326,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "romance",
+          "latency_ms": 14858,
+          "quotes_total": 3,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "romance"
+        ]
+      }
+    },
+    {
+      "id": "stability-loan-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "loan",
+      "note": "Our own paraphrase of loan-001 -- loan is the dataset's thinnest category (2 entries), relevant to hypothesis B even though it's analytically ruled out at max=2.",
+      "pattern_precheck": [
+        "loan"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 6390,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 7411,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "stability-loan-02",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "loan",
+      "note": "Our own paraphrase of loan-002 -- the dataset's other loan entry.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 5347,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 5816,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "stability-fake_scholarship-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "fake_scholarship",
+      "note": "Our own paraphrase of fake_scholarship-001.",
+      "pattern_precheck": [
+        "fake_scholarship",
+        "loan"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 6079,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 5,
+          "scam_type": "none",
+          "latency_ms": 6111,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "stability-fake_scholarship-02",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "fake_scholarship",
+      "note": "Our own paraphrase of fake_scholarship-002 -- a second, independent case.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 85,
+          "scam_type": "fake_scholarship",
+          "latency_ms": 12298,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 85,
+          "scam_type": "fake_scholarship",
+          "latency_ms": 13894,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "fake_scholarship"
+        ]
+      }
+    },
+    {
+      "id": "stability-fake_job-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "fake_job",
+      "note": "Our own paraphrase of fake_job-001.",
+      "pattern_precheck": [
+        "fake_job"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "fake_job",
+          "latency_ms": 12877,
+          "quotes_total": 4,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "fake_job",
+          "latency_ms": 13951,
+          "quotes_total": 5,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "fake_job"
+        ]
+      }
+    },
+    {
+      "id": "stability-fake_job-02",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "fake_job",
+      "note": "Our own paraphrase of fake_job-002 -- a second, independent case.",
+      "pattern_precheck": [
+        "fake_job",
+        "investment"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 6238,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 6404,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "stability-investment-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "investment",
+      "note": "Our own paraphrase of investment-001.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 6297,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 6604,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "stability-investment-02",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "investment",
+      "note": "Our own paraphrase of investment-002 -- a second, independent case.",
+      "pattern_precheck": [
+        "investment"
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 35,
+          "scam_type": "none",
+          "latency_ms": 6134,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 35,
+          "scam_type": "none",
+          "latency_ms": 7192,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "suspicious"
+        ],
+        "modal_risk_level": "suspicious",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "stability-phishing-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "phishing",
+      "note": "Our own paraphrase of phishing-001.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 10641,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "suspicious",
+          "risk_score": 45,
+          "scam_type": "phishing",
+          "latency_ms": 9161,
+          "quotes_total": 2,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "suspicious"
+        ],
+        "modal_risk_level": "suspicious",
+        "disagreement": false,
+        "scam_types_seen": [
+          "phishing"
+        ]
+      }
+    },
+    {
+      "id": "stability-phishing-02",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "phishing",
+      "note": "Our own paraphrase of phishing-002 -- a second, independent case.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 7224,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 7421,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    },
+    {
+      "id": "stability-other-01",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "other",
+      "note": "Our own paraphrase of other-001 (fake shipper) -- a deliberately-off-taxonomy case: this one SHOULD come back 'other', so a fraction of our 'section missing' results are expected to be this, not evidence of a bug.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "impersonation",
+          "latency_ms": 15566,
+          "quotes_total": 5,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "likely_scam",
+          "risk_score": 95,
+          "scam_type": "impersonation",
+          "latency_ms": 18304,
+          "quotes_total": 7,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "likely_scam"
+        ],
+        "modal_risk_level": "likely_scam",
+        "disagreement": false,
+        "scam_types_seen": [
+          "impersonation"
+        ]
+      }
+    },
+    {
+      "id": "stability-other-02",
+      "expected_risk_level": "likely_scam",
+      "expected_scam_type": "other",
+      "note": "Our own paraphrase of other-002 (fake storefront) -- also expected to legitimately come back 'other'.",
+      "pattern_precheck": [],
+      "runs": [
+        {
+          "run": 1,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 6997,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        },
+        {
+          "run": 2,
+          "ok": true,
+          "risk_level": "safe",
+          "risk_score": 15,
+          "scam_type": "none",
+          "latency_ms": 6211,
+          "quotes_total": 0,
+          "quotes_dropped": 0
+        }
+      ],
+      "aggregate": {
+        "risk_levels_seen": [
+          "safe"
+        ],
+        "modal_risk_level": "safe",
+        "disagreement": false,
+        "scam_types_seen": [
+          "none"
+        ]
+      }
+    }
+  ]
+}
