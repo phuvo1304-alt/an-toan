@@ -7,6 +7,7 @@ import '../../app/widgets.dart';
 import '../../core/locale_provider.dart';
 import '../../core/text_scale_provider.dart';
 import '../../l10n/app_localizations.dart';
+import 'official_contacts.dart';
 
 /// Public privacy policy page (GitHub Pages, served from docs/ on main).
 final privacyPolicyUrl =
@@ -28,6 +29,31 @@ class SettingsScreen extends ConsumerWidget {
     if (!opened) {
       messenger.showSnackBar(SnackBar(
           content: Text(t.privacyPolicyOpenError(privacyPolicyUrl.toString()))));
+    }
+  }
+
+  /// Dials [contact]'s phone (`primary_action: "call"`) or opens its URL
+  /// (`"open_url"`) -- the action each contact's own sourcing determined is
+  /// realistic (e.g. a VN shortcode vs. a line that costs international
+  /// rates to dial from Vietnam, see data/official_contacts.json).
+  Future<void> _openContact(BuildContext context, OfficialContact contact) async {
+    final t = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final useUrl = contact.primaryAction == 'open_url' && contact.url != null;
+    final uri = useUrl
+        ? Uri.tryParse(contact.url!)
+        : (contact.phone != null ? Uri(scheme: 'tel', path: contact.phone) : null);
+    var opened = false;
+    if (uri != null) {
+      try {
+        opened = await launchUrl(uri,
+            mode: useUrl ? LaunchMode.externalApplication : LaunchMode.platformDefault);
+      } catch (_) {
+        opened = false;
+      }
+    }
+    if (!opened && messenger.mounted) {
+      messenger.showSnackBar(SnackBar(content: Text(t.errorGeneric)));
     }
   }
 
@@ -85,6 +111,32 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(height: AppSpace.lg),
             SectionTitle(t.officialHelpTitle),
             Text(t.officialHelpBody),
+            const SizedBox(height: AppSpace.lg),
+            SectionTitle(t.officialContactsListTitle),
+            FutureBuilder<List<OfficialContact>>(
+              future: loadOfficialContacts(),
+              builder: (context, snapshot) {
+                final contacts = snapshot.data ?? const [];
+                return Column(
+                  children: contacts
+                      .map((c) => Card(
+                            clipBehavior: Clip.antiAlias,
+                            child: ListTile(
+                              minVerticalPadding: 12,
+                              leading: Icon(c.primaryAction == 'open_url'
+                                  ? Icons.open_in_new
+                                  : Icons.call_outlined),
+                              title: Text(c.orgName(locale.languageCode),
+                                  style: textTheme.titleSmall),
+                              subtitle: Text(c.purpose(locale.languageCode)),
+                              isThreeLine: true,
+                              onTap: () => _openContact(context, c),
+                            ),
+                          ))
+                      .toList(),
+                );
+              },
+            ),
           ],
         ),
       ),

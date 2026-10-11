@@ -191,6 +191,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'If you have been scammed, tell your family, your bank and your local police right away. Check the latest official contact numbers on the authorities\' official websites.';
 
   @override
+  String get officialContactsListTitle => 'Official reporting contacts';
+
+  @override
+  String officialContactShortcut(Object orgName) {
+    return 'Contact $orgName — see all official contacts in Settings';
+  }
+
+  @override
   String get quizTitle => 'Quiz';
 
   @override

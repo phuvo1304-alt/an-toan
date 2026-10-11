@@ -191,6 +191,14 @@ class AppLocalizationsVi extends AppLocalizations {
       'Nếu bạn đã bị lừa, hãy báo ngay cho gia đình, ngân hàng của bạn và cơ quan công an địa phương. Hãy kiểm tra số liên hệ chính thức mới nhất trên cổng thông tin của cơ quan chức năng.';
 
   @override
+  String get officialContactsListTitle => 'Số liên hệ báo cáo chính thức';
+
+  @override
+  String officialContactShortcut(Object orgName) {
+    return 'Liên hệ $orgName — xem tất cả số liên hệ chính thức trong Cài đặt';
+  }
+
+  @override
   String get quizTitle => 'Đố vui';
 
   @override

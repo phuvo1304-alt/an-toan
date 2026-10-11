@@ -57,6 +57,8 @@
   "retry": "Retry",
   "officialHelpTitle": "Need help?",
   "officialHelpBody": "If you have been scammed, tell your family, your bank and your local police right away. Check the latest official contact numbers on the authorities' official websites.",
+  "officialContactsListTitle": "Official reporting contacts",
+  "officialContactShortcut": "Contact {orgName} — see all official contacts in Settings",
   "quizTitle": "Quiz",
   "quizIntro": "Read each message and decide whether it is a scam. After each answer you will see an explanation.",
   "quizStart": "Start",

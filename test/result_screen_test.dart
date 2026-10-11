@@ -462,4 +462,68 @@ void main() {
       expect(bar.value, closeTo(0.8, 0.001)); // riskScore: 80 in _result()
     });
   });
+
+  // -- Official contact shortcut (CLAUDE.md section 2/7) ----------------------
+  //
+  // ONE contextually-relevant official contact appended to "what to do",
+  // picked from the real bundled data/official_contacts.json by scam_type
+  // (pickContactForScamType) -- never for safe results, since there's
+  // nothing urgent to act on there.
+  group('official contact shortcut', () {
+    testWidgets('never appears for a safe result', (tester) async {
+      await tester.pumpWidget(_wrap(
+          ResultScreen(result: _result(scamType: 'phishing', riskLevel: RiskLevel.safe))));
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.support_agent), findsNothing);
+    });
+
+    testWidgets(
+        'picks the 156 scam-call-reporting contact for phishing, for both '
+        'suspicious and likely_scam', (tester) async {
+      for (final level in [RiskLevel.suspicious, RiskLevel.likelyScam]) {
+        await tester.pumpWidget(_wrap(
+            ResultScreen(result: _result(scamType: 'phishing', riskLevel: level))));
+        await tester.pumpAndSettle();
+
+        expect(
+          find.text('Contact Spam & Scam Call Reporting (156/5656) — see all '
+              'official contacts in Settings'),
+          findsOneWidget,
+          reason: 'risk level: $level',
+        );
+        expect(find.byIcon(Icons.support_agent), findsOneWidget);
+      }
+    });
+
+    testWidgets(
+        'falls back to the general police line (113) for a category with no '
+        'dedicated contact', (tester) async {
+      await tester.pumpWidget(_wrap(ResultScreen(
+          result: _result(scamType: 'romance', riskLevel: RiskLevel.likelyScam))));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('Contact Police Emergency Line (113) — see all official '
+            'contacts in Settings'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('renders in Vietnamese when the result language is vi',
+        (tester) async {
+      await tester.pumpWidget(_wrap(
+        ResultScreen(result: _result(
+            scamType: 'phishing', riskLevel: RiskLevel.likelyScam, language: 'vi')),
+        locale: const Locale('vi'),
+      ));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('Liên hệ Phản ánh cuộc gọi rác, cuộc gọi lừa đảo (156/5656) '
+            '— xem tất cả số liên hệ chính thức trong Cài đặt'),
+        findsOneWidget,
+      );
+    });
+  });
 }

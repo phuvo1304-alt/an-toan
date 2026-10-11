@@ -440,6 +440,18 @@ abstract class AppLocalizations {
   /// **'Nếu bạn đã bị lừa, hãy báo ngay cho gia đình, ngân hàng của bạn và cơ quan công an địa phương. Hãy kiểm tra số liên hệ chính thức mới nhất trên cổng thông tin của cơ quan chức năng.'**
   String get officialHelpBody;
 
+  /// No description provided for @officialContactsListTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số liên hệ báo cáo chính thức'**
+  String get officialContactsListTitle;
+
+  /// No description provided for @officialContactShortcut.
+  ///
+  /// In vi, this message translates to:
+  /// **'Liên hệ {orgName} — xem tất cả số liên hệ chính thức trong Cài đặt'**
+  String officialContactShortcut(Object orgName);
+
   /// No description provided for @quizTitle.
   ///
   /// In vi, this message translates to:

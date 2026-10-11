@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../l10n/app_localizations.dart';
+import '../settings/official_contacts.dart';
 import 'reference_cases.dart';
 import 'scam_result.dart';
 
@@ -18,6 +19,7 @@ class ResultScreen extends StatefulWidget {
 
 class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderStateMixin {
   late final Future<List<ReferenceCase>> _casesFuture;
+  late final Future<OfficialContact?> _contactFuture;
 
   // One-time entrance animation for the risk bar filling in (never loops,
   // never affects risk_score/risk_level -- only how the bar's fill is drawn
@@ -41,6 +43,10 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
           summary: widget.result.summary,
           language: widget.result.language,
         ));
+
+    // Picked once per screen instance, same reasoning as _casesFuture.
+    _contactFuture = loadOfficialContacts()
+        .then((all) => pickContactForScamType(all, widget.result.scamType));
 
     _barController = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
     _barAnimation = CurvedAnimation(parent: _barController, curve: Curves.easeOut);
@@ -164,10 +170,16 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
         ),
     };
 
+    // Official-contact shortcut: ONE contextually-relevant line appended to
+    // "what to do", chosen by scam_type (pickContactForScamType), never for
+    // safe results -- it links through to the full Settings list rather
+    // than repeating the contact's number/URL here.
+    final showContactShortcut = result.riskLevel != RiskLevel.safe;
+
     // "What to do" steps: built once, placed either right after the summary
     // (suspicious/likely_scam -- act-on-it-now order) or in their original
     // spot after the reference cases (safe -- nothing urgent to act on).
-    final whatToDoWidgets = result.whatToDo.isEmpty
+    final whatToDoWidgets = (result.whatToDo.isEmpty && !showContactShortcut)
         ? const <Widget>[]
         : [
             SectionTitle(t.whatToDo),
@@ -200,6 +212,47 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                     ),
                   ],
                 ),
+              ),
+            if (showContactShortcut)
+              FutureBuilder<OfficialContact?>(
+                future: _contactFuture,
+                builder: (context, snapshot) {
+                  final contact = snapshot.data;
+                  if (contact == null) return const SizedBox.shrink();
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      onTap: () => context.push('/settings'),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 28,
+                            height: 28,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: scheme.primaryContainer,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.support_agent,
+                                size: 16, color: scheme.onPrimaryContainer),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 3),
+                              child: Text(
+                                t.officialContactShortcut(contact.orgName(result.language)),
+                                style: style.whatToDoStyle ?? textTheme.bodyMedium,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
           ];
 
