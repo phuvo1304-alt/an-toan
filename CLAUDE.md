@@ -355,9 +355,13 @@ Then wait for my "go" before writing code.
      of exact quotes (needs a client change).
 
 ### 14.3 analyze-scam: scam_type classification is not always stable across identical calls
-- **Status:** confirmed on TEXT input, root cause unconfirmed, no fix
-  attempted. Distinct from 14.1 (red-flag quote/title mismatches) and 14.2
-  (image misreads) -- this is about the `scam_type` field specifically.
+- **Status:** investigated 2026-10-11. 1/16 (6.25%) flip rate, confined to a
+  single hybrid romance+investment test case -- not a general classification
+  problem. Impact is cosmetic only (which reference cases display).
+  Decision: accepted as-is, no fix planned. Revisit only if real user
+  reports surface a pattern, not from this single eval. Distinct from 14.1
+  (red-flag quote/title mismatches) and 14.2 (image misreads) -- this is
+  about the `scam_type` field specifically.
 - **Found:** 2026-10-11, investigating a symptom report: the "Real reported
   cases" section on the result screen (driven entirely by `scam_type`, see
   `pickReferenceCases` in `reference_cases.dart`) seemed to appear
