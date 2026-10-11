@@ -19,15 +19,27 @@ class AppConfig {
 // ---------------------------------------------------------------------------
 // Settings' "Support this project" donation card (personal/family bank
 // transfer via a locally-generated VietQR code -- see
-// lib/features/settings/settings_screen.dart). PLACEHOLDERS: fill in the
-// real account number and the name actually printed on that account before
-// release (which may not be the app author's own name -- Vietnamese bank
-// accounts are often held under a parent's name). Do NOT invent digits or a
-// name that look real. While kDonationAccountNumber is still
-// "REPLACE_ME", the whole section hides itself rather than rendering a
-// broken/fake-looking QR.
+// lib/features/settings/settings_screen.dart). While kDonationAccountNumber
+// is still "REPLACE_ME", the whole section hides itself rather than
+// rendering a broken/fake-looking QR.
+//
+// kDonationAccountHolderName is display text only in our own UI -- it is
+// NEVER passed to vietqr_gen's VietQR.generate() (which has no account-
+// holder-name parameter at all) and is never encoded in the QR payload
+// itself. It's written unaccented/uppercase to match how Vietnamese banks
+// themselves display a VietQR account holder's name, not because the
+// library requires any particular format.
 // ---------------------------------------------------------------------------
 
 const kDonationBankCode = Bank.acb;
-const kDonationAccountNumber = 'REPLACE_ME';
-const kDonationAccountHolderName = 'REPLACE_ME';
+const kDonationAccountNumber = '41087687';
+const kDonationAccountHolderName = 'VO NGUYEN TRONG PHU';
+
+/// Whether the donation account info looks real, not the "REPLACE_ME"
+/// placeholder -- pure and parameterized (not a getter over the constants
+/// above) specifically so BOTH states stay independently testable
+/// regardless of what the real constants currently hold. Settings calls
+/// this with the real kDonation* constants to decide whether to show the
+/// section at all.
+bool isDonationInfoConfigured(String accountNumber, String accountHolderName) =>
+    accountNumber != 'REPLACE_ME' && accountHolderName != 'REPLACE_ME';

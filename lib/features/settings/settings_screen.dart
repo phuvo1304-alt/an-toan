@@ -143,8 +143,8 @@ class SettingsScreen extends ConsumerWidget {
             // flow. Hidden entirely while the account info is still the
             // placeholder, so an incomplete/fake-looking QR never ships --
             // see lib/core/config.dart.
-            if (kDonationAccountNumber != 'REPLACE_ME' &&
-                kDonationAccountHolderName != 'REPLACE_ME') ...[
+            if (isDonationInfoConfigured(
+                kDonationAccountNumber, kDonationAccountHolderName)) ...[
               const SizedBox(height: AppSpace.lg),
               SectionTitle(t.donationTitle),
               DonationCard(

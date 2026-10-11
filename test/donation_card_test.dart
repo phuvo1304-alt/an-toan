@@ -9,8 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:vietqr_gen/vietqr_generator.dart' show Bank;
+import 'package:vietqr_gen/vietqr_generator.dart' show Bank, VietQR;
 
+import 'package:an_toan/core/config.dart';
 import 'package:an_toan/features/settings/donation_card.dart';
 import 'package:an_toan/l10n/app_localizations.dart';
 
@@ -140,5 +141,19 @@ void main() {
 
     expect(find.text('Đây là tài khoản cá nhân/gia đình, không phải tổ chức '
         'từ thiện đã đăng ký. Mọi sự hỗ trợ đều hoàn toàn tự nguyện.'), findsOneWidget);
+  });
+
+  // The only way to be sure the shipped QR encodes the real account and
+  // isn't silently still carrying a cached/placeholder value: decode/inspect
+  // the actual generated payload string, using the REAL production
+  // lib/core/config.dart constants (not a test fixture).
+  test('the real production VietQR payload encodes the real account number, '
+      'not a leftover placeholder', () {
+    final payload = VietQR.generate(
+      bank: kDonationBankCode,
+      accountNumber: kDonationAccountNumber,
+    );
+    expect(payload, contains('41087687'));
+    expect(payload, isNot(contains('REPLACE_ME')));
   });
 }
