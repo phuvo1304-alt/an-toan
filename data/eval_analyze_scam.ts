@@ -29,8 +29,9 @@
 //                       --no-verify-jwt.
 //   EVAL_CASES_FILE    Case file to load, relative to this script's own
 //                       directory (default "test_cases.json"). Lets a
-//                       different investigation (e.g. scam_type stability)
-//                       reuse this harness without forking it.
+//                       different investigation (e.g. scam_type stability,
+//                       or the accuracy test set below) reuse this harness
+//                       without forking it.
 //   EVAL_RUNS          Runs per case (default 3).
 //   EVAL_DELAY_MS      Delay between calls in ms (default 300), so this is
 //                       never hammering even a local server.
@@ -50,6 +51,12 @@ interface TestCase {
   language: "vi" | "en";
   expected_risk_level: "safe" | "suspicious" | "likely_scam";
   expected_scam_type?: string;
+  // Optional: present on the CLAUDE.md §5 accuracy test set, absent on older
+  // case files (test_cases.json, scam_type_stability_cases.json), which
+  // still run fine -- their cases are just left out of the scoring summary.
+  // "tricky" cases are scored leniently: landing on "suspicious" instead of
+  // the case's own expected_risk_level is never a miss there (see classify()).
+  category?: "scam" | "safe" | "tricky";
   note: string;
   input_type: "text";
 }
@@ -77,10 +84,51 @@ interface RunResult {
   quotes_dropped?: number; // red_flags whose quote wasn't found in the case text (quotes.ts)
 }
 
+// Severity-weighted outcome of comparing modal_risk_level against
+// expected_risk_level, on the ordered scale safe(0) < suspicious(1) <
+// likely_scam(2). "tricky" cases are scored leniently on purpose (see
+// classify()): only landing on likely_scam is ever a miss for them.
+type Classification =
+  | "correct"
+  | "false_negative_soft" // scam case landed on suspicious (distance 1)
+  | "false_negative_full" // scam case landed on safe (distance 2)
+  | "false_positive_soft" // safe case landed on suspicious (distance 1)
+  | "false_positive_full" // safe/tricky case landed on likely_scam (distance 2)
+  | "acceptable_caution" // tricky case landed on the OTHER calm level than
+  // its own expected_risk_level (safe<->suspicious) -- not a miss
+  | "unscored"; // no category on this case, or no successful runs to score
+
+const RISK_ORDINAL: Record<string, number> = { safe: 0, suspicious: 1, likely_scam: 2 };
+
+function classify(
+  category: TestCase["category"],
+  expected: string,
+  actual: string | null,
+): Classification {
+  if (!category || !actual) return "unscored";
+  const e = RISK_ORDINAL[expected];
+  const a = RISK_ORDINAL[actual];
+  if (e === undefined || a === undefined) return "unscored";
+  const distance = Math.abs(a - e);
+
+  if (category === "tricky") {
+    if (actual === "likely_scam") return "false_positive_full";
+    return actual === expected ? "correct" : "acceptable_caution";
+  }
+  if (category === "scam") {
+    if (distance === 0) return "correct";
+    return distance === 1 ? "false_negative_soft" : "false_negative_full";
+  }
+  // category === "safe"
+  if (distance === 0) return "correct";
+  return distance === 1 ? "false_positive_soft" : "false_positive_full";
+}
+
 interface CaseResult {
   id: string;
   expected_risk_level: string;
   expected_scam_type?: string;
+  category?: TestCase["category"];
   note: string;
   // Computed once from the input text, not per run: preCheck() is pure and
   // deterministic, so it can't differ between runs of the same case.
@@ -91,6 +139,17 @@ interface CaseResult {
     modal_risk_level: string | null;
     disagreement: boolean;
     scam_types_seen: string[];
+    // Same §14.3 pattern applied to scam_type, not a new question: whether
+    // identical-case runs returned different scam_type values.
+    modal_scam_type: string | null;
+    scam_type_disagreement: boolean;
+  };
+  scoring: {
+    distance: number | null; // |actual_ordinal - expected_ordinal|, null if unscored
+    classification: Classification;
+    // Only meaningful for category "scam" (expected_risk_level likely_scam);
+    // null otherwise.
+    scam_type_match: boolean | null;
   };
 }
 
@@ -185,10 +244,16 @@ function printCaseLine(c: CaseResult) {
   const totalDropped = c.runs.reduce((sum, r) => sum + (r.quotes_dropped ?? 0), 0);
   const failedRuns = c.runs.filter((r) => !r.ok).length;
   const failedNote = failedRuns > 0 ? ` [${failedRuns}/${c.runs.length} runs failed]` : "";
+  const scoreNote = c.category
+    ? ` [${c.category}:${c.scoring.classification}` +
+      `${c.scoring.distance !== null ? ` d=${c.scoring.distance}` : ""}` +
+      `${c.scoring.scam_type_match === false ? " scam_type_mismatch" : ""}]`
+    : "";
   console.log(
-    `${status} ${c.id.padEnd(24)} expected=${c.expected_risk_level.padEnd(12)} ` +
+    `${status} ${c.id.padEnd(28)} expected=${c.expected_risk_level.padEnd(12)} ` +
       `actual=${(c.aggregate.modal_risk_level ?? "n/a").padEnd(12)} ` +
-      `pre-check=[${c.pattern_precheck.join(",") || "-"}] quote_mismatches=${totalDropped}${disagreement}${failedNote}`,
+      `pre-check=[${c.pattern_precheck.join(",") || "-"}] quote_mismatches=${totalDropped}` +
+      `${scoreNote}${disagreement}${failedNote}`,
   );
 }
 
@@ -209,6 +274,60 @@ function printTotals(results: CaseResult[]) {
   console.log(`${totalDropped} quote mismatches total across all runs.`);
   if (totalFailedRuns > 0) {
     console.log(`${totalFailedRuns} runs failed outright (HTTP error or timeout) -- see the results file.`);
+  }
+}
+
+// Category-aware, severity-weighted accuracy summary (CLAUDE.md §5). Only
+// prints when at least one case in this run has a `category` -- older case
+// files (test_cases.json, scam_type_stability_cases.json) don't set it, so
+// this is silently skipped for them rather than reporting a misleading
+// partial breakdown.
+function printScoringSummary(results: CaseResult[]) {
+  const scored = results.filter((c) => c.category);
+  if (scored.length === 0) return;
+
+  const correct = scored.filter(
+    (c) => c.scoring.classification === "correct" || c.scoring.classification === "acceptable_caution",
+  ).length;
+
+  const scamCases = scored.filter((c) => c.category === "scam");
+  const safeCases = scored.filter((c) => c.category === "safe");
+  const trickyCases = scored.filter((c) => c.category === "tricky");
+
+  const fnFull = scamCases.filter((c) => c.scoring.classification === "false_negative_full").length;
+  const fnSoft = scamCases.filter((c) => c.scoring.classification === "false_negative_soft").length;
+  const fpFullSafe = safeCases.filter((c) => c.scoring.classification === "false_positive_full").length;
+  const fpSoftSafe = safeCases.filter((c) => c.scoring.classification === "false_positive_soft").length;
+  const fpFullTricky = trickyCases.filter((c) => c.scoring.classification === "false_positive_full").length;
+  const trickyCaution = trickyCases.filter((c) => c.scoring.classification === "acceptable_caution").length;
+
+  const scamTypeApplicable = scamCases.filter((c) => c.scoring.scam_type_match !== null);
+  const scamTypeMatches = scamTypeApplicable.filter((c) => c.scoring.scam_type_match === true).length;
+
+  console.log("");
+  console.log("== Accuracy scoring (category-aware, severity-weighted; CLAUDE.md §5) ==");
+  console.log(
+    `Overall: ${correct}/${scored.length} correct ` +
+      `(${((correct / scored.length) * 100).toFixed(1)}%). "Correct" includes tricky cases that ` +
+      "landed on the acceptably-cautious other calm level.",
+  );
+  console.log(
+    `Scam cases (${scamCases.length}): false negative, full-miss (landed safe) = ${fnFull}; ` +
+      `soft-miss (landed suspicious) = ${fnSoft}.`,
+  );
+  console.log(
+    `Safe cases (${safeCases.length}): false positive, full-miss (landed likely_scam) = ${fpFullSafe}; ` +
+      `soft-miss (landed suspicious) = ${fpSoftSafe}.`,
+  );
+  console.log(
+    `Tricky cases (${trickyCases.length}): false positive, full-miss (landed likely_scam) = ${fpFullTricky}; ` +
+      `${trickyCaution} landed on the other acceptable calm level (not counted as a miss).`,
+  );
+  if (scamTypeApplicable.length > 0) {
+    console.log(
+      `scam_type match on scam cases: ${scamTypeMatches}/${scamTypeApplicable.length} ` +
+        "(modal scam_type across runs vs expected_scam_type).",
+    );
   }
 }
 
@@ -260,19 +379,39 @@ async function run() {
     const okRuns = runs.filter((r) => r.ok);
     const riskLevelsSeen = [...new Set(okRuns.map((r) => r.risk_level!))];
     const scamTypesSeen = [...new Set(okRuns.map((r) => r.scam_type!))];
+    const modalRiskLevel = modalValue(okRuns.map((r) => r.risk_level!));
+    const modalScamType = modalValue(okRuns.map((r) => r.scam_type!));
+
+    const classification = classify(testCase.category, testCase.expected_risk_level, modalRiskLevel);
+    const distance =
+      modalRiskLevel != null && RISK_ORDINAL[testCase.expected_risk_level] !== undefined
+        ? Math.abs(RISK_ORDINAL[modalRiskLevel] - RISK_ORDINAL[testCase.expected_risk_level])
+        : null;
+    const scamTypeMatch =
+      testCase.category === "scam" && testCase.expected_scam_type != null && modalScamType != null
+        ? modalScamType === testCase.expected_scam_type
+        : null;
 
     const caseResult: CaseResult = {
       id: testCase.id,
       expected_risk_level: testCase.expected_risk_level,
       expected_scam_type: testCase.expected_scam_type,
+      category: testCase.category,
       note: testCase.note,
       pattern_precheck: patternPrecheck,
       runs,
       aggregate: {
         risk_levels_seen: riskLevelsSeen,
-        modal_risk_level: modalValue(okRuns.map((r) => r.risk_level!)),
+        modal_risk_level: modalRiskLevel,
         disagreement: riskLevelsSeen.length > 1,
         scam_types_seen: scamTypesSeen,
+        modal_scam_type: modalScamType,
+        scam_type_disagreement: scamTypesSeen.length > 1,
+      },
+      scoring: {
+        distance,
+        classification,
+        scam_type_match: scamTypeMatch,
       },
     };
     results.push(caseResult);
@@ -281,6 +420,7 @@ async function run() {
 
   const path = await writeResultsFile(results);
   printTotals(results);
+  printScoringSummary(results);
   console.log(`\nWrote ${path}`);
 }
 

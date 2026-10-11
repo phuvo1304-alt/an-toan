@@ -1,0 +1,284 @@
+[
+  {
+    "id": "scam-fake_job-01",
+    "text": "Cần tuyển người quay video ngắn review sản phẩm tại nhà, lương 350.000đ/video, không cần kinh nghiệm. Sau khi hồ sơ được duyệt, bạn đóng 250.000đ phí nhận bộ dụng cụ quay để bắt đầu nhận đơn. Liên hệ qua Telegram @reviewjob_vn.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "fake_job",
+    "category": "scam",
+    "note": "Fresh wording: paid-video-review recruiting, 'equipment kit fee' before work starts, moves to Telegram.",
+    "input_type": "text"
+  },
+  {
+    "id": "scam-phishing-01",
+    "text": "[MB Bank] Tai khoan cua ban nhan duoc mot khoan hoan tien 350.000d tu chuong trinh tri an khach hang thang 10. Vui long dang nhap xac nhan tai mb-priority-vn[.]xyz truoc 18h hom nay de nhan thuong, qua gio he thong se tu dong huy.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "phishing",
+    "category": "scam",
+    "note": "Fresh wording: fake bank refund/reward notice with a look-alike domain and a same-day deadline.",
+    "input_type": "text"
+  },
+  {
+    "id": "scam-phishing-02",
+    "text": "Your GrabPay wallet has an incoming refund of 180,000 VND pending approval. Confirm your account within 2 hours at grabpay-confirm[.]site or the refund will be automatically cancelled and returned to sender.",
+    "language": "en",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "phishing",
+    "category": "scam",
+    "note": "Fresh wording, English: fake e-wallet refund notice with a look-alike domain and a short deadline.",
+    "input_type": "text"
+  },
+  {
+    "id": "scam-impersonation-01",
+    "text": "Tôi gọi từ Đội Cảnh sát kinh tế tỉnh. Số điện thoại của em có tên trong một đường dây đánh bạc qua mạng đang bị điều tra. Em giữ liên lạc với tôi, tuyệt đối không được tắt máy hay kể cho ai, và chuẩn bị sẵn tiền trong tài khoản để làm việc với điều tra viên chiều nay.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "impersonation",
+    "category": "scam",
+    "note": "Fresh wording: police impersonation, secrecy demand, told to keep money ready -- classic 'online kidnapping' lead-in.",
+    "input_type": "text"
+  },
+  {
+    "id": "scam-impersonation-02",
+    "text": "Hi, it's James from your study group -- I'm stuck in the UK with a frozen bank card after my wallet got stolen. Could you send me $150 through Western Union today? I'll transfer it straight back the moment my card works again, I promise.",
+    "language": "en",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "impersonation",
+    "category": "scam",
+    "note": "Fresh wording, English: acquaintance-impersonation emergency-money request via wire transfer.",
+    "input_type": "text"
+  },
+  {
+    "id": "scam-investment-01",
+    "text": "Mời bạn vào nhóm Zalo 'Cố vấn tài chính số' -- chuyên gia hướng dẫn giao dịch vàng kỹ thuật số, lãi trung bình 8%/ngày, rút tiền tự động không giới hạn. Chỉ cần nạp thử 500.000đ để được cấp tài khoản demo có lãi thật ngay hôm nay.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "investment",
+    "category": "scam",
+    "note": "Fresh wording: 'digital gold' trading group, guaranteed daily return, small trial deposit framed as risk-free.",
+    "input_type": "text"
+  },
+  {
+    "id": "scam-romance-01",
+    "text": "Em ơi, anh là kỹ sư dầu khí đang làm việc ở Dubai. Tuần sau anh về Việt Nam sẽ mang theo một ít vàng để dành dụm cho tương lai của hai đứa, nhưng hải quan sân bay giữ lại đòi phí kiểm định 4 triệu, em ứng giúp anh được không, về anh gửi lại ngay cho em.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "romance",
+    "category": "scam",
+    "note": "Fresh wording: overseas-professional persona, gift-plus-customs-fee romance scam.",
+    "input_type": "text"
+  },
+  {
+    "id": "scam-loan-01",
+    "text": "Duyệt vay 15 triệu trong 10 phút, lãi suất 0%, không giữ tài sản, chỉ cần ảnh CCCD hai mặt. Sau khi hồ sơ được duyệt, bạn đóng 350.000đ phí bảo hiểm khoản vay qua ví MoMo để hệ thống kích hoạt giải ngân.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "loan",
+    "category": "scam",
+    "note": "Fresh wording: instant 0%-interest loan app demanding an 'insurance fee' before payout.",
+    "input_type": "text"
+  },
+  {
+    "id": "scam-fake_scholarship-01",
+    "text": "Thông báo: Hồ sơ của em đã lọt vào vòng chung kết học bổng Toàn cầu 2026 (trị giá 300 triệu đồng/năm). Để xác nhận suất học, em đóng 1.800.000đ phí xử lý hồ sơ qua tài khoản cá nhân của cán bộ tuyển sinh trong vòng 24 giờ.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "fake_scholarship",
+    "category": "scam",
+    "note": "Fresh wording: fake scholarship finalist notice demanding a processing fee to a personal account.",
+    "input_type": "text"
+  },
+  {
+    "id": "scam-other-01",
+    "text": "Shipper đây, đơn hôm qua giao rồi nhưng hệ thống chưa ghi nhận thanh toán COD nên tài khoản shop của bạn bị trừ gấp đôi. Bạn chuyển khoản 45.000đ vào số tài khoản này để shop đối soát lại, không thì đơn hàng sắp tới của bạn sẽ bị khóa.",
+    "language": "vi",
+    "expected_risk_level": "likely_scam",
+    "expected_scam_type": "other",
+    "category": "scam",
+    "note": "Fresh wording: fake-shipper COD 'double charge' trick, a different variant than the gửi-hàng-ở-chỗ-cũ one in the reference dataset.",
+    "input_type": "text"
+  },
+
+  {
+    "id": "safe-order_confirmation-01",
+    "text": "Đơn hàng #DH88213 của bạn tại Shopee đã được giao thành công lúc 14:32 ngày 09/10. Cảm ơn bạn đã mua sắm, hãy đánh giá sản phẩm để nhận xu thưởng.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "safe",
+    "note": "Real-style order-delivered confirmation, no ask, no link beyond normal app review flow.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-school_announcement-01",
+    "text": "Phòng Đào tạo thông báo: lịch thi giữa kỳ môn Toán 12 sẽ chuyển từ thứ Ba sang thứ Năm tuần sau, phòng thi giữ nguyên. Các em xem chi tiết trên bảng tin lớp.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "safe",
+    "note": "Genuine school schedule-change announcement, no money, no link, no personal-info ask.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-bank_otp_self-01",
+    "text": "Ma OTP xac nhan giao dich chuyen khoan 500.000d cua ban la 274019, hieu luc trong 5 phut. Tuyet doi khong chia se ma nay voi bat ky ai, ke ca nhan vien ngan hang.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "safe",
+    "note": "Self-initiated bank OTP notice with no request attached -- normal banking SMS.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-job_posting-01",
+    "text": "Part-time barista position at Highlands Coffee, Nguyen Trai branch. Shifts: weekends, 4 hours, 28,000 VND/hour. Bring your ID and resume to the store manager between 2-5 PM to apply, no deposit or equipment fee required.",
+    "language": "en",
+    "expected_risk_level": "safe",
+    "category": "safe",
+    "note": "Genuine part-time job posting with verifiable specifics (named store, branch, wage, in-person application), no upfront fee.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-utility_bill-01",
+    "text": "Thông báo: Hóa đơn tiền điện tháng 9 của hộ bạn là 412.000đ, hạn thanh toán 20/10. Bạn có thể thanh toán qua ứng dụng EVN hoặc tại các điểm thu hộ quen thuộc.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "safe",
+    "note": "Routine electricity-bill reminder directing payment to the utility's own app/known channels.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-course_registration-01",
+    "text": "Nhắc nhở: Hạn đăng ký học phần học kỳ 2 là 17h ngày 15/10 trên cổng thông tin sinh viên. Nếu gặp lỗi đăng ký, liên hệ trực tiếp phòng Công tác sinh viên.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "safe",
+    "note": "Genuine university course-registration deadline reminder, no money, no external link.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-friend_hangout-01",
+    "text": "Chiều nay tan học đi uống trà sữa không? Tiệm mới mở gần cổng trường đó, tao hẹn mấy đứa trong lớp rồi.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "safe",
+    "note": "Ordinary low-stakes message between classmates.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-gym_membership-01",
+    "text": "Your California Fitness membership (ID: CF-20931) expires on October 30. Renew in person at the front desk or through the official app anytime before then to keep your current rate.",
+    "language": "en",
+    "expected_risk_level": "safe",
+    "category": "safe",
+    "note": "Genuine membership-renewal reminder with specific ID, directs to official channels only.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-parcel_delivered-01",
+    "text": "Kiện hàng của bạn (mã vận đơn GHN3391204) đã được giao tại địa chỉ và ký nhận bởi bạn lúc 10:15 sáng nay. Cảm ơn bạn đã sử dụng dịch vụ Giao Hàng Nhanh.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "safe",
+    "note": "Parcel-delivered SUCCESS notification (not a failed-delivery/fee-request shape), specific tracking code.",
+    "input_type": "text"
+  },
+  {
+    "id": "safe-family_errand-01",
+    "text": "Con nhớ hôm nay là lịch học thêm Lý lúc 19h ở nhà thầy Minh như mọi tuần nhé, mẹ gửi tiền học phí tháng này vào tài khoản của thầy như cũ rồi.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "safe",
+    "note": "Routine family message about an established, recurring tutoring arrangement, no urgency or new account.",
+    "input_type": "text"
+  },
+
+  {
+    "id": "tricky-courier_official_channel-01",
+    "text": "Bưu điện Việt Nam: Kiện hàng của bạn đang chờ xác nhận lại địa chỉ giao. Vui lòng mở ứng dụng VNPost chính thức hoặc gọi tổng đài 1900-xxxx để xác nhận trực tiếp, chúng tôi sẽ không bao giờ gửi đường link yêu cầu thanh toán qua tin nhắn.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "tricky",
+    "note": "Surface features overlap fake-parcel-SMS scams (address confirmation, urgency), but correctly routes through the official app/self-dialed hotline and explicitly disclaims SMS links/payment -- the real tell scammers fake.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-bank_fraud_alert-01",
+    "text": "[ACB] He thong phat hien giao dich bat thuong tri gia 2.000.000d tu tai khoan cua ban luc 23:47. Neu khong phai ban thuc hien, vui long goi ngay so tong dai in tren mat sau the ACB de khoa giao dich. Khong cung cap OTP qua dien thoai hoac tin nhan cho bat ky ai.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "tricky",
+    "note": "Looks exactly like phishing's 'unusual transaction' urgency trigger, but correctly tells the user to call the number on their OWN card (not a link/number in the message) and warns against sharing the OTP -- the textbook correct bank-security pattern.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-scholarship_paperwork-01",
+    "text": "Thông báo phòng Công tác sinh viên: Các em đã đạt học bổng khuyến khích học tập học kỳ 1 vui lòng đến phòng 204 nộp lại bản photo công chứng CCCD và sổ hộ khẩu trước ngày 20/10 để hoàn tất thủ tục nhận học bổng, nếu không nộp đúng hạn quyết định học bổng sẽ bị hủy.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "tricky",
+    "note": "Awkward, bureaucratic phrasing with a hard deadline and a document ask -- surface-resembles fake_scholarship, but it's an in-person office visit for an ALREADY-AWARDED scholarship, no fee, no remote transfer.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-paid_survey-01",
+    "text": "Khảo sát thị trường trả phí: Hoàn thành khảo sát 10 phút nhận ngay 20.000đ vào ví Momo, thanh toán trong vòng 24h sau khi khảo sát được duyệt. Không cần đóng phí, không cần tải app, làm trực tiếp trên trình duyệt.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "tricky",
+    "note": "Surface-resembles fake_job's 'easy task, get paid' shape, but the payout is small and realistic, explicitly no deposit and no app install -- the inverted tell from the real scam pattern.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-brokerage_promo-01",
+    "text": "Open a new trading account with VNDirect this month and get a 50,000 VND welcome voucher for your first trade. Stock investing involves risk and the value of your portfolio can go down as well as up. Terms and conditions apply, see our website for details.",
+    "language": "en",
+    "expected_risk_level": "safe",
+    "category": "tricky",
+    "note": "Surface-resembles investment-scam recruitment language, but names a real licensed brokerage, offers a modest realistic voucher, and includes a standard risk disclaimer -- the opposite of 'guaranteed, no risk'.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-charity_appeal-01",
+    "text": "Quỹ Bảo trợ trẻ em tỉnh đang kêu gọi ủng hộ khẩn cấp cho 12 em nhỏ mất nhà do lũ lụt tuần trước. Mọi khoản đóng góp xin chuyển vào tài khoản chính thức của Quỹ, thông tin tài khoản và danh sách công khai được đăng trên cổng thông tin UBND tỉnh sau mỗi đợt quyên góp.",
+    "language": "vi",
+    "expected_risk_level": "suspicious",
+    "category": "tricky",
+    "note": "Urgent money ask from an unverifiable-from-text org is a real gray area -- named/traceable with public accountability, so cautious 'suspicious' is the fair bar here, not 'safe' outright and definitely not 'likely_scam'.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-new_number_contact-01",
+    "text": "Chào, mình là Lan, bạn học chung CLB Guitar á. Số cũ mình bị mất nên nhắn bằng số mới, lưu lại giúp mình nha, lúc nào rảnh nhắn mình ôn bài nhóm nhé.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "tricky",
+    "note": "Surface-resembles the impersonation 'contact from a new/unknown number' pattern, but there is no money ask, no urgency and no sensitive request at all.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-landlord_reminder-01",
+    "text": "Chú nhắc cháu là tiền nhà tháng 10 (2.500.000đ) đến hạn ngày 5 như mọi tháng, cháu chuyển vào số tài khoản chú đưa lúc ký hợp đồng giúp chú nhé, cảm ơn cháu.",
+    "language": "vi",
+    "expected_risk_level": "safe",
+    "category": "tricky",
+    "note": "Has the 'transfer money to this account' surface shape, but it's a known, pre-established recurring arrangement (the same account from the lease) with no new urgency or pressure.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-sso_migration-01",
+    "text": "Phòng CNTT trường thông báo: Hệ thống email sinh viên sẽ chuyển sang nền tảng mới. Sinh viên vui lòng xác thực lại tài khoản trước ngày 20/10 tại sso.truong.edu.vn để tránh gián đoạn truy cập, đăng nhập bằng tài khoản email trường như bình thường.",
+    "language": "vi",
+    "expected_risk_level": "suspicious",
+    "category": "tricky",
+    "note": "A 'verify your account via this link before a deadline' shape is exactly what phishing imitates, even though this one points to a real-looking school subdomain -- a cautious 'suspicious' (can't verify the link from text alone) is the fair bar, not an outright 'safe'.",
+    "input_type": "text"
+  },
+  {
+    "id": "tricky-loan_late_fee-01",
+    "text": "This is a reminder from HSBC that your personal loan installment of 3,200,000 VND is due on October 18. A late payment fee of 150,000 VND will apply if payment is not received by the due date. Log in to the HSBC Vietnam app to pay or view details.",
+    "language": "en",
+    "expected_risk_level": "safe",
+    "category": "tricky",
+    "note": "Surface-resembles loan-scam fee language, but it's a named bank reminding about an EXISTING loan's normal late fee, directing to the official app -- not an upfront fee to unlock a new loan.",
+    "input_type": "text"
+  }
+]
