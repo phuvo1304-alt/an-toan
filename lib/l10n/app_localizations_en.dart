@@ -244,7 +244,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get readOriginalArticle => 'Read the original article';
 
   @override
-  String get donationTitle => 'Support this project';
+  String get donationTitle => 'Help keep An Toàn free';
+
+  @override
+  String get donationStory =>
+      'I built An Toàn because someone I know lost money to a scam. This app will always stay free, with no ads. If it\'s helped you, a small contribution helps cover the server and AI costs that keep it running.';
+
+  @override
+  String get donationScanInstruction => 'Scan to support';
 
   @override
   String get donationDisclosure =>

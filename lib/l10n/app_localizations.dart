@@ -527,8 +527,20 @@ abstract class AppLocalizations {
   /// No description provided for @donationTitle.
   ///
   /// In vi, this message translates to:
-  /// **'Hỗ trợ dự án'**
+  /// **'Giúp An Toàn tiếp tục miễn phí'**
   String get donationTitle;
+
+  /// No description provided for @donationStory.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mình làm An Toàn vì một người mình biết đã từng bị lừa mất tiền. Ứng dụng này sẽ luôn miễn phí, không quảng cáo. Nếu nó giúp được bạn, một phần nhỏ ủng hộ sẽ giúp mình trả chi phí máy chủ và AI để duy trì nó.'**
+  String get donationStory;
+
+  /// No description provided for @donationScanInstruction.
+  ///
+  /// In vi, this message translates to:
+  /// **'Quét mã để ủng hộ'**
+  String get donationScanInstruction;
 
   /// No description provided for @donationDisclosure.
   ///

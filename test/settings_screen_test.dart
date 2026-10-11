@@ -140,9 +140,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    expect(find.text('Hỗ trợ dự án'), findsOneWidget); // vi default
+    expect(find.text('Giúp An Toàn tiếp tục miễn phí'), findsOneWidget); // vi default
     expect(find.byType(QrImageView), findsOneWidget);
-    expect(find.text(kDonationAccountHolderName), findsOneWidget);
+    // Shown twice by design: once in the story's byline, once next to the
+    // QR (the credibility mechanism a real transfer is checked against).
+    expect(find.text(kDonationAccountHolderName), findsNWidgets(2));
     expect(find.text('ACB'), findsOneWidget);
     expect(find.text(kDonationAccountNumber), findsOneWidget);
     expect(find.byIcon(Icons.copy), findsNWidgets(2));

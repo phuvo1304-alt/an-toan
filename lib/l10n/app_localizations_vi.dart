@@ -244,7 +244,14 @@ class AppLocalizationsVi extends AppLocalizations {
   String get readOriginalArticle => 'Đọc bài báo gốc';
 
   @override
-  String get donationTitle => 'Hỗ trợ dự án';
+  String get donationTitle => 'Giúp An Toàn tiếp tục miễn phí';
+
+  @override
+  String get donationStory =>
+      'Mình làm An Toàn vì một người mình biết đã từng bị lừa mất tiền. Ứng dụng này sẽ luôn miễn phí, không quảng cáo. Nếu nó giúp được bạn, một phần nhỏ ủng hộ sẽ giúp mình trả chi phí máy chủ và AI để duy trì nó.';
+
+  @override
+  String get donationScanInstruction => 'Quét mã để ủng hộ';
 
   @override
   String get donationDisclosure =>

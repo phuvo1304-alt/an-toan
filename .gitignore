@@ -51,6 +51,12 @@ ios/Flutter/Generated.xcconfig
 ios/Flutter/ephemeral/
 ios/Flutter/flutter_export_environment.sh
 
+# ---- Flutter golden tests ----
+# matchesGoldenFile writes before/after/diff images here on a failing
+# comparison, for local inspection -- never committed. The baseline images
+# under test/goldens/ ARE committed (they're the regression reference).
+test/failures/
+
 # ---- IDE / OS ----
 .idea/
 *.iml

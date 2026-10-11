@@ -25,7 +25,11 @@ Widget _wrap(Widget child, {Locale locale = const Locale('en')}) {
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
     ],
-    home: Scaffold(body: child),
+    // Tall scrollable surface: the redesigned card (story pull-quote + QR
+    // panel + two rows + disclosure) is taller than a bare Scaffold body at
+    // the default test surface, so wrap it the same way the real Settings
+    // screen does (inside scroll content), not a fixed-height box.
+    home: Scaffold(body: SingleChildScrollView(child: child)),
   );
 }
 
@@ -55,9 +59,18 @@ void main() {
     return calls;
   }
 
-  testWidgets('renders the QR, the account holder name, and bank/account text',
+  Future<void> setTallSurface(WidgetTester tester) async {
+    tester.view.physicalSize = const Size(400, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+  }
+
+  testWidgets(
+      'renders the headline story, scan instruction, QR, holder name '
+      '(shown next to the story AND next to the QR), and bank/account text',
       (tester) async {
     mockClipboard(tester);
+    await setTallSurface(tester);
     await tester.pumpWidget(_wrap(const DonationCard(
       bankCode: Bank.acb,
       accountNumber: _fakeAccountNumber,
@@ -67,16 +80,22 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.byType(QrImageView), findsOneWidget);
-    expect(find.text(_fakeHolderName), findsOneWidget);
+    expect(find.textContaining('I built An Toàn'), findsOneWidget);
+    expect(find.text('Scan to support'), findsOneWidget);
+    // Shown twice by design: once as the story's byline, once next to the
+    // QR (the credibility mechanism a real transfer is checked against).
+    expect(find.text(_fakeHolderName), findsNWidgets(2));
     expect(find.text('ACB'), findsOneWidget);
     expect(find.text(_fakeAccountNumber), findsOneWidget);
     expect(find.text('This is a personal/family bank account, not a '
         'registered charity. Any support is completely optional.'), findsOneWidget);
   });
 
-  testWidgets('each value has its own copy button (icon + text, never a '
+  testWidgets(
+      'each value has its own deliberate Copy button (icon + text, never a '
       'QR-only or color-only path)', (tester) async {
     mockClipboard(tester);
+    await setTallSurface(tester);
     await tester.pumpWidget(_wrap(const DonationCard(
       bankCode: Bank.acb,
       accountNumber: _fakeAccountNumber,
@@ -84,12 +103,15 @@ void main() {
     )));
     await tester.pumpAndSettle();
 
-    expect(find.byIcon(Icons.copy), findsNWidgets(2)); // bank + account number
+    expect(find.byType(OutlinedButton), findsNWidgets(2)); // bank + account number
+    expect(find.byIcon(Icons.copy), findsNWidgets(2));
+    expect(find.text('Copy'), findsNWidgets(2));
   });
 
   testWidgets('tapping copy on the account number actually writes it to the '
       'clipboard, and confirms it', (tester) async {
     final calls = mockClipboard(tester);
+    await setTallSurface(tester);
     await tester.pumpWidget(_wrap(const DonationCard(
       bankCode: Bank.acb,
       accountNumber: _fakeAccountNumber,
@@ -97,7 +119,7 @@ void main() {
     )));
     await tester.pumpAndSettle();
 
-    // The account-number field is the second copy button (bank is first).
+    // The account-number row is the second copy button (bank is first).
     await tester.tap(find.byIcon(Icons.copy).at(1));
     await tester.pumpAndSettle();
 
@@ -112,6 +134,7 @@ void main() {
   testWidgets('tapping copy on the bank name writes "ACB" to the clipboard',
       (tester) async {
     final calls = mockClipboard(tester);
+    await setTallSurface(tester);
     await tester.pumpWidget(_wrap(const DonationCard(
       bankCode: Bank.acb,
       accountNumber: _fakeAccountNumber,
@@ -129,6 +152,7 @@ void main() {
 
   testWidgets('renders in Vietnamese when the ambient locale is vi', (tester) async {
     mockClipboard(tester);
+    await setTallSurface(tester);
     await tester.pumpWidget(_wrap(
       const DonationCard(
         bankCode: Bank.acb,
@@ -139,8 +163,28 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
+    expect(find.textContaining('Mình làm An Toàn'), findsOneWidget);
+    expect(find.text('Quét mã để ủng hộ'), findsOneWidget);
     expect(find.text('Đây là tài khoản cá nhân/gia đình, không phải tổ chức '
         'từ thiện đã đăng ký. Mọi sự hỗ trợ đều hoàn toàn tự nguyện.'), findsOneWidget);
+  });
+
+  // The avatar initial is derived from the LAST token of the holder's name
+  // (Vietnamese name order: family name first, given name last), not the
+  // first -- "VO NGUYEN TRONG PHU" should show "P" (for "Phu"), not "V".
+  testWidgets('the avatar shows the initial of the last name token',
+      (tester) async {
+    mockClipboard(tester);
+    await setTallSurface(tester);
+    await tester.pumpWidget(_wrap(const DonationCard(
+      bankCode: Bank.acb,
+      accountNumber: _fakeAccountNumber,
+      accountHolderName: 'VO NGUYEN TRONG PHU',
+    )));
+    await tester.pumpAndSettle();
+
+    expect(find.descendant(of: find.byType(CircleAvatar), matching: find.text('P')),
+        findsOneWidget);
   });
 
   // The only way to be sure the shipped QR encodes the real account and
