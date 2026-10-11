@@ -244,6 +244,28 @@ class AppLocalizationsVi extends AppLocalizations {
   String get readOriginalArticle => 'Đọc bài báo gốc';
 
   @override
+  String get donationTitle => 'Hỗ trợ dự án';
+
+  @override
+  String get donationDisclosure =>
+      'Đây là tài khoản cá nhân/gia đình, không phải tổ chức từ thiện đã đăng ký. Mọi sự hỗ trợ đều hoàn toàn tự nguyện.';
+
+  @override
+  String get donationBankLabel => 'Ngân hàng';
+
+  @override
+  String get donationAccountLabel => 'Số tài khoản';
+
+  @override
+  String get donationHolderLabel => 'Chủ tài khoản';
+
+  @override
+  String get donationCopy => 'Sao chép';
+
+  @override
+  String get donationCopied => 'Đã sao chép';
+
+  @override
   String get quizTitle => 'Đố vui';
 
   @override

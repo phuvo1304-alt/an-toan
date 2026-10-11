@@ -4,9 +4,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
+import '../../core/config.dart';
 import '../../core/locale_provider.dart';
 import '../../core/text_scale_provider.dart';
 import '../../l10n/app_localizations.dart';
+import 'donation_card.dart';
 import 'official_contacts.dart';
 
 /// Public privacy policy page (GitHub Pages, served from docs/ on main).
@@ -137,6 +139,20 @@ class SettingsScreen extends ConsumerWidget {
                 );
               },
             ),
+            // Donation card: Settings only, never in the Scam Checker result
+            // flow. Hidden entirely while the account info is still the
+            // placeholder, so an incomplete/fake-looking QR never ships --
+            // see lib/core/config.dart.
+            if (kDonationAccountNumber != 'REPLACE_ME' &&
+                kDonationAccountHolderName != 'REPLACE_ME') ...[
+              const SizedBox(height: AppSpace.lg),
+              SectionTitle(t.donationTitle),
+              DonationCard(
+                bankCode: kDonationBankCode,
+                accountNumber: kDonationAccountNumber,
+                accountHolderName: kDonationAccountHolderName,
+              ),
+            ],
           ],
         ),
       ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:an_toan/core/locale_provider.dart';
@@ -80,5 +81,24 @@ void main() {
     // call_outlined for phone contacts, open_in_new for URL-primary ones.
     expect(find.byIcon(Icons.call_outlined), findsWidgets);
     expect(find.byIcon(Icons.open_in_new), findsWidgets);
+  });
+
+  // The one failure mode that would actually ship something embarrassing:
+  // kDonationAccountNumber/kDonationAccountHolderName in lib/core/config.dart
+  // are still "REPLACE_ME" placeholders as of this writing (deliberately --
+  // the task needs the real account info filled in by hand before release).
+  // The whole donation section must hide itself rather than render a
+  // broken/fake-looking QR.
+  testWidgets(
+      'hides the donation section entirely while the account info is still '
+      'the placeholder', (tester) async {
+    await setTallSurface(tester);
+    await tester.pumpWidget(_wrap(const SettingsScreen()));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Hỗ trợ dự án'), findsNothing); // vi default
+    expect(find.text('Support this project'), findsNothing);
+    expect(find.byType(QrImageView), findsNothing);
   });
 }

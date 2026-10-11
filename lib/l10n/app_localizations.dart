@@ -524,6 +524,48 @@ abstract class AppLocalizations {
   /// **'Đọc bài báo gốc'**
   String get readOriginalArticle;
 
+  /// No description provided for @donationTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hỗ trợ dự án'**
+  String get donationTitle;
+
+  /// No description provided for @donationDisclosure.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đây là tài khoản cá nhân/gia đình, không phải tổ chức từ thiện đã đăng ký. Mọi sự hỗ trợ đều hoàn toàn tự nguyện.'**
+  String get donationDisclosure;
+
+  /// No description provided for @donationBankLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ngân hàng'**
+  String get donationBankLabel;
+
+  /// No description provided for @donationAccountLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số tài khoản'**
+  String get donationAccountLabel;
+
+  /// No description provided for @donationHolderLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chủ tài khoản'**
+  String get donationHolderLabel;
+
+  /// No description provided for @donationCopy.
+  ///
+  /// In vi, this message translates to:
+  /// **'Sao chép'**
+  String get donationCopy;
+
+  /// No description provided for @donationCopied.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã sao chép'**
+  String get donationCopied;
+
   /// No description provided for @quizTitle.
   ///
   /// In vi, this message translates to:

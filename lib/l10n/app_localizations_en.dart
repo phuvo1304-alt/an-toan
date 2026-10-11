@@ -244,6 +244,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get readOriginalArticle => 'Read the original article';
 
   @override
+  String get donationTitle => 'Support this project';
+
+  @override
+  String get donationDisclosure =>
+      'This is a personal/family bank account, not a registered charity. Any support is completely optional.';
+
+  @override
+  String get donationBankLabel => 'Bank';
+
+  @override
+  String get donationAccountLabel => 'Account number';
+
+  @override
+  String get donationHolderLabel => 'Account holder';
+
+  @override
+  String get donationCopy => 'Copy';
+
+  @override
+  String get donationCopied => 'Copied to clipboard';
+
+  @override
   String get quizTitle => 'Quiz';
 
   @override

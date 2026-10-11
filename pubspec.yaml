@@ -46,6 +46,14 @@ dependencies:
   speech_to_text: ^7.5.0
   crypto: ^3.0.7
   image: ^4.10.1
+  # VietQR donation card (Settings only): generates a NAPAS 247 bank-transfer
+  # QR payload entirely locally -- no API key, no network call, no signup.
+  # Checked against pub.dev before adding (2026-10-11): vietqr_gen 1.2.0 has
+  # zero dependencies and passes full Dart/Flutter-latest-stable analysis;
+  # qr_flutter 4.1.0 is the de facto standard QR-rendering widget (2.24M+
+  # downloads) and also supports latest stable.
+  vietqr_gen: ^1.2.0
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:
