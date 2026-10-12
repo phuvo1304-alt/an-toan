@@ -31,34 +31,104 @@ const SCAM_TYPES = [
   "investment", "romance", "loan", "other", "none",
 ];
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+// ---- CORS -------------------------------------------------------------------
+// CORS headers only control whether a BROWSER's JavaScript is allowed to read
+// the response -- they are not an access-control mechanism and do not stop a
+// direct script/curl call (which sends no Origin header, or can set any
+// value it likes). The real cost-abuse defence is the IP-based rate limit
+// below. CORS pinning here only stops OTHER WEBSITES from embedding a call to
+// this function in their own client-side JS and having a visitor's browser
+// make the request on the site's behalf.
+//
+// ALLOWED_WEB_ORIGIN is set after the web app is deployed (its exact origin
+// isn't known until then) -- see the deploy README. Until it is set, no
+// browser origin is allowed through (native app calls, which send no Origin
+// header at all, are unaffected either way).
+const ALLOWED_WEB_ORIGIN = Deno.env.get("ALLOWED_WEB_ORIGIN") ?? "";
 
-function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
+function corsHeadersFor(req: Request) {
+  const origin = req.headers.get("origin");
+  const allow = origin && ALLOWED_WEB_ORIGIN && origin === ALLOWED_WEB_ORIGIN
+    ? origin
+    : "null";
+  return {
+    "Access-Control-Allow-Origin": allow,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Vary": "Origin",
+  };
 }
 
-// ---- Very simple per-device rate limit (in memory) -------------------------
-// Resets when the function restarts, so it is a first line of defence only.
-// Later: move this to a Postgres table (analysis_log) for a real limit.
-const hits = new Map<string, number[]>();
-function rateLimited(deviceId: string): boolean {
-  const now = Date.now();
-  const windowMs = 60 * 60 * 1000; // 1 hour
-  const limit = 30; // checks per device per hour
-  const recent = (hits.get(deviceId) ?? []).filter((t) => now - t < windowMs);
-  if (recent.length >= limit) {
-    hits.set(deviceId, recent);
+// ---- Server-side rate limit, keyed by IP (not a client-supplied value) -----
+// Durable (Postgres, see migrations/20261012120000_analysis_rate_log.sql),
+// not an in-memory Map: survives cold starts and is correct across however
+// many concurrent function instances are running. Keyed by the caller's real
+// IP address, hashed before it ever reaches the database -- never a
+// client-supplied field like the old device_id, which anyone calling the
+// function directly (not through the app) could simply relabel per request.
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
+// The new-style secret API key (sb_secret_...), not the legacy service_role
+// JWT: same bypass-RLS server-side privilege, but individually rotatable
+// without touching the project's shared JWT secret (which the legacy anon
+// key the mobile app ships with is also derived from).
+const DB_SECRET_KEY = Deno.env.get("SB_SECRET_API_KEY") ?? "";
+const IP_HASH_SALT = Deno.env.get("IP_HASH_SALT") ?? "";
+const RATE_LIMIT = 30; // requests per window per IP
+const RATE_WINDOW_MINUTES = 60;
+
+function clientIp(req: Request): string {
+  // cf-connecting-ip (Cloudflare's own header, set directly by Cloudflare and
+  // not attacker-controlled) first; x-forwarded-for (the de facto standard
+  // most reverse proxies set, first entry = original client) as a fallback.
+  return req.headers.get("cf-connecting-ip")
+    ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    ?? "unknown";
+}
+
+async function hashIp(ip: string): Promise<string> {
+  const bytes = new TextEncoder().encode(`${ip}:${IP_HASH_SALT}`);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// Returns true if the caller is over the limit. Fails CLOSED: if the rate
+// check itself cannot run (network error, misconfigured secrets), this
+// treats the request as rate-limited rather than letting paid API calls
+// through with no cap in place -- an occasional false "try again later" is
+// far cheaper than a limiter silently doing nothing.
+async function isRateLimited(req: Request): Promise<boolean> {
+  if (!SUPABASE_URL || !DB_SECRET_KEY) {
+    console.error("rate limit misconfigured: missing SUPABASE_URL or SB_SECRET_API_KEY");
     return true;
   }
-  recent.push(now);
-  hits.set(deviceId, recent);
-  return false;
+  try {
+    const ipHash = await hashIp(clientIp(req));
+    const resp = await fetch(`${SUPABASE_URL}/rest/v1/rpc/check_and_log_analysis_rate`, {
+      method: "POST",
+      headers: {
+        apikey: DB_SECRET_KEY,
+        Authorization: `Bearer ${DB_SECRET_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        p_ip_hash: ipHash,
+        p_limit: RATE_LIMIT,
+        p_window_minutes: RATE_WINDOW_MINUTES,
+      }),
+    });
+    if (!resp.ok) {
+      console.error("rate limit check failed", resp.status, await resp.text());
+      return true;
+    }
+    return (await resp.json()) === true;
+  } catch (e) {
+    console.error("rate limit check threw", e);
+    return true;
+  }
+}
+
+function jsonWith(headers: Record<string, string>) {
+  return (body: unknown, status = 200) =>
+    new Response(JSON.stringify(body), { status, headers: { ...headers, "Content-Type": "application/json" } });
 }
 
 // ---- Prompt ----------------------------------------------------------------
@@ -263,7 +333,10 @@ async function callClaudeWithRetry(body: string): Promise<Response> {
 
 // ---- Handler ---------------------------------------------------------------
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  const cors = corsHeadersFor(req);
+  const json = jsonWith(cors);
+
+  if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
   if (!ANTHROPIC_API_KEY) {
     console.error("ANTHROPIC_API_KEY is not set");
@@ -278,7 +351,6 @@ Deno.serve(async (req) => {
   }
 
   const lang: "vi" | "en" = body?.language === "en" ? "en" : "vi";
-  const deviceId = clampStr(body?.device_id, 100) || "unknown";
   const text = typeof body?.text === "string" ? body.text.trim() : "";
   // 0-3 screenshots; every image is checked (count, type, size). See images.ts.
   const imageCheck = parseImages(body);
@@ -288,7 +360,7 @@ Deno.serve(async (req) => {
   if (!text && images.length === 0) return json({ error: "empty_input" }, 400);
   if (text.length > MAX_TEXT_CHARS) return json({ error: "text_too_long" }, 413);
 
-  if (rateLimited(deviceId)) return json({ error: "rate_limited" }, 429);
+  if (await isRateLimited(req)) return json({ error: "rate_limited" }, 429);
 
   // Build the content blocks of ONE user message. Wrap text in tags so the
   // model sees where untrusted content starts/ends.

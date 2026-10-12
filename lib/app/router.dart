@@ -30,6 +30,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       final atOnboarding = state.uri.path == '/onboarding';
       if (!onboardingDone.value && !atOnboarding) return '/onboarding';
       if (onboardingDone.value && atOnboarding) return '/';
+      // /result takes its content via `extra` (a ScamResult object), which
+      // only exists in memory for a navigation made within the running app
+      // -- it never survives a web page reload or a typed/shared /result
+      // URL. Without this, state.extra would be null there and the route's
+      // `as ScamResult` cast would crash the whole app on load. Redirect
+      // Home instead of crashing; there's no check content to show anyway.
+      if (state.uri.path == '/result' && state.extra is! ScamResult) return '/';
       return null;
     },
     routes: [

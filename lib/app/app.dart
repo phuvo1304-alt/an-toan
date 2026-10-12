@@ -6,6 +6,7 @@ import '../core/locale_provider.dart';
 import '../core/text_scale_provider.dart';
 import '../core/theme_option_provider.dart';
 import '../l10n/app_localizations.dart';
+import 'responsive.dart';
 import 'router.dart';
 import 'text_scaling.dart';
 import 'theme.dart';
@@ -64,11 +65,12 @@ class AnToanApp extends ConsumerWidget {
       // the whole app, clamped overall -- see text_scaling.dart.
       builder: (context, child) {
         final ambient = MediaQuery.textScalerOf(context);
-        return MediaQuery(
+        final scaled = MediaQuery(
           data: MediaQuery.of(context)
               .copyWith(textScaler: combinedTextScaler(ambient, appTextFactor)),
           child: child!,
         );
+        return ResponsiveMaxWidth(child: scaled);
       },
       routerConfig: ref.watch(routerProvider),
     );

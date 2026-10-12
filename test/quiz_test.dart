@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -119,6 +120,15 @@ void main() {
     // Onboarding already done, so the app starts on Home (the gate is tested
     // in onboarding_test.dart).
     SharedPreferences.setMockInitialValues({'onboarding_complete': true});
+    // ResponsiveMaxWidth (lib/app/responsive.dart) narrows content to 480px
+    // on anything wider than 600px, including the default 800-wide test
+    // surface -- the narrower width wraps question/feedback text onto more
+    // lines, pushing the next-question button past the quiz ListView's
+    // lazy-build cache range at the default 600-tall surface. Same bug class
+    // as training_test.dart/phone_test.dart's tall surfaces.
+    tester.view.physicalSize = const Size(480, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     await tester.pumpWidget(const ProviderScope(child: AnToanApp()));
     await tester.pumpAndSettle();
 

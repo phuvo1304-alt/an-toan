@@ -1,0 +1,38 @@
+# An Toàn -- Netlify deploy config (web build).
+#
+# Why Netlify: no Flutter buildpack needed system-side (the build command
+# below installs its own pinned Flutter SDK), a free plan with no site-count
+# limit and generous bandwidth, and the simplest possible redirect config for
+# SPA routing (`_redirects`-equivalent below) -- a good fit for a free,
+# no-custom-domain hobby deploy.
+#
+# SECRETS: SUPABASE_URL and SUPABASE_ANON_KEY below are the two values this
+# build bakes in via --dart-define. Both are safe to be public (see
+# CLAUDE.md section 9 and SETUP.md) -- the anon key's safety depends on RLS
+# being correct, which this project already requires everywhere. They are
+# NOT in this file or in git: set them as environment variables in the
+# Netlify dashboard (Site settings -> Environment variables) before the
+# first deploy, or the build will fail with empty values baked in.
+#
+# Pinned Flutter version matches this project's own dev environment
+# (CLAUDE.md section 3) -- bump both together, deliberately, not silently.
+[build]
+  command = """
+    git clone https://github.com/flutter/flutter.git --branch 3.47.5 --depth 1 _flutter_sdk && \
+    export PATH="$PATH:$(pwd)/_flutter_sdk/bin" && \
+    flutter config --enable-web --no-analytics && \
+    flutter pub get && \
+    flutter build web --release \
+      --dart-define=SUPABASE_URL=$SUPABASE_URL \
+      --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY
+  """
+  publish = "build/web"
+
+# SPA routing: go_router uses the browser's real URL path (usePathUrlStrategy
+# in lib/main.dart), so refreshing or deep-linking into any route (e.g.
+# "/settings") must still serve index.html, not 404 -- Flutter's own router
+# then resolves the path client-side once the app loads.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
