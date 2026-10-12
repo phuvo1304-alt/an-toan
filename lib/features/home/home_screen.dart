@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/theme.dart';
+import '../../app/widgets.dart';
+import '../../core/config.dart';
 import '../../l10n/app_localizations.dart';
+import '../settings/donation_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -56,6 +59,21 @@ class HomeScreen extends StatelessWidget {
               subtitle: t.cardQuizDesc,
               onTap: () => context.push('/quiz'),
             ),
+            // Same component, same gating check as Settings -- see
+            // lib/features/settings/settings_screen.dart and
+            // lib/core/config.dart. Deliberately not a second copy: showing
+            // the same content from two code paths is how this story drifted
+            // (shortened, then a line dropped) across earlier commits.
+            if (isDonationInfoConfigured(
+                kDonationAccountNumber, kDonationAccountHolderName)) ...[
+              const SizedBox(height: AppSpace.lg),
+              SectionTitle(t.donationTitle),
+              DonationCard(
+                bankCode: kDonationBankCode,
+                accountNumber: kDonationAccountNumber,
+                accountHolderName: kDonationAccountHolderName,
+              ),
+            ],
           ],
         ),
       ),
