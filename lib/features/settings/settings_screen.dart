@@ -7,6 +7,7 @@ import '../../app/widgets.dart';
 import '../../core/config.dart';
 import '../../core/locale_provider.dart';
 import '../../core/text_scale_provider.dart';
+import '../../core/theme_option_provider.dart';
 import '../../l10n/app_localizations.dart';
 import 'donation_card.dart';
 import 'official_contacts.dart';
@@ -66,6 +67,8 @@ class SettingsScreen extends ConsumerWidget {
     final notifier = ref.read(localeProvider.notifier);
     final textSize = ref.watch(textScaleProvider);
     final textScaleNotifier = ref.read(textScaleProvider.notifier);
+    final themeOption = ref.watch(themeOptionProvider);
+    final themeOptionNotifier = ref.read(themeOptionProvider.notifier);
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -95,6 +98,19 @@ class SettingsScreen extends ConsumerWidget {
               ],
               selected: {textSize},
               onSelectionChanged: (s) => textScaleNotifier.setOption(s.first),
+            ),
+            const SizedBox(height: AppSpace.lg),
+            SectionTitle(t.appearance),
+            SegmentedButton<AppThemeOption>(
+              segments: [
+                ButtonSegment(
+                    value: AppThemeOption.system, label: Text(t.appearanceSystem)),
+                ButtonSegment(value: AppThemeOption.light, label: Text(t.appearanceLight)),
+                ButtonSegment(value: AppThemeOption.dark, label: Text(t.appearanceDark)),
+                ButtonSegment(value: AppThemeOption.sepia, label: Text(t.appearanceSepia)),
+              ],
+              selected: {themeOption},
+              onSelectionChanged: (s) => themeOptionNotifier.setOption(s.first),
             ),
             const SizedBox(height: AppSpace.lg),
             Card(

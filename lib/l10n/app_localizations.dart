@@ -224,6 +224,36 @@ abstract class AppLocalizations {
   /// **'Rất lớn'**
   String get textSizeExtraLarge;
 
+  /// No description provided for @appearance.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giao diện'**
+  String get appearance;
+
+  /// No description provided for @appearanceSystem.
+  ///
+  /// In vi, this message translates to:
+  /// **'Theo hệ thống'**
+  String get appearanceSystem;
+
+  /// No description provided for @appearanceLight.
+  ///
+  /// In vi, this message translates to:
+  /// **'Sáng'**
+  String get appearanceLight;
+
+  /// No description provided for @appearanceDark.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tối'**
+  String get appearanceDark;
+
+  /// No description provided for @appearanceSepia.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giấy cũ'**
+  String get appearanceSepia;
+
   /// No description provided for @disclaimerTitle.
   ///
   /// In vi, this message translates to:

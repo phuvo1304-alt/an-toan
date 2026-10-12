@@ -74,6 +74,21 @@ class AppLocalizationsVi extends AppLocalizations {
   String get textSizeExtraLarge => 'Rất lớn';
 
   @override
+  String get appearance => 'Giao diện';
+
+  @override
+  String get appearanceSystem => 'Theo hệ thống';
+
+  @override
+  String get appearanceLight => 'Sáng';
+
+  @override
+  String get appearanceDark => 'Tối';
+
+  @override
+  String get appearanceSepia => 'Giấy cũ';
+
+  @override
   String get disclaimerTitle => 'Lưu ý quan trọng';
 
   @override

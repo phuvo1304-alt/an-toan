@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 
 // ---------------------------------------------------------------------------
 // An Toàn design tokens. Every screen takes its colors, spacing, corner radii
@@ -93,6 +94,23 @@ class RiskPalette extends ThemeExtension<RiskPalette> {
     scamStrong: Color(0xFFDC2626), // ~4.8:1 with white on top
   );
 
+  /// Warm-shifted so the risk colors sit naturally on the sepia surface
+  /// (Color(0xFFF6EFDD)) instead of looking like the light palette pasted
+  /// onto a cream page -- own containers, own on-colors, not a tint filter.
+  /// Measured against sepia's own surface/container colors (see
+  /// buildSepiaTheme): safe/suspicious/scam >= 5.8:1 on their own container
+  /// and >= 6.8:1 as a label directly on the page surface (both well past
+  /// the 4.5:1 body-text bar); white-on-scamStrong ~12.1:1.
+  static const sepia = RiskPalette(
+    safe: Color(0xFF14532D),
+    safeContainer: Color(0xFFE2EFC8),
+    suspicious: Color(0xFF7C3B0A),
+    suspiciousContainer: Color(0xFFF5E3B8),
+    scam: Color(0xFF9F1C1C),
+    scamContainer: Color(0xFFF5D9C8),
+    scamStrong: Color(0xFF6B1414), // ~12.1:1 with white on top
+  );
+
   @override
   RiskPalette copyWith({
     Color? safe,
@@ -133,8 +151,60 @@ extension RiskPaletteContext on BuildContext {
   RiskPalette get risk => Theme.of(this).extension<RiskPalette>()!;
 }
 
+/// Light and dark are both generated straight from the brand seed.
 ThemeData buildTheme(Brightness brightness) {
   final scheme = ColorScheme.fromSeed(seedColor: appSeedColor, brightness: brightness);
+  final risk = brightness == Brightness.dark ? RiskPalette.dark : RiskPalette.light;
+  return _buildThemeData(scheme, risk);
+}
+
+/// Sepia ("reading mode"): a warm, cream/beige, reduced-blue-light
+/// alternative to light mode, in the spirit of e-reader sepia filters.
+///
+/// `primary`/`secondary`/`tertiary` themselves (small accents -- button
+/// fills, focus rings, the donation card's own warm mauve/plum identity)
+/// stay the brand's trust-blue tones, generated the normal way from
+/// `appSeedColor`: they're small enough on screen that recognizability as
+/// An Toàn matters more than warming them. Their `*Container` counterparts
+/// are large fill areas instead (home screen's highlighted card,
+/// SegmentedButton's selected pill) -- found genuinely jarring against a
+/// warm page in manual review (a bright blue card/pill between warm cream
+/// ones reads as a bug, not an accent), so those, like the whole surface
+/// family, are overridden to warm tones here. Pairs with its own
+/// RiskPalette.sepia, not RiskPalette.light -- see that field's doc comment
+/// for the measured contrast ratios.
+ThemeData buildSepiaTheme() {
+  const surface = Color(0xFFF6EFDD);
+  const surfaceContainerLow = Color(0xFFEFE4C8);
+  const surfaceContainerHigh = Color(0xFFE8DAB8);
+  const onSurface = Color(0xFF3B2E1F);
+  const onSurfaceVariant = Color(0xFF6B5B45);
+  const outline = Color(0xFF8A7652);
+  const outlineVariant = Color(0xFFD9C9A3);
+  const warmOnContainer = Color(0xFF4A3414);
+
+  final base = ColorScheme.fromSeed(seedColor: appSeedColor, brightness: Brightness.light);
+  final scheme = base.copyWith(
+    surface: surface,
+    onSurface: onSurface,
+    onSurfaceVariant: onSurfaceVariant,
+    outline: outline,
+    outlineVariant: outlineVariant,
+    surfaceContainerLowest: surface,
+    surfaceContainerLow: surfaceContainerLow,
+    surfaceContainer: surfaceContainerLow,
+    surfaceContainerHigh: surfaceContainerHigh,
+    surfaceContainerHighest: surfaceContainerHigh,
+    // ~7.6:1 (primary) / ~8.1:1 (secondary) against their own "on" color.
+    primaryContainer: const Color(0xFFE8CE8A),
+    onPrimaryContainer: warmOnContainer,
+    secondaryContainer: const Color(0xFFE4D5AE),
+    onSecondaryContainer: warmOnContainer,
+  );
+  return _buildThemeData(scheme, RiskPalette.sepia);
+}
+
+ThemeData _buildThemeData(ColorScheme scheme, RiskPalette risk) {
   final base = ThemeData(
     useMaterial3: true,
     colorScheme: scheme,
@@ -155,10 +225,18 @@ ThemeData buildTheme(Brightness brightness) {
   const buttonText = TextStyle(
       fontFamily: appFontFamily, fontSize: 16, fontWeight: FontWeight.w600);
 
+  // Explicit, not left to Flutter's own background-luminance heuristic:
+  // status bar icons must stay legible against the app bar's background in
+  // all three appearance modes (light, dark, sepia) -- dark icons on
+  // light/sepia, light icons on dark.
+  final overlayStyle = scheme.brightness == Brightness.dark
+      ? SystemUiOverlayStyle.light
+      : SystemUiOverlayStyle.dark;
+
   return base.copyWith(
     textTheme: text,
     scaffoldBackgroundColor: scheme.surface,
-    extensions: [brightness == Brightness.dark ? RiskPalette.dark : RiskPalette.light],
+    extensions: [risk],
     appBarTheme: AppBarTheme(
       backgroundColor: scheme.surface,
       foregroundColor: scheme.onSurface,
@@ -167,6 +245,12 @@ ThemeData buildTheme(Brightness brightness) {
       scrolledUnderElevation: 1,
       centerTitle: false,
       titleTextStyle: text.titleLarge?.copyWith(color: scheme.onSurface),
+      systemOverlayStyle: overlayStyle.copyWith(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: scheme.surface,
+        systemNavigationBarIconBrightness:
+            scheme.brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+      ),
     ),
     cardTheme: CardThemeData(
       elevation: 0,
