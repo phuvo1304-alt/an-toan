@@ -18,6 +18,7 @@
 # (CLAUDE.md section 3) -- bump both together, deliberately, not silently.
 [build]
   command = """
+    rm -rf _flutter_sdk && \
     git clone https://github.com/flutter/flutter.git --branch 3.47.5 --depth 1 _flutter_sdk && \
     export PATH="$PATH:$(pwd)/_flutter_sdk/bin" && \
     flutter config --enable-web --no-analytics && \
