@@ -171,19 +171,37 @@ class _QuestionView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpace.md),
       children: [
-        // Progress, score and streak
+        // Progress, score and streak. Every text element can shrink (Expanded
+        // / Flexible + ellipsis) instead of forcing its full intrinsic width
+        // -- at the app's own worst-case combined text scale (OS 1.3x x
+        // in-app Extra Large 1.6x, clamped) on a narrow ~360px Android
+        // screen, the unprotected version of this row overflowed by 157px
+        // (found via test/text_scale_widget_test.dart, which also verifies
+        // the fix).
         Row(
           children: [
             Expanded(
               child: Text(
                 t.quizQuestionProgress(session.index + 1, session.total),
                 style: textTheme.titleSmall,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-            Text(t.quizScore(session.correct, session.total)),
+            const SizedBox(width: AppSpace.sm),
+            Flexible(
+              child: Text(
+                t.quizScore(session.correct, session.total),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
             const SizedBox(width: 12),
             const Icon(Icons.local_fire_department_outlined, size: 20),
-            Text(t.quizStreak(session.streak)),
+            Flexible(
+              child: Text(
+                t.quizStreak(session.streak),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: AppSpace.sm),

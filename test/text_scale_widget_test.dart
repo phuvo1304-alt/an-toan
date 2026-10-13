@@ -17,14 +17,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:an_toan/app/text_scaling.dart';
 import 'package:an_toan/app/theme.dart';
 import 'package:an_toan/features/home/home_screen.dart';
+import 'package:an_toan/features/quiz/quiz_screen.dart';
 import 'package:an_toan/features/scam_checker/result_screen.dart';
 import 'package:an_toan/features/scam_checker/scam_result.dart';
 import 'package:an_toan/features/settings/settings_screen.dart';
 import 'package:an_toan/l10n/app_localizations.dart';
 
-Widget _wrapAtWorstCaseCombinedScale(Widget child) {
+Widget _wrapAtWorstCaseCombinedScale(Widget child, {Locale? locale}) {
   return MaterialApp(
     theme: buildTheme(Brightness.light),
+    locale: locale, // null preserves the existing implicit-resolution behavior
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -100,4 +102,37 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
+
+  testWidgets(
+      'Quiz screen (start view, then mid-question) has no overflow at the '
+      'worst-case combined scale', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(360, 1200); // narrow Android width
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(_wrapAtWorstCaseCombinedScale(
+        const ProviderScope(child: QuizScreen()),
+        locale: const Locale('en')));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    // Into the question-answering view: the richest text content (question +
+    // answer buttons), the same kind of state the Result-screen checks above
+    // specifically engineer for. ensureVisible first: at this combined scale
+    // the content is taller than the ListView's lazy-build cache range at a
+    // 1200px-tall surface, the same test-infra gotcha documented elsewhere
+    // in this project (e.g. quiz_test.dart's own tapText helper).
+    final start = find.text('Start');
+    await tester.ensureVisible(start);
+    await tester.tap(start);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    final scam = find.text('Scam');
+    await tester.ensureVisible(scam);
+    await tester.tap(scam);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
 }
