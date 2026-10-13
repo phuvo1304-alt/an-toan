@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -309,8 +308,6 @@ class PhoneApi {
       }
     } on PhoneApiException {
       rethrow;
-    } on SocketException {
-      throw const PhoneApiException(PhoneError.network);
     } on http.ClientException {
       throw const PhoneApiException(PhoneError.network);
     } catch (_) {
