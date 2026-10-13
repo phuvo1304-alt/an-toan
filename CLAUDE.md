@@ -417,3 +417,30 @@ Then wait for my "go" before writing code.
      (the Voice tab sends its transcript through the same `text` path, so
      it is indistinguishable from typed text by the time it reaches
      `analyze-scam`).
+
+### 14.4 Quiz screen: text overflow at Extra Large text size on narrow phones
+- **Status:** FIXED and confirmed (2026-10-13, commit 15b467e).
+- **Found:** 2026-10-13, during a pre-submission accessibility audit. The
+  worst-case-combined-text-scale overflow suite (`test/text_scale_widget_
+  test.dart`) already covered Home/Settings/Result but not Quiz; adding
+  Quiz coverage caught a real `RenderFlex overflowed by 157 pixels on the
+  right` in the question header row (progress label + score + streak +
+  icon) at the app's own worst case -- OS text scale 1.3x times the in-app
+  Extra Large setting 1.6x, clamped by `combinedTextScaler`
+  (`lib/app/text_scaling.dart`) -- on a narrow ~360px-wide Android screen.
+  Three of the row's Text widgets had no way to shrink.
+- **Fix (commit 15b467e):** `lib/features/quiz/quiz_screen.dart`'s question
+  header row: the progress label stays `Expanded`; score and streak become
+  `Flexible` with `TextOverflow.ellipsis`, so the row truncates instead of
+  overflowing when there genuinely isn't enough width.
+- **Evidence:** the new test (`test/text_scale_widget_test.dart`, "Quiz
+  screen... has no overflow at the worst-case combined scale") reproduced
+  the overflow before the fix, passes after it. Full suite: 219 passed, 0
+  failed, both before (minus this one new test) and after.
+- **Not live-device-tested:** this confirms no crash/overflow exception at
+  the code level, via Flutter's widget-test renderer -- not how it actually
+  looks on a real phone's glass. A real-device accessibility pass is still
+  outstanding (see the unresolved "manual walkthrough" gap from the
+  2026-10-13 bug-check report: no Android device or emulator was reachable
+  in that session -- the host machine has no hardware virtualization
+  acceleration available).
