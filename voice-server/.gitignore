@@ -1,0 +1,13 @@
+.venv/
+model/
+__pycache__/
+.pytest_cache/
+# never commit any voice recording
+*.wav
+*.m4a
+*.aac
+*.mp3
+*.ogg
+*.opus
+*.flac
+*.webm

@@ -1,0 +1,12 @@
+.venv
+model
+tests
+__pycache__
+*.pyc
+.pytest_cache
+*.wav
+*.m4a
+*.mp3
+*.ogg
+*.flac
+*.webm
