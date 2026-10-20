@@ -13,6 +13,7 @@ the author) can steer it by looking at audio or scores.
 """
 import csv
 import hashlib
+import re
 import sys
 import unicodedata
 import urllib.request
@@ -36,6 +37,27 @@ OUT_SHA = HERE / "selection.sha256"
 
 SAMPLE_RATE = 16_000
 MIN_S, MAX_S, MAX_CHARS = 3.0, 13.0, 200
+
+# Deviation D1 (2026-10-21, logged in CLAUDE.md section 14.5): one general text rule, added
+# BEFORE any audio, TTS or score existed. TTS tools read digits, symbols, acronyms and foreign
+# names differently from human readers, which would confound real vs AI. A sentence is eligible
+# only if its text has Vietnamese letters, spaces and a fixed punctuation whitelist, and EVERY
+# word is a phonotactically valid Vietnamese syllable (so "web", "Paris", "GPS", "30", "yen sign"
+# all fail). No sentence was judged by listening or picked by hand.
+ALLOWED_PUNCT = set(",.;:!?\"'()-–—…“”‘’«»")
+TONE_MARKS = {"̀", "́", "̃", "̉", "̣"}   # grave, acute, tilde, hook, dot below
+KEEP_MARKS = {"̂", "̆", "̛"}                         # circumflex, breve, horn
+ALPHABET = set("abcdđeghiklmnopqrstuvxyăâêôơư")  # no f j w z
+_ONSET = r"(?:ngh|ng|nh|ch|gh|gi|kh|ph|qu|th|tr|[bcdđghklmnrstvx])?"
+_NUC3 = r"iêu|yêu|oai|oay|oeo|uây|uôi|ươi|ươu|uyê|uyu|uya|uai"
+_NUC2 = (r"ai|ao|au|ay|âu|ây|eo|êu|ia|iê|iu|oa|oă|oe|oi|ôi|ơi|ua|uâ|uê|ui"
+         r"|uô|uy|ưa|ưi|ươ|ưu|yê|oo")
+_NUC1 = r"[aăâeêioôơuưy]"
+SYLLABLE = re.compile(rf"^(?P<on>{_ONSET})(?P<nu>{_NUC3}|{_NUC2}|{_NUC1})(?P<co>ch|ng|nh|[cmnpt])?$")
+OPEN_NUCLEI = set("ai ao au ay âu ây eo êu ia iu oi ôi ơi ua ui ưa ưi ưu "
+                  "iêu yêu oai oay oeo uây uôi ươi ươu uya uai".split())
+NEEDS_CODA = {"iê", "uô", "ươ", "yê", "uyê"}
+CH_NH_NUCLEI = {"a", "e", "ê", "i", "oa", "oe", "uê", "uy"}
 
 N_TUNING = 16        # male, FLEURS train
 N_HELD_MALE = 12     # FLEURS test (all male)
@@ -94,9 +116,68 @@ def load_tsv(split):
     return out
 
 
-def eligible(row):
+def _strip_tones(word):
+    """Remove tone marks (keeping the vowel-quality marks); None if a mark sits on a non-vowel."""
+    out, prev = [], ""
+    for ch in unicodedata.normalize("NFD", word.lower()):
+        if unicodedata.category(ch) == "Mn":
+            if ch in TONE_MARKS:
+                if prev not in "aeiouy":
+                    return None
+                continue
+            if ch in KEEP_MARKS:
+                out.append(ch)
+                continue
+            return None            # any other accent (n-tilde, u-umlaut, ...) is not Vietnamese
+        out.append(ch)
+        prev = ch
+    return unicodedata.normalize("NFC", "".join(out))
+
+
+def syllable_ok(word):
+    s = _strip_tones(word)
+    if not s or not set(s) <= ALPHABET:
+        return False
+    m = SYLLABLE.match(s)
+    if not m:
+        return False
+    nu, co = m.group("nu"), m.group("co") or ""
+    if nu in OPEN_NUCLEI and co:
+        return False
+    if nu in NEEDS_CODA and not co:
+        return False
+    if co in ("ch", "nh") and nu not in CH_NH_NUCLEI:
+        return False
+    if co == "ng" and nu in ("i", "y", "ơ", "ia"):
+        return False
+    if co == "c" and nu in ("i", "y", "ê", "ơ"):
+        return False
+    return True
+
+
+def text_ok(text):
+    """True if the text has only Vietnamese letters, spaces, whitelisted punctuation, and every
+    word is a valid Vietnamese syllable (rejects digits, symbols, acronyms, foreign words)."""
+    words, cur = [], []
+    for ch in unicodedata.normalize("NFC", text):
+        if ch.isspace() or ch in ALLOWED_PUNCT:
+            words.append("".join(cur))
+            cur = []
+        elif unicodedata.category(ch)[0] in "LM":
+            cur.append(ch)
+        else:
+            return False           # digit, currency, other symbol, unlisted punctuation
+    words.append("".join(cur))
+    return all(syllable_ok(w) for w in words if w)
+
+
+def eligible_basic(row):
     dur = row["num_samples"] / SAMPLE_RATE
     return MIN_S <= dur <= MAX_S and len(row["raw"]) <= MAX_CHARS
+
+
+def eligible(row):
+    return eligible_basic(row) and text_ok(row["raw"])
 
 
 def by_sentence(rows, gender):
@@ -212,6 +293,15 @@ def write_csv(rows, path):
         w.writerows(rows)
 
 
+def pool_report():
+    train, test = load_tsv("train"), load_tsv("test")
+    print("eligible sentences (distinct ids with >=1 eligible clip), before -> after the text rule D1:")
+    for name, rows_, g in (("train male  ", train, "male"), ("train female", train, "female"), ("test male   ", test, "male")):
+        before = {r["id"] for r in rows_ if r["gender"] == g and eligible_basic(r)}
+        after = {r["id"] for r in rows_ if r["gender"] == g and eligible(r)}
+        print(f"  {name}: {len(before):4d} -> {len(after):4d}")
+
+
 def summary(rows):
     from collections import Counter
     print("rows:", len(rows))
@@ -245,6 +335,7 @@ def main():
     tmp.replace(OUT_CSV)
     OUT_SHA.write_text(f"{digest}  selection.csv\n", encoding="utf-8", newline="\n")
     summary(rows)
+    pool_report()
     print("selection.csv sha256:", digest)
 
 

@@ -447,3 +447,30 @@ Then wait for my "go" before writing code.
   2026-10-13 bug-check report: no Android device or emulator was reachable
   in that session -- the host machine has no hardware virtualization
   acceleration available).
+
+### 14.5 AI voice detection evaluation: sentence-selection rule changed (deviation D1)
+- **Status:** DONE, before any audio, TTS clip or score existed (2026-10-21,
+  owner decision). Full plan: `data/voice_eval/PLAN.md` (see its "Deviations").
+- **What changed:** `data/voice_eval/select_sentences.py` gained ONE general
+  text rule. A FLEURS sentence is eligible only if its text has Vietnamese
+  letters, spaces and a fixed punctuation whitelist, and every word is a
+  valid Vietnamese syllable. Digits, currency/other symbols, acronyms and
+  foreign names or words are therefore excluded. It is applied to all pools;
+  no sentence was picked or rejected by hand or by listening. During testing
+  the rule wrongly rejected "giêng/giềng" (a bug in the syllable table:
+  "-êng" is valid). That was fixed in the rule, not by hand-picking.
+- **Why:** the first selection had 9 of 40 sentences with digits plus symbols
+  and foreign names (e.g. "A1GP", a yen sign, Hindi names). TTS tools read
+  these differently from human readers, which would confound real vs AI.
+- **Old selection:** `selection.csv` sha256
+  `c06a54e60c5b00497653e82eebd0e4138a6ac16cfd75cef0a3ccdc280347c12d`
+  (commit 2508912).
+- **New selection:** sha256
+  `bb8b51b24c2f8208bfc52a038d983fb2878cff0ef36bc2685393fa34c84cf640`
+  (the commit that adds this entry). Re-running the script reproduces it
+  (`select_sentences.py --check`).
+- **Eligible sentences after the rule** (before the rule): train male 251
+  (503), train female 527 (1,053), test male 130 (238). The 16 tuning +
+  24 held-out + 12 owner-reads sentences are all still filled.
+- **Not changed:** seed 20261021, the 2b split, voice assignment, counts and
+  the decision rule (PLAN.md section 8).

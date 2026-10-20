@@ -31,7 +31,7 @@ One gap: the server's content-type allow-list has no `amr`, `3gpp` or `caf`. `ap
 
 ## 1. Data and split
 
-**Rule.** FLEURS `vi_vn`, seed `20261021`. A sentence is eligible if its clip is 3–13 s and the text is at most 200 characters. Sentences are ranked by `sha256("20261021|"+sentence_id)`. Each sentence gets exactly one real clip and one AI clip.
+**Rule.** FLEURS `vi_vn`, seed `20261021`. A sentence is eligible if its clip is 3–13 s, the text is at most 200 characters, **and (deviation D1, see "Deviations" at the end) the text contains only Vietnamese letters, spaces and a fixed punctuation list, with every word a valid Vietnamese syllable** (so digits, currency and other symbols, acronyms and foreign names or words are excluded). Sentences are ranked by `sha256("20261021|"+sentence_id)`. Each sentence gets exactly one real clip and one AI clip.
 
 | | Tuning | Held-out |
 |---|---|---|
@@ -98,7 +98,7 @@ data/voice_eval/
 ```
 
 - `.gitignore` also blocks all audio extensions under `data/voice_eval/`.
-- `scan_outputs.py` runs before every commit. It rejects `supabase`, `.supabase.co`, `.run.app`, `eyJ…`, `VOICE_SHARED_SECRET`, and any `http(s)://` outside a short allow-list of public source links.
+- `scan_outputs.py` runs before every commit. It rejects backend and model-server host names, the names of the backend-URL, anon-key, shared-secret and AI-key environment variables (in files under `data/voice_eval/`), JWT-like tokens and API-key prefixes, and any web link outside a short allow-list of public source and licence links.
 - The harness reads the server address from the environment and never writes it to a file.
 - Results record only the model revision hash and the voice-server git commit.
 - `CONSENT.md` covers only your own voice. No one else's voice is recorded.
@@ -206,3 +206,9 @@ My total is about 5–6 h across 3–4 sessions, and yours is about 1 h. Cost is
 | Is "Can't-tell-only" a real ship option? | Treat as OFF |
 | Server content types (`amr`/`3gpp`/`caf`) | Client sends `octet-stream`; decide in Stage 3/4 |
 | Test AMR decoding in the Docker image later | Yes |
+
+## Deviations
+
+Any change to a rule above after "go" is logged here and in CLAUDE.md §14.
+
+**D1, 2026-10-21, before any audio, TTS or score existed (owner decision).** The first `selection.csv` (sha256 `c06a54e60c5b00497653e82eebd0e4138a6ac16cfd75cef0a3ccdc280347c12d`, commit `2508912`) contained sentences with digits (9 of 40), symbols and foreign names or acronyms. TTS tools and human readers say these differently, which would confound real versus AI. One general text rule was added to `select_sentences.py` (see §1) and the selection was regenerated: new sha256 `bb8b51b24c2f8208bfc52a038d983fb2878cff0ef36bc2685393fa34c84cf640`. No sentence was chosen or rejected by hand or by listening. Eligible sentences after the rule: train male 251 of 503, train female 527 of 1,053, test male 130 of 238. The 16 tuning, 24 held-out and 12 owner-reads sentences are all still filled.
