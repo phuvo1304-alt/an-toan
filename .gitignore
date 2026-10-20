@@ -63,3 +63,26 @@ test/failures/
 .vscode/*.local.json
 .DS_Store
 Thumbs.db
+
+# ---- AI voice detection evaluation (data/voice_eval) ----
+# No voice recording, generated speech, model weight or virtual environment is ever committed.
+data/voice_eval/audio/
+data/voice_eval/models/
+data/voice_eval/.venv*/
+data/voice_eval/**/*.wav
+data/voice_eval/**/*.m4a
+data/voice_eval/**/*.aac
+data/voice_eval/**/*.mp3
+data/voice_eval/**/*.ogg
+data/voice_eval/**/*.opus
+data/voice_eval/**/*.flac
+data/voice_eval/**/*.webm
+data/voice_eval/**/*.amr
+data/voice_eval/**/*.3gp
+data/voice_eval/**/*.caf
+data/voice_eval/**/*.mp4
+data/voice_eval/**/*.onnx
+data/voice_eval/**/*.safetensors
+
+# cached FLEURS metadata (TSV transcripts only, re-downloadable and hash-checked by the script)
+data/voice_eval/cache/
