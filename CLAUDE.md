@@ -50,6 +50,9 @@
 5. **Bilingual UI**: Vietnamese default, English switchable in Settings. All strings go through localization (no hard-coded text in widgets).
 6. **Safety basics:** a disclaimer, a privacy screen, and links to official Vietnam resources (for example reporting to the police, the 156 hotline or the national anti-fraud channels). Verify each official contact is current before shipping.
 
+### Post-MVP, approved by owner on 2026-10-20
+- **AI voice detection** ("Giọng thật hay AI?" / "Real or AI voice?", route `/voice`, 5th Home card). The user picks or records a clip (max 60 s); the app sends it to the Supabase Edge Function `analyze-voice`, which forwards it to a private Python model server (`garystafford/wav2vec2-deepfake-voice-detector`, Apache-2.0). Result is one of three outcomes (Leans human / Leans AI / Can't tell), never a percentage and never proof. Behind a `--dart-define` build flag (OFF in release until the owner approves the Vietnamese evaluation) and a server kill switch `VOICE_ENABLED`. Audio is never stored or logged. Known limits are tracked in section 14 once written.
+
 ### Later (do NOT build until the MVP is shipped)
 - User accounts and login, cloud-synced progress, leaderboards
 - Push notifications, scam-alert feed
