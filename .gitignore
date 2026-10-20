@@ -86,3 +86,6 @@ data/voice_eval/**/*.safetensors
 
 # cached FLEURS metadata (TSV transcripts only, re-downloadable and hash-checked by the script)
 data/voice_eval/cache/
+
+__pycache__/
+*.pyc
