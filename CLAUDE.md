@@ -576,3 +576,26 @@ Then wait for my "go" before writing code.
   intervals reach 0.83-0.85; roll-off alone is 0.750; duration separates the
   held-out clips at about 0.75 in the direction opposite to the tuning set; the
   sample-rate trace (AUC 1.000, not one of the seven features) remains.
+
+### 14.10 AI voice detection evaluation: phone-like arms, trace rule (D7), interpretation table
+- **Status:** logged 2026-10-22, before any score existed (owner decision). Full text:
+  `data/voice_eval/PLAN.md` (D7, section 8a, check C6).
+- **Facts (build step 6b):** simulated phone-like arms (band-limit 300-3400 Hz, 30 dB
+  SNR noise, AAC 24 kbps / Opus 12 kbps / AMR-NB 12.2 kbps with the local ffmpeg):
+  the production decoder accepted 80/80 in each arm. 7-feature shortcut check on
+  them: AAC 0.865 [0.741, 0.964], Opus 0.769 [0.628, 0.891], AMR-NB 0.780 [0.641,
+  0.901], all at or above 0.75. Gate arms unchanged (0.684 / 0.701 / 0.689).
+- **D7:** the sample-rate trace feature (energy 7-8 kHz relative to 1-3 kHz of the
+  server-converted signal), direction-free held-out AUC: clean 0.597, noise-matched
+  **0.760**, matched raw 0.693, AAC 0.632, Opus 0.604, AMR-NB 0.635. An arm at 0.75 or
+  higher cannot support a claim that the detector hears the voice. Caveat: 0.760 vs
+  0.75 on 24 + 24 clips is within noise, and the tuning and held-out directions
+  disagree. PLAN section 8 item 2 was NOT reworded: it names the noise-matched arm,
+  so it cannot be met and **the feature stays OFF whatever the scores are**.
+- **Pre-registered reading (PLAN 8a):** all scores, cut-offs and false-positive /
+  false-negative tables are descriptive, not validation. Per arm and per VieNeu
+  model: (a) upper bound < 0.70 or point AUC <= 0.5 = credible negative evidence;
+  (b) lower bound >= 0.80 = NOT evidence it hears the voice (confounds); (c) between
+  = inconclusive. All keep the feature OFF. Next work for (b): matched pairs made by
+  re-synthesising the real clip itself through the codec, or real deepfake data with
+  provenance.
