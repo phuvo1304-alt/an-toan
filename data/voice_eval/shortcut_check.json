@@ -405,6 +405,240 @@
    },
    "gate_arm": false,
    "flagged": true
+  },
+  "phone_aac": {
+   "n_tuning": [
+    16,
+    16
+   ],
+   "n_heldout": [
+    24,
+    24
+   ],
+   "heldout_auc": 0.865,
+   "ci95": [
+    0.741,
+    0.964
+   ],
+   "tuning_auc_in_sample": 1.0,
+   "weights_standardised": {
+    "duration_s": 0.144,
+    "lead_silence_s": -0.217,
+    "trail_silence_s": -0.075,
+    "noise_floor_dbfs": 0.875,
+    "rms_dbfs": 0.704,
+    "peak_dbfs": -1.658,
+    "rolloff95_hz": -1.206
+   },
+   "single_feature": {
+    "duration_s": {
+     "auc_heldout_direction_from_tuning": 0.26,
+     "tuning_auc": 0.539,
+     "ai_higher": true,
+     "median_real": 8.48,
+     "median_ai": 7.348
+    },
+    "lead_silence_s": {
+     "auc_heldout_direction_from_tuning": 0.949,
+     "tuning_auc": 0.494,
+     "ai_higher": false,
+     "median_real": 0.2,
+     "median_ai": 0.1
+    },
+    "trail_silence_s": {
+     "auc_heldout_direction_from_tuning": 0.896,
+     "tuning_auc": 0.453,
+     "ai_higher": false,
+     "median_real": 0.22,
+     "median_ai": 0.17
+    },
+    "noise_floor_dbfs": {
+     "auc_heldout_direction_from_tuning": 0.156,
+     "tuning_auc": 0.578,
+     "ai_higher": true,
+     "median_real": -58.207,
+     "median_ai": -59.582
+    },
+    "rms_dbfs": {
+     "auc_heldout_direction_from_tuning": 0.444,
+     "tuning_auc": 0.508,
+     "ai_higher": true,
+     "median_real": -29.937,
+     "median_ai": -30.357
+    },
+    "peak_dbfs": {
+     "auc_heldout_direction_from_tuning": 0.823,
+     "tuning_auc": 0.07,
+     "ai_higher": false,
+     "median_real": -9.886,
+     "median_ai": -12.898
+    },
+    "rolloff95_hz": {
+     "auc_heldout_direction_from_tuning": 0.746,
+     "tuning_auc": 0.072,
+     "ai_higher": false,
+     "median_real": 1867.188,
+     "median_ai": 1312.5
+    }
+   },
+   "gate_arm": false,
+   "flagged": true
+  },
+  "phone_opus": {
+   "n_tuning": [
+    16,
+    16
+   ],
+   "n_heldout": [
+    24,
+    24
+   ],
+   "heldout_auc": 0.769,
+   "ci95": [
+    0.628,
+    0.891
+   ],
+   "tuning_auc_in_sample": 1.0,
+   "weights_standardised": {
+    "duration_s": -0.002,
+    "lead_silence_s": -0.104,
+    "trail_silence_s": -0.007,
+    "noise_floor_dbfs": 0.802,
+    "rms_dbfs": 0.747,
+    "peak_dbfs": -1.664,
+    "rolloff95_hz": -1.237
+   },
+   "single_feature": {
+    "duration_s": {
+     "auc_heldout_direction_from_tuning": 0.26,
+     "tuning_auc": 0.539,
+     "ai_higher": true,
+     "median_real": 8.48,
+     "median_ai": 7.348
+    },
+    "lead_silence_s": {
+     "auc_heldout_direction_from_tuning": 0.045,
+     "tuning_auc": 0.523,
+     "ai_higher": true,
+     "median_real": 0.2,
+     "median_ai": 0.1
+    },
+    "trail_silence_s": {
+     "auc_heldout_direction_from_tuning": 0.889,
+     "tuning_auc": 0.453,
+     "ai_higher": false,
+     "median_real": 0.24,
+     "median_ai": 0.17
+    },
+    "noise_floor_dbfs": {
+     "auc_heldout_direction_from_tuning": 0.123,
+     "tuning_auc": 0.551,
+     "ai_higher": true,
+     "median_real": -60.81,
+     "median_ai": -62.083
+    },
+    "rms_dbfs": {
+     "auc_heldout_direction_from_tuning": 0.51,
+     "tuning_auc": 0.512,
+     "ai_higher": true,
+     "median_real": -30.606,
+     "median_ai": -30.705
+    },
+    "peak_dbfs": {
+     "auc_heldout_direction_from_tuning": 0.802,
+     "tuning_auc": 0.086,
+     "ai_higher": false,
+     "median_real": -10.27,
+     "median_ai": -12.732
+    },
+    "rolloff95_hz": {
+     "auc_heldout_direction_from_tuning": 0.685,
+     "tuning_auc": 0.064,
+     "ai_higher": false,
+     "median_real": 1656.25,
+     "median_ai": 1187.5
+    }
+   },
+   "gate_arm": false,
+   "flagged": true
+  },
+  "phone_amr": {
+   "n_tuning": [
+    16,
+    16
+   ],
+   "n_heldout": [
+    24,
+    24
+   ],
+   "heldout_auc": 0.78,
+   "ci95": [
+    0.641,
+    0.901
+   ],
+   "tuning_auc_in_sample": 1.0,
+   "weights_standardised": {
+    "duration_s": -0.028,
+    "lead_silence_s": -0.178,
+    "trail_silence_s": -0.08,
+    "noise_floor_dbfs": 0.883,
+    "rms_dbfs": 1.17,
+    "peak_dbfs": -1.423,
+    "rolloff95_hz": -1.288
+   },
+   "single_feature": {
+    "duration_s": {
+     "auc_heldout_direction_from_tuning": 0.26,
+     "tuning_auc": 0.539,
+     "ai_higher": true,
+     "median_real": 8.5,
+     "median_ai": 7.37
+    },
+    "lead_silence_s": {
+     "auc_heldout_direction_from_tuning": 0.049,
+     "tuning_auc": 0.52,
+     "ai_higher": true,
+     "median_real": 0.22,
+     "median_ai": 0.1
+    },
+    "trail_silence_s": {
+     "auc_heldout_direction_from_tuning": 0.893,
+     "tuning_auc": 0.391,
+     "ai_higher": false,
+     "median_real": 0.24,
+     "median_ai": 0.19
+    },
+    "noise_floor_dbfs": {
+     "auc_heldout_direction_from_tuning": 0.132,
+     "tuning_auc": 0.543,
+     "ai_higher": true,
+     "median_real": -64.488,
+     "median_ai": -65.842
+    },
+    "rms_dbfs": {
+     "auc_heldout_direction_from_tuning": 0.474,
+     "tuning_auc": 0.512,
+     "ai_higher": true,
+     "median_real": -30.423,
+     "median_ai": -30.602
+    },
+    "peak_dbfs": {
+     "auc_heldout_direction_from_tuning": 0.788,
+     "tuning_auc": 0.352,
+     "ai_higher": false,
+     "median_real": -10.356,
+     "median_ai": -12.993
+    },
+    "rolloff95_hz": {
+     "auc_heldout_direction_from_tuning": 0.689,
+     "tuning_auc": 0.115,
+     "ai_higher": false,
+     "median_real": 1640.625,
+     "median_ai": 1179.688
+    }
+   },
+   "gate_arm": false,
+   "flagged": true
   }
  },
  "gate_arms_flagged": []

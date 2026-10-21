@@ -106,12 +106,16 @@ def show(name, res, decide):
 
 
 ARMS = [("clean", "clean", True), ("noise_matched", "nm", True), ("matched_raw", "mr", True),
-        ("level_randomized_raw", "lr", False), ("raw", "raw", False)]     # deviation D6: matched raw replaces level-randomized raw as the gate arm
+        ("level_randomized_raw", "lr", False), ("raw", "raw", False),     # deviation D6: matched raw replaces level-randomized raw as the gate arm
+        ("phone_aac", "pac", False), ("phone_opus", "pop", False), ("phone_amr", "pam", False)]   # step 6b: simulated phone-like arms, reported only (not gate arms)
 
 
 def main():
     rows = list(csv.DictReader(open(HERE / "prepare_stats.csv", encoding="utf-8", newline="")))
     assert len(rows) == 80
+    phone = {r["clip_id"]: r for r in csv.DictReader(open(HERE / "phone_stats.csv", encoding="utf-8", newline=""))}   # step 6b
+    for r in rows:
+        r.update({k: v for k, v in phone[r["clip_id"]].items() if k not in r})
     out = {"features": FEATURES, "threshold": THRESHOLD, "l2": L2, "bootstrap": {"resamples": BOOT_B, "seed": BOOT_SEED, "stratified": True}, "arms": {}}
     for name, prefix, gate in ARMS:
         res = run(rows, prefix)
