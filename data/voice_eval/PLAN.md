@@ -168,6 +168,8 @@ Checked in order. The first match wins.
    - Wording is the §9 text, with no percentages and the flag labelled experimental.
 3. **Can't-tell-only** is everything else: no verdict, only the "call back on a number you know" advice. I'd treat this as OFF unless you want the advice-only screen.
 
+**Hard stop on the shortcut repairs (decided by the owner on 2026-10-22, before any score existed).** The level-randomized raw arm was shortcut-flagged (held-out AUC 0.918). The owner allows exactly **one** repair attempt for it (deviation D6) and **no further adjustment rounds after that attempt**. An arm that is still at or above AUC 0.75 after D6 cannot be used for the ON gate, and the feature stays OFF. **No shortcut feature may be added, removed or changed, and the 0.75 threshold and the classifier settings may not be changed, in order to get under 0.75.** Information-only diagnoses (such as the ablations in check C4) never change the gate.
+
 This rule says nothing about old-style generators, since none are in held-out.
 
 ## 9. What results can and cannot claim, and in-app wording
