@@ -51,7 +51,7 @@ One gap: the server's content-type allow-list has no `amr`, `3gpp` or `caf`. `ap
 - I generate one 3–4 s clip per voice, with shuffled filenames and no key. You write M, F or unsure for each.
 - **Required:** the 12 held-out voices (about 1 minute).
 - **Optional:** the 10 tuning voices and MMS (about 1 more minute).
-- I also run a pitch check, which can contradict a label but can't confirm one. A voice that disagrees is marked "contradicted" and dropped from the gender breakdown. Replacement follows the same hash order and happens before any score.
+- **The blind human listening check decides** (deviation D2). A voice whose label you contradict by ear is marked "contradicted" and dropped from the gender breakdown; the replacement follows the same hash order and happens before any score. I also run a pitch check, but it is **advisory only**: it is recorded, and it neither confirms nor contradicts a label (male and female voices overlap around 165-180 Hz).
 - **Real speakers:** I'd have you listen to 6 real clips (3 M / 3 F) as a spot-check on FLEURS' labels.
 
 ## 2. Fairness controls
@@ -105,7 +105,7 @@ data/voice_eval/
 
 ## 5. Manifest
 
-**Fields.** clip_id (opaque), role, split, source, source_split, sentence_id, speaker_label (FLEURS: `unknown-<gender>`; TTS: voice name), tool, voice, gender, gender_check, condition, derived_from, duration_s, orig_sample_rate, silence stats, sha256, model/SDK versions, seed.
+**Fields.** clip_id (opaque), role, split, source, source_split, sentence_id, speaker_label (FLEURS: `unknown-<gender>`; TTS: voice name), tool, voice, gender, gender_check (for the 12 held-out TTS voices: `human-blind-confirmed`, with the pitch result stored as an advisory flag; other voices: `declared-unverified`; MMS: `unknown`), condition, derived_from, duration_s, orig_sample_rate, silence stats, sha256, model/SDK versions, seed.
 
 **Hashing order.**
 1. `selection.csv` is frozen and its sha256 committed **before any TTS or audio is generated**.
@@ -213,3 +213,22 @@ My total is about 5–6 h across 3–4 sessions, and yours is about 1 h. Cost is
 Any change to a rule above after "go" is logged here and in CLAUDE.md §14.
 
 **D1, 2026-10-21, before any audio, TTS or score existed (owner decision).** The first `selection.csv` (sha256 `c06a54e60c5b00497653e82eebd0e4138a6ac16cfd75cef0a3ccdc280347c12d`, commit `2508912`) contained sentences with digits (9 of 40), symbols and foreign names or acronyms. TTS tools and human readers say these differently, which would confound real versus AI. One general text rule was added to `select_sentences.py` (see §1) and the selection was regenerated: new sha256 `bb8b51b24c2f8208bfc52a038d983fb2878cff0ef36bc2685393fa34c84cf640`. No sentence was chosen or rejected by hand or by listening. Eligible sentences after the rule: train male 251 of 503, train female 527 of 1,053, test male 130 of 238. The 16 tuning, 24 held-out and 12 owner-reads sentences are all still filled.
+
+**D2, 2026-10-21, before any score existed (owner decision).** Rule changed from "a pitch contradiction drops a voice" to "**a blind human listening check decides; pitch is advisory**". Reason: the blind listening check of the 12 held-out voices matched the declared gender on **12 of 12**. A simple pitch estimate (median over voiced frames, line at 165 Hz) flagged two declared-male voices, Turbo / Quang Sơn (median 170 Hz, range 129-229 Hz) and Nano / Hữu Quân (median 173 Hz, range 125-206 Hz), but that is the overlap zone between male and female voices, so pitch cannot contradict a male label there. Both voices are kept. **`selection.csv` is unchanged** (sha256 `bb8b51b24c2f8208bfc52a038d983fb2878cff0ef36bc2685393fa34c84cf640`); no voice was replaced. `gender_check` is `human-blind-confirmed` for all 12 held-out voices, with the pitch flag recorded as advisory. Measured pitch (10th to 90th percentile of voiced frames; declared-male medians 93-173 Hz, declared-female medians 188-254 Hz, no overlap between the medians):
+
+| Tool | Voice | Declared | Human blind answer | Pitch median (Hz) | Pitch range p10-p90 (Hz) | Pitch vs 165 Hz line |
+|---|---|---|---|---|---|---|
+| nano | Ái Hân | female | female | 188 | 135-278 | agrees |
+| turbo | Ngọc Linh | female | female | 199 | 170-320 | agrees |
+| nano | Mỹ Duyên | female | female | 240 | 189-312 | agrees |
+| nano | Xuân Tiên | female | female | 240 | 179-294 | agrees |
+| turbo | Thục Đoan | female | female | 250 | 182-325 | agrees |
+| turbo | Đoan Trang | female | female | 254 | 170-276 | agrees |
+| nano | Đức Trí | male | male | 93 | 76-104 | agrees |
+| nano | Adam | male | male | 114 | 93-127 | agrees |
+| turbo | Phạm Tuyên | male | male | 115 | 80-158 | agrees |
+| turbo | Minh Đức | male | male | 165 | 102-213 | agrees |
+| turbo | Quang Sơn | male | male | 170 | 129-229 | advisory flag (borderline) |
+| nano | Hữu Quân | male | male | 173 | 125-206 | advisory flag (borderline) |
+
+Limits: the listening check used one short neutral sentence per voice, one listener, and the voices' own declared labels as the reference; "human-blind-confirmed" means this listener heard the declared gender, not an independent proof. The tuning voices and MMS were not checked.

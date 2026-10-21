@@ -474,3 +474,25 @@ Then wait for my "go" before writing code.
   24 held-out + 12 owner-reads sentences are all still filled.
 - **Not changed:** seed 20261021, the 2b split, voice assignment, counts and
   the decision rule (PLAN.md section 8).
+
+### 14.6 AI voice detection evaluation: voice-gender rule changed (deviation D2)
+- **Status:** DONE on 2026-10-21, before any score existed (owner decision).
+  Full text with the pitch table: `data/voice_eval/PLAN.md` ("Deviations").
+- **What changed:** the rule "a pitch contradiction drops a TTS voice from the
+  gender breakdown" became "a blind human listening check decides; pitch is
+  advisory". Pitch is still measured and recorded, but it neither confirms nor
+  contradicts a label.
+- **Why:** the owner's blind listening check of the 12 held-out voices matched
+  the declared gender 12 of 12. A simple pitch estimate (median over voiced
+  frames, line at 165 Hz) flagged two declared-male voices: Turbo / Quang Son
+  (median 170 Hz, p10-p90 range 129-229 Hz) and Nano / Huu Quan (median
+  173 Hz, range 125-206 Hz). That is the male/female overlap zone, so pitch
+  cannot contradict a male label there. Declared-male voice medians span
+  93-173 Hz and declared-female 188-254 Hz.
+- **Decision:** both voices kept. No voice was replaced and `selection.csv` is
+  unchanged (sha256 `bb8b51b24c2f8208bfc52a038d983fb2878cff0ef36bc2685393fa34c84cf640`).
+  `gender_check` will be `human-blind-confirmed` for the 12 held-out voices,
+  with the pitch flag stored as advisory.
+- **Limits:** one listener, one short neutral sentence per voice, and the
+  voices' own declared labels as the reference. The tuning voices and MMS were
+  not checked. The pitch estimator is a simple autocorrelation method.
