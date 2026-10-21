@@ -1,0 +1,8 @@
+# Frozen 2026-10-22 before the first score (PLAN.md section 5). Any later change needs a logged deviation.
+a0442301de7c9274e731befe3261609681eb05d40d252773efdbb1fa4665eacb  manifest.csv
+7cca0a7fe84ecf89b25c814ed5d8e63cbbc7e6017be80ecd9d03e928faa7a16a  run_eval.py
+73b17c2eb74c5f9d2c2046dbd28b5d3e75f3c5bbd4154744615e44cffb7e4b89  analyze.py
+a7a49e358229909a7411b60f277691bcd512a422661e2b2118cf6e7464de950b  cutoffs.py
+d1139ecce4c1ec1288f34171a2a2d17c671537800923e7c3ce2346ccef3020ad  selection.csv
+93493e55972ed34eb26b55f167602992a86ba47ec3f50a359992dd868fbdd031  build_manifest.py
+b10188236938137251c22a2147cb9ebb83bbb3ab9a7d01e814df5b86a602b82c  test_analysis.py
