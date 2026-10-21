@@ -1,0 +1,72 @@
+# SDK preset voices, as returned offline by list_preset_voices() (no synthesis). vieneu==3.8.3,
+# pinned model commits in models.sha256. Format: id | SDK gender field | gender word inside the label | full label
+
+## turbo (25 voices, backend=onnx)
+Adam bựa | male | male | ⭐ Adam bựa — Nam · Bắc · Phong cách tự nhiên
+Trúc Ly | female | female | ⭐ Trúc Ly — Nữ · Bắc · Phong cách tự nhiên
+Thiện Minh | male | male | ⭐ Thiện Minh — Nam · Bắc · Phong cách kể chuyện
+Mai Anh | female | female | ⭐ Mai Anh — Nữ · Bắc · Phong cách tin tức
+Hải Đăng | male | male | ⭐ Hải Đăng — Nam · Bắc · Phong cách tự nhiên
+Thùy Dung | female | female | ⭐ Thùy Dung — Nữ · Nam · Phong cách tin tức
+Thiền Tâm Đức | male | male | ⭐ Thiền Tâm Đức — Nam · Bắc · Phong cách kể chuyện
+Ngọc Huyền | female | female | ⭐ Ngọc Huyền — Nữ · Bắc · Giọng đọc tự nhiên
+Quang Sơn | male | male | ⭐ Quang Sơn — Nam · Trung · Phong cách tự nhiên
+Ngọc Trân | female | female | ⭐ Ngọc Trân — Nữ · Trung · Phong cách tự nhiên
+Minh Đức | male | male | Minh Đức — Nam · Bắc · Phong cách tin tức
+Phạm Tuyên | male | male | Phạm Tuyên — Nam · Bắc · Phong cách tự nhiên
+Thái Sơn | male | male | Thái Sơn — Nam · Nam · Phong cách kể chuyện
+Xuân Vĩnh | male | male | Xuân Vĩnh — Nam · Bắc · Phong cách tự nhiên
+Thanh Bình | male | male | Thanh Bình — Nam · Bắc · Phong cách kể chuyện
+Ngọc Linh | female | female | Ngọc Linh — Nữ · Bắc · Phong cách kể chuyện
+Đoan Trang | female | female | Đoan Trang — Nữ · Bắc · Phong cách tự nhiên
+Thục Đoan | female | female | Thục Đoan — Nữ · Nam · Phong cách kể chuyện
+Minh Triết | male | male | Minh Triết — Nam · Nam · Phong cách tin tức
+Mỹ Duyên | female | female | Mỹ Duyên — Nữ · Nam · Phong cách đọc truyện
+Quỳnh Anh | female | female | Quỳnh Anh — Nữ · Bắc · Phong cách đọc truyện
+Đức Trí | male | male | Đức Trí — Nam · Nam · Phong cách đọc truyện
+Kim Thanh | female | female | Kim Thanh — Nữ · Nam · Phong cách đọc truyện
+Adam | male | male | Adam — Nam · Nam · Giọng đọc tự nhiên
+Quốc Tuấn | male | male | Quốc Tuấn — Nam · Bắc · Phong cách tự nhiên
+
+## nano (11 voices, backend=onnx)
+Adam | male | male | Adam — Nam · Nam · Giọng đọc tự nhiên
+Ái Hân | female | female | Ái Hân — Nữ · Nam · Phong cách tin tức
+Mỹ Duyên | female | female | Mỹ Duyên — Nữ · Bắc · Phong cách đọc truyện
+Đức Trí | male | male | Đức Trí — Nam · Bắc · Phong cách đọc truyện
+Hữu Quân | male | male | Hữu Quân — Nam · Bắc · Phong cách tin tức
+Xuân Tiên | female | female | Xuân Tiên — Nữ · Bắc · Phong cách tin tức
+Mai Anh | female | female | Mai Anh — Nữ · Bắc · Phong cách tin tức
+Trúc Ly | female | female | Trúc Ly — Nữ · Bắc · Phong cách tự nhiên
+Anh Khôi | male | male | Anh Khôi — Nam · Bắc · Phong cách kể chuyện
+Minh Quân | male | male | Minh Quân — Nam · Bắc · Phong cách tự nhiên
+Mạnh Dũng | male | male | Mạnh Dũng — Nam · Bắc · Phong cách tự nhiên
+
+## Check of PLAN.md section 1 against the SDK
+voices named in PLAN.md section 1: 22 (held-out/nano=6, held-out/turbo=6, tuning/nano=5, tuning/turbo=5)
+  ok        nano/held-out: 'Hữu Quân' exact spelling, gender male (SDK field and label agree)
+  ok        nano/held-out: 'Adam' exact spelling, gender male (SDK field and label agree)
+  ok        nano/held-out: 'Đức Trí' exact spelling, gender male (SDK field and label agree)
+  ok        nano/held-out: 'Ái Hân' exact spelling, gender female (SDK field and label agree)
+  ok        nano/held-out: 'Xuân Tiên' exact spelling, gender female (SDK field and label agree)
+  ok        nano/held-out: 'Mỹ Duyên' exact spelling, gender female (SDK field and label agree)
+  ok        turbo/held-out: 'Minh Đức' exact spelling, gender male (SDK field and label agree)
+  ok        turbo/held-out: 'Phạm Tuyên' exact spelling, gender male (SDK field and label agree)
+  ok        turbo/held-out: 'Quang Sơn' exact spelling, gender male (SDK field and label agree)
+  ok        turbo/held-out: 'Ngọc Linh' exact spelling, gender female (SDK field and label agree)
+  ok        turbo/held-out: 'Đoan Trang' exact spelling, gender female (SDK field and label agree)
+  ok        turbo/held-out: 'Thục Đoan' exact spelling, gender female (SDK field and label agree)
+  ok        nano/tuning: 'Anh Khôi' exact spelling, gender male (SDK field and label agree)
+  ok        nano/tuning: 'Minh Quân' exact spelling, gender male (SDK field and label agree)
+  ok        nano/tuning: 'Mạnh Dũng' exact spelling, gender male (SDK field and label agree)
+  ok        nano/tuning: 'Mai Anh' exact spelling, gender female (SDK field and label agree)
+  ok        nano/tuning: 'Trúc Ly' exact spelling, gender female (SDK field and label agree)
+  ok        turbo/tuning: 'Thanh Bình' exact spelling, gender male (SDK field and label agree)
+  ok        turbo/tuning: 'Xuân Vĩnh' exact spelling, gender male (SDK field and label agree)
+  ok        turbo/tuning: 'Quỳnh Anh' exact spelling, gender female (SDK field and label agree)
+  ok        turbo/tuning: 'Ngọc Trân' exact spelling, gender female (SDK field and label agree)
+  ok        turbo/tuning: 'Kim Thanh' exact spelling, gender female (SDK field and label agree)
+selection.csv: 22 distinct (tool, voice) pairs in use; pairs not matching PLAN.md/SDK: none
+SDK turbo voices not used by the plan (14): Adam, Adam bựa, Hải Đăng, Mai Anh, Minh Triết, Mỹ Duyên, Ngọc Huyền, Quốc Tuấn, Thiền Tâm Đức, Thiện Minh, Thái Sơn, Thùy Dung, Trúc Ly, Đức Trí
+SDK nano voices not used by the plan (0): 
+
+RESULT: all planned voices present with exact spelling and declared gender

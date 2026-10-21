@@ -1,0 +1,61 @@
+{
+ "tool": "nano",
+ "backend": "onnx",
+ "voices": [
+  {
+   "label": "Adam — Nam · Nam · Giọng đọc tự nhiên",
+   "id": "Adam",
+   "gender": "male"
+  },
+  {
+   "label": "Ái Hân — Nữ · Nam · Phong cách tin tức",
+   "id": "Ái Hân",
+   "gender": "female"
+  },
+  {
+   "label": "Mỹ Duyên — Nữ · Bắc · Phong cách đọc truyện",
+   "id": "Mỹ Duyên",
+   "gender": "female"
+  },
+  {
+   "label": "Đức Trí — Nam · Bắc · Phong cách đọc truyện",
+   "id": "Đức Trí",
+   "gender": "male"
+  },
+  {
+   "label": "Hữu Quân — Nam · Bắc · Phong cách tin tức",
+   "id": "Hữu Quân",
+   "gender": "male"
+  },
+  {
+   "label": "Xuân Tiên — Nữ · Bắc · Phong cách tin tức",
+   "id": "Xuân Tiên",
+   "gender": "female"
+  },
+  {
+   "label": "Mai Anh — Nữ · Bắc · Phong cách tin tức",
+   "id": "Mai Anh",
+   "gender": "female"
+  },
+  {
+   "label": "Trúc Ly — Nữ · Bắc · Phong cách tự nhiên",
+   "id": "Trúc Ly",
+   "gender": "female"
+  },
+  {
+   "label": "Anh Khôi — Nam · Bắc · Phong cách kể chuyện",
+   "id": "Anh Khôi",
+   "gender": "male"
+  },
+  {
+   "label": "Minh Quân — Nam · Bắc · Phong cách tự nhiên",
+   "id": "Minh Quân",
+   "gender": "male"
+  },
+  {
+   "label": "Mạnh Dũng — Nam · Bắc · Phong cách tự nhiên",
+   "id": "Mạnh Dũng",
+   "gender": "male"
+  }
+ ]
+}

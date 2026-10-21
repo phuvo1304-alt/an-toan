@@ -49,6 +49,7 @@ ALLOWED_URL_PREFIXES = (
     "huggingface.co/facebook/mms-tts-vie",
     "huggingface.co/garystafford/",
     "huggingface.co/OpenMOSS-Team/",
+    "huggingface.co/api/models/",
     "github.com/pnnbao97/",
     "github.com/facebookresearch/fairseq",
     "creativecommons.org/licenses/",

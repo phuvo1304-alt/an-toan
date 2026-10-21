@@ -1,0 +1,131 @@
+{
+ "tool": "turbo",
+ "backend": "onnx",
+ "voices": [
+  {
+   "label": "⭐ Adam bựa — Nam · Bắc · Phong cách tự nhiên",
+   "id": "Adam bựa",
+   "gender": "male"
+  },
+  {
+   "label": "⭐ Trúc Ly — Nữ · Bắc · Phong cách tự nhiên",
+   "id": "Trúc Ly",
+   "gender": "female"
+  },
+  {
+   "label": "⭐ Thiện Minh — Nam · Bắc · Phong cách kể chuyện",
+   "id": "Thiện Minh",
+   "gender": "male"
+  },
+  {
+   "label": "⭐ Mai Anh — Nữ · Bắc · Phong cách tin tức",
+   "id": "Mai Anh",
+   "gender": "female"
+  },
+  {
+   "label": "⭐ Hải Đăng — Nam · Bắc · Phong cách tự nhiên",
+   "id": "Hải Đăng",
+   "gender": "male"
+  },
+  {
+   "label": "⭐ Thùy Dung — Nữ · Nam · Phong cách tin tức",
+   "id": "Thùy Dung",
+   "gender": "female"
+  },
+  {
+   "label": "⭐ Thiền Tâm Đức — Nam · Bắc · Phong cách kể chuyện",
+   "id": "Thiền Tâm Đức",
+   "gender": "male"
+  },
+  {
+   "label": "⭐ Ngọc Huyền — Nữ · Bắc · Giọng đọc tự nhiên",
+   "id": "Ngọc Huyền",
+   "gender": "female"
+  },
+  {
+   "label": "⭐ Quang Sơn — Nam · Trung · Phong cách tự nhiên",
+   "id": "Quang Sơn",
+   "gender": "male"
+  },
+  {
+   "label": "⭐ Ngọc Trân — Nữ · Trung · Phong cách tự nhiên",
+   "id": "Ngọc Trân",
+   "gender": "female"
+  },
+  {
+   "label": "Minh Đức — Nam · Bắc · Phong cách tin tức",
+   "id": "Minh Đức",
+   "gender": "male"
+  },
+  {
+   "label": "Phạm Tuyên — Nam · Bắc · Phong cách tự nhiên",
+   "id": "Phạm Tuyên",
+   "gender": "male"
+  },
+  {
+   "label": "Thái Sơn — Nam · Nam · Phong cách kể chuyện",
+   "id": "Thái Sơn",
+   "gender": "male"
+  },
+  {
+   "label": "Xuân Vĩnh — Nam · Bắc · Phong cách tự nhiên",
+   "id": "Xuân Vĩnh",
+   "gender": "male"
+  },
+  {
+   "label": "Thanh Bình — Nam · Bắc · Phong cách kể chuyện",
+   "id": "Thanh Bình",
+   "gender": "male"
+  },
+  {
+   "label": "Ngọc Linh — Nữ · Bắc · Phong cách kể chuyện",
+   "id": "Ngọc Linh",
+   "gender": "female"
+  },
+  {
+   "label": "Đoan Trang — Nữ · Bắc · Phong cách tự nhiên",
+   "id": "Đoan Trang",
+   "gender": "female"
+  },
+  {
+   "label": "Thục Đoan — Nữ · Nam · Phong cách kể chuyện",
+   "id": "Thục Đoan",
+   "gender": "female"
+  },
+  {
+   "label": "Minh Triết — Nam · Nam · Phong cách tin tức",
+   "id": "Minh Triết",
+   "gender": "male"
+  },
+  {
+   "label": "Mỹ Duyên — Nữ · Nam · Phong cách đọc truyện",
+   "id": "Mỹ Duyên",
+   "gender": "female"
+  },
+  {
+   "label": "Quỳnh Anh — Nữ · Bắc · Phong cách đọc truyện",
+   "id": "Quỳnh Anh",
+   "gender": "female"
+  },
+  {
+   "label": "Đức Trí — Nam · Nam · Phong cách đọc truyện",
+   "id": "Đức Trí",
+   "gender": "male"
+  },
+  {
+   "label": "Kim Thanh — Nữ · Nam · Phong cách đọc truyện",
+   "id": "Kim Thanh",
+   "gender": "female"
+  },
+  {
+   "label": "Adam — Nam · Nam · Giọng đọc tự nhiên",
+   "id": "Adam",
+   "gender": "male"
+  },
+  {
+   "label": "Quốc Tuấn — Nam · Bắc · Phong cách tự nhiên",
+   "id": "Quốc Tuấn",
+   "gender": "male"
+  }
+ ]
+}

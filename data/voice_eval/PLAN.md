@@ -175,7 +175,8 @@ This rule says nothing about old-style generators, since none are in held-out.
 They go in `CREDITS.md` at the repo root and in Settings → About. They credit authors and licenses only, with no statement about preset-speaker consent:
 - the detector model and its dataset, as already specified
 - FLEURS (Google, CC BY 4.0), with the exact citation text copied from the dataset card (unverified until I copy it)
-- VieNeu-TTS v3 Turbo/Nano by Phạm Nguyễn Ngọc Bảo (Apache-2.0, repo and HF links), plus MOSS-Audio-Tokenizer-Nano (OpenMOSS-Team) and sea-g2p
+- VieNeu-TTS v3 Turbo/Nano by Phạm Nguyễn Ngọc Bảo (Apache-2.0, repo and HF links), plus sea-g2p
+- MOSS-Audio-Tokenizer-Nano (OpenMOSS-Team, Apache-2.0): the ONNX audio codec Turbo uses on CPU, a fourth download source approved by the owner on 2026-10-21 (pinned commit in `SOURCES.md`)
 - MMS-TTS-vie, Meta AI, Vineel Pratap et al., CC BY-NC 4.0, used unmodified
 
 ## 11. Build order and time
