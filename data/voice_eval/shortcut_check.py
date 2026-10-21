@@ -105,7 +105,8 @@ def show(name, res, decide):
     print("  standardised weights: " + ", ".join(f"{f} {v:+.2f}" for f, v in sorted(res["weights_standardised"].items(), key=lambda kv: -abs(kv[1]))))
 
 
-ARMS = [("clean", "clean", True), ("noise_matched", "nm", True), ("level_randomized_raw", "lr", True), ("raw", "raw", False)]
+ARMS = [("clean", "clean", True), ("noise_matched", "nm", True), ("matched_raw", "mr", True),
+        ("level_randomized_raw", "lr", False), ("raw", "raw", False)]     # deviation D6: matched raw replaces level-randomized raw as the gate arm
 
 
 def main():

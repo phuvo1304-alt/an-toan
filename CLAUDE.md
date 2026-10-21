@@ -547,3 +547,32 @@ Then wait for my "go" before writing code.
   real and 0 AI clips as silent.
 - **Open:** the flagged gate arm is reported, nothing else was changed; options
   await the owner's decision.
+
+### 14.9 AI voice detection evaluation: matched raw arm replaces the level-randomized raw gate arm (deviation D6)
+- **Status:** logged on 2026-10-22 BEFORE the new arm was prepared or checked
+  (owner decision; the single repair attempt allowed by the hard stop in
+  `data/voice_eval/PLAN.md` section 8). Results are added below after the run.
+- **Why:** the D5 level-randomized raw arm was shortcut-flagged (held-out AUC
+  0.918 [0.814, 0.993]; clean 0.684, noise-matched 0.701). Diagnosis: lead
+  silence 1.000, original sample rate 1.000, RMS 0.950, peak 0.903, trailing
+  silence 0.832, duration 0.823, roll-off 0.767; the random gain inflated the
+  silence features; without the level and silence features the combined AUC
+  was still 0.769 [0.623, 0.903]. Roll-off and the sample-rate trace remain.
+- **Change:** a simulated "matched raw arm": every clip gets a common loudness
+  drawn (seeded) from -40 to -20 dBFS; AI clips get real-like edge silence and
+  matched pink noise. Clean and noise-matched arms unchanged. Same seven
+  features, 0.75 threshold and bootstrap.
+- **Hard stop:** if the matched raw arm is at or above 0.75 it cannot be used
+  for the ON gate and the feature stays OFF; no further rounds.
+- **Known residual:** the AI clips (synthesized at 24 or 48 kHz) are converted to
+  16 kHz by the server while the real clips are natively 16 kHz; this cannot be
+  removed without altering the voices.
+- **Result of D6 (added after the run, 2026-10-22):** the matched raw arm was built
+  and checked once. Held-out shortcut AUC [95% interval]: clean 0.684 [0.524,
+  0.835], noise-matched 0.701 [0.542, 0.849], **matched raw 0.689 [0.530, 0.833]**
+  (level-randomized raw 0.918 and plain raw 0.911 are now descriptive). No gate
+  arm reached 0.75, so the hard stop did not trigger. The production server
+  rejects 0 real and 0 AI clips as silent in the matched raw arm. Cautions: the
+  intervals reach 0.83-0.85; roll-off alone is 0.750; duration separates the
+  held-out clips at about 0.75 in the direction opposite to the tuning set; the
+  sample-rate trace (AUC 1.000, not one of the seven features) remains.

@@ -51,9 +51,13 @@ SHORT_S = 3.0
 NOISE_SEED, LEVEL_SEED = 20261022, 20261023
 NOISE_ITERS, NOISE_TOL_DB = 8, 0.25
 LEVEL_GAIN_RANGE_DB = (-20.0, 0.0)
+# ---- deviation D6 (matched raw arm), fixed in PLAN.md section 2 before it was prepared or checked ----
+MATCH_SEED = 20261024
+MATCH_LEVEL_RANGE_DBFS = (-40.0, -20.0)   # common whole-clip RMS target, drawn per clip, independent of class
 
 CLEAN, RAW = HERE / "audio" / "clean", HERE / "audio" / "raw_arm"
 NOISE, LEVEL = HERE / "audio" / "noise_matched", HERE / "audio" / "raw_level_random"
+MATCHED = HERE / "audio" / "raw_matched"
 STATS = HERE / "prepare_stats.csv"
 
 
@@ -179,6 +183,9 @@ def process(c):
     if db(np.max(np.abs(ys))) + g2_db > PEAK_CAP_DBFS:                 # the cap applies to the FINAL clip only
         g2_db, capped = PEAK_CAP_DBFS - db(np.max(np.abs(ys))), True
     zs = ys * 10 ** (g2_db / 20.0)
+    act_xs = frame_dbfs(xs) >= SILENCE_DBFS                            # edge silence of the normalized clip (used by the D6 arm)
+    row["edge_lead_s"] = f"{(int(np.argmax(act_xs)) if act_xs.any() else len(act_xs)) * FRAME / SR:.3f}"
+    row["edge_trail_s"] = f"{(int(len(act_xs) - 1 - np.max(np.where(act_xs))) if act_xs.any() else 0) * FRAME / SR:.3f}"
     row.update({"gain1_db": f"{g1_db:.2f}", "intermediate_peak_dbfs": f"{db(np.max(np.abs(xs))):.2f}", "gain2_db": f"{g2_db:.2f}",
                 "peak_cap_applied": int(capped), "trim_lead_s": f"{lead_s:.3f}", "trim_trail_s": f"{trail_s:.3f}",
                 "trim_total_s": f"{lead_s + trail_s:.3f}", "trim_no_active_frames": ti["no_active_frames"],
@@ -250,6 +257,66 @@ def noise_matched(rows):
         add_features(r, "nm", sf.read(str(dst), dtype="float64")[0])
 
 
+def floor_after_server(x, sr):
+    """Noise floor of a float signal as the production server converts it (16 kHz mono), without quantization."""
+    import io
+    buf = io.BytesIO()
+    sf.write(buf, np.asarray(x, dtype=np.float32), sr, format="WAV", subtype="FLOAT")
+    return noise_floor(server_samples_unchecked(buf.getvalue()))
+
+
+def matched_raw(rows, clips):
+    """Deviation D6: the matched raw arm (SIMULATED). Common loudness for both classes; AI clips get real-like
+    edge silence and matched pink noise. Native sample rate, mono, one final 16-bit rounding."""
+    by_id = {c["clip_id"]: c for c in clips}
+    real_by_split = {sp: sorted((r for r in rows if r["class"] == "real" and r["split"] == sp), key=lambda r: r["clip_id"])
+                     for sp in ("tuning", "heldout")}
+    for r in rows:
+        x, sr = sf.read(str(by_id[r["clip_id"]]["path"]), dtype="float64")
+        rng = rng_for(MATCH_SEED, r["clip_id"])
+        level = float(rng.uniform(*MATCH_LEVEL_RANGE_DBFS))             # draw 1: common loudness (same distribution for both classes)
+        xn = x * 10 ** ((TARGET_RMS_DBFS - rms_db(x)) / 20.0)           # normalized domain (whole-clip RMS -28 dBFS)
+        mix = xn
+        info = {"mr_pad_lead_s": "", "mr_pad_trail_s": "", "mr_drawn_real": "", "mr_target_floor_dbfs": "", "mr_noise_level_dbfs": "",
+                "mr_iterations": 0, "mr_status": "real clip: gain only", "mr_floor_error_db": ""}
+        if r["class"] == "ai":
+            pool = real_by_split[r["split"]]
+            j = pool[int(rng.integers(0, len(pool)))]                   # draw 2: which real clip's edge silence and noise floor
+            pad_l = max(0.0, float(j["edge_lead_s"]) - float(r["edge_lead_s"]))
+            pad_t = max(0.0, float(j["edge_trail_s"]) - float(r["edge_trail_s"]))
+            xp = np.concatenate([np.zeros(int(round(pad_l * sr))), xn, np.zeros(int(round(pad_t * sr)))])
+            target = float(j["input_noise_floor_after_gain1_dbfs"])     # the drawn real clip's floor, normalized domain
+            info.update({"mr_pad_lead_s": f"{pad_l:.3f}", "mr_pad_trail_s": f"{pad_t:.3f}", "mr_drawn_real": j["clip_id"], "mr_target_floor_dbfs": f"{target:.2f}"})
+            if pad_l == 0.0 and pad_t == 0.0 and floor_after_server(xp, sr) >= target - NOISE_TOL_DB:
+                info["mr_status"] = "no noise needed (no padding, own floor already at or above the draw)"
+                mix = xp
+            else:
+                n0 = pink(len(xp), rng)                                 # draw 3: the noise
+                lvl, it = target, 0
+                for it in range(1, NOISE_ITERS + 1):
+                    mix = xp + n0 * 10 ** (lvl / 20.0)
+                    err = target - floor_after_server(mix, sr)
+                    if abs(err) <= NOISE_TOL_DB:
+                        break
+                    lvl += float(np.clip(err, -6.0, 6.0))
+                err = target - floor_after_server(mix, sr)
+                info.update({"mr_noise_level_dbfs": f"{lvl:.2f}", "mr_iterations": it, "mr_floor_error_db": f"{err:.2f}",
+                             "mr_status": "padded and noise added" if abs(err) <= NOISE_TOL_DB else "did not converge"})
+        gain_db = level - rms_db(mix)                                   # scale to the drawn common loudness
+        capped = db(np.max(np.abs(mix))) + gain_db > PEAK_CAP_DBFS
+        if capped:
+            gain_db = PEAK_CAP_DBFS - db(np.max(np.abs(mix)))
+        final = mix * 10 ** (gain_db / 20.0)
+        path = MATCHED / f"{r['clip_id']}.wav"
+        clipped = write16(path, final, sr)
+        ok, code, _ = server_decode(path.read_bytes())
+        r.update(info)
+        r.update({"mr_level_target_dbfs": f"{level:.2f}", "mr_final_whole_rms_dbfs_native": f"{rms_db(final):.2f}", "mr_gain_db": f"{gain_db:.2f}",
+                  "mr_capped": int(capped), "mr_server_decode": "ok" if ok else code, "mr_clipped_samples": clipped,
+                  "mr_file": f"audio/raw_matched/{path.name}", "mr_sha256": sha(path)})
+        add_features(r, "mr", server_samples_unchecked(path.read_bytes()))
+
+
 def mmm(vals):
     return f"{min(vals):7.2f} / {st.median(vals):7.2f} / {max(vals):7.2f}"
 
@@ -308,6 +375,21 @@ def report(rows):
         print(f"  {name:4s}: gain dB min/median/max {mmm(g)} | whole-clip RMS after gain {mmm([f(r, 'lr_whole_clip_rms_dbfs_native') for r in rs])} dBFS | rejected by the production server: {len(rejected)} {rejected or ''}")
     print(f"  clipped samples in this arm: {sum(int(r['lr_clipped_samples']) for r in rows)} | loudness (RMS dBFS of the server-converted clip) real {mmm([f(r, 'lr_rms_dbfs') for r in real])} vs AI {mmm([f(r, 'lr_rms_dbfs') for r in ai])}")
 
+    print("\n== 4b. MATCHED RAW ARM (SIMULATED, deviation D6): common loudness U(%.0f, %.0f) dBFS, seed %d; AI clips get matched edge silence and pink noise" % (*MATCH_LEVEL_RANGE_DBFS, MATCH_SEED))
+    for name, rs in (("REAL", real), ("AI", ai)):
+        rej = [(r["clip_id"], r["mr_server_decode"], r["mr_final_whole_rms_dbfs_native"]) for r in rs if r["mr_server_decode"] != "ok"]
+        print(f"  {name:4s}: drawn target RMS {mmm([f(r, 'mr_level_target_dbfs') for r in rs])} | final whole-clip RMS {mmm([f(r, 'mr_final_whole_rms_dbfs_native') for r in rs])} dBFS | "
+              f"peak-capped: {sum(int(r['mr_capped']) for r in rs)} | clipped samples {sum(int(r['mr_clipped_samples']) for r in rs)} | REJECTED BY THE PRODUCTION SERVER AS SILENT OR OTHER: {len(rej)} {rej or ''}")
+    print(f"  edge silence (normalized domain, s) min / median / max: real lead {mmm([f(r, 'edge_lead_s') for r in real])} | real trail {mmm([f(r, 'edge_trail_s') for r in real])}")
+    print(f"      AI own lead {mmm([f(r, 'edge_lead_s') for r in ai])} | AI own trail {mmm([f(r, 'edge_trail_s') for r in ai])}")
+    print(f"      AI pad added: lead {mmm([f(r, 'mr_pad_lead_s') for r in ai])} | trail {mmm([f(r, 'mr_pad_trail_s') for r in ai])}")
+    print(f"      AI edge silence in the arm (server-converted features): lead {mmm([f(r, 'mr_lead_silence_s') for r in ai])} | trail {mmm([f(r, 'mr_trail_silence_s') for r in ai])}  vs real lead {mmm([f(r, 'mr_lead_silence_s') for r in real])} | trail {mmm([f(r, 'mr_trail_silence_s') for r in real])}")
+    print(f"  duration (s): real {mmm([f(r, 'mr_duration_s') for r in real])} | AI {mmm([f(r, 'mr_duration_s') for r in ai])} (AI before padding: {mmm([f(r, 'pre_duration_s') for r in ai])})")
+    errs = [abs(f(r, "mr_floor_error_db")) for r in ai if r["mr_floor_error_db"] != ""]
+    print(f"  AI statuses: { {s: sum(1 for r in ai if r['mr_status'] == s) for s in sorted({r['mr_status'] for r in ai})} } | floor error vs the drawn target |dB| mean {st.mean(errs):.2f}, max {max(errs):.2f}")
+    print(f"  noise floor in the arm (dBFS) real {mmm([f(r, 'mr_noise_floor_dbfs') for r in real])} | AI {mmm([f(r, 'mr_noise_floor_dbfs') for r in ai])}")
+    print(f"  loudness as the server sees it (RMS dBFS) real {mmm([f(r, 'mr_rms_dbfs') for r in real])} | AI {mmm([f(r, 'mr_rms_dbfs') for r in ai])}")
+
     print("\n== 5. RAW ARM (only the sample format changed)")
     print(f"  same frame count as the original: {sum(int(r['raw_frames_equal']) for r in rows)} of 80 | sample rates unchanged: "
           f"{all(int(r['raw_sample_rate']) == int(r['orig_sample_rate']) for r in rows)} | channels all 1: {all(int(r['raw_channels']) == 1 for r in rows)} | "
@@ -332,11 +414,12 @@ def report(rows):
 
 def main():
     clips = clip_list()
-    for d in (CLEAN, RAW, NOISE, LEVEL):                  # rebuild every arm from scratch
+    for d in (CLEAN, RAW, NOISE, LEVEL, MATCHED):         # rebuild every arm from scratch
         if d.exists():
             shutil.rmtree(d)
     rows = [process(c) for c in clips]
     noise_matched(rows)
+    matched_raw(rows, clips)
     cols = []
     for r in rows:
         for k in r:

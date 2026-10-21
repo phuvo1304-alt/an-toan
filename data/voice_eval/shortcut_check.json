@@ -172,6 +172,84 @@
    "gate_arm": true,
    "flagged": false
   },
+  "matched_raw": {
+   "n_tuning": [
+    16,
+    16
+   ],
+   "n_heldout": [
+    24,
+    24
+   ],
+   "heldout_auc": 0.689,
+   "ci95": [
+    0.53,
+    0.833
+   ],
+   "tuning_auc_in_sample": 1.0,
+   "weights_standardised": {
+    "duration_s": -0.004,
+    "lead_silence_s": 0.218,
+    "trail_silence_s": 0.135,
+    "noise_floor_dbfs": 0.911,
+    "rms_dbfs": 1.114,
+    "peak_dbfs": -1.949,
+    "rolloff95_hz": -1.199
+   },
+   "single_feature": {
+    "duration_s": {
+     "auc_heldout_direction_from_tuning": 0.252,
+     "tuning_auc": 0.539,
+     "ai_higher": true,
+     "median_real": 9.9,
+     "median_ai": 8.598
+    },
+    "lead_silence_s": {
+     "auc_heldout_direction_from_tuning": 0.398,
+     "tuning_auc": 0.646,
+     "ai_higher": true,
+     "median_real": 0.24,
+     "median_ai": 0.33
+    },
+    "trail_silence_s": {
+     "auc_heldout_direction_from_tuning": 0.451,
+     "tuning_auc": 0.553,
+     "ai_higher": true,
+     "median_real": 1.23,
+     "median_ai": 1.2
+    },
+    "noise_floor_dbfs": {
+     "auc_heldout_direction_from_tuning": 0.554,
+     "tuning_auc": 0.543,
+     "ai_higher": true,
+     "median_real": -67.165,
+     "median_ai": -64.347
+    },
+    "rms_dbfs": {
+     "auc_heldout_direction_from_tuning": 0.422,
+     "tuning_auc": 0.508,
+     "ai_higher": true,
+     "median_real": -29.436,
+     "median_ai": -30.067
+    },
+    "peak_dbfs": {
+     "auc_heldout_direction_from_tuning": 0.684,
+     "tuning_auc": 0.207,
+     "ai_higher": false,
+     "median_real": -7.46,
+     "median_ai": -13.66
+    },
+    "rolloff95_hz": {
+     "auc_heldout_direction_from_tuning": 0.75,
+     "tuning_auc": 0.424,
+     "ai_higher": false,
+     "median_real": 1484.375,
+     "median_ai": 984.375
+    }
+   },
+   "gate_arm": true,
+   "flagged": false
+  },
   "level_randomized_raw": {
    "n_tuning": [
     16,
@@ -247,7 +325,7 @@
      "median_ai": 984.375
     }
    },
-   "gate_arm": true,
+   "gate_arm": false,
    "flagged": true
   },
   "raw": {
@@ -329,7 +407,5 @@
    "flagged": true
   }
  },
- "gate_arms_flagged": [
-  "level_randomized_raw"
- ]
+ "gate_arms_flagged": []
 }
