@@ -1,1 +1,6 @@
 data/voice_eval/selection.csv -text
+data/voice_eval/run_eval.py -text
+data/voice_eval/analyze.py -text
+data/voice_eval/cutoffs.py -text
+data/voice_eval/manifest.csv -text
+data/voice_eval/manifest.sha256 -text

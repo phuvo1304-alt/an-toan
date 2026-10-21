@@ -599,3 +599,8 @@ Then wait for my "go" before writing code.
   = inconclusive. All keep the feature OFF. Next work for (b): matched pairs made by
   re-synthesising the real clip itself through the codec, or real deepfake data with
   provenance.
+- **D8 (same day, before any score; owner to confirm):** the section 7 cut-off definitions were
+  internally inconsistent (the "no usable gap if t_hum >= t_ai" test was inverted relative to the
+  two definitions). Corrected: the human zone ends at the second-highest tuning real score, the AI
+  zone starts at the second-lowest tuning AI score, usable iff t_hum <= t_ai, the band between is
+  "Can't tell". See PLAN.md D8.
