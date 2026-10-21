@@ -1,0 +1,274 @@
+{
+ "arm": "level_randomized_raw",
+ "threshold": 0.75,
+ "l2": 1.0,
+ "bootstrap": {
+  "resamples": 2000,
+  "seed": 20261021
+ },
+ "per_feature": [
+  {
+   "feature": "lead_silence_s",
+   "kind": "gate feature",
+   "heldout_auc": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ],
+   "tuning_auc": 0.424,
+   "direction": "AI lower",
+   "median_real": 0.8,
+   "median_ai": 0.09,
+   "plain_raw_arm_auc": 0.783
+  },
+  {
+   "feature": "orig_sample_rate_hz",
+   "kind": "metadata (discarded by the server)",
+   "heldout_auc": 1.0,
+   "ci95": [
+    1.0,
+    1.0
+   ],
+   "tuning_auc": 0.812,
+   "direction": "AI higher",
+   "median_real": 16000.0,
+   "median_ai": 24000.0,
+   "plain_raw_arm_auc": null
+  },
+  {
+   "feature": "rms_dbfs",
+   "kind": "gate feature",
+   "heldout_auc": 0.95,
+   "ci95": [
+    0.882,
+    0.991
+   ],
+   "tuning_auc": 0.855,
+   "direction": "AI higher",
+   "median_real": -43.518,
+   "median_ai": -28.992,
+   "plain_raw_arm_auc": 1.0
+  },
+  {
+   "feature": "peak_dbfs",
+   "kind": "gate feature",
+   "heldout_auc": 0.903,
+   "ci95": [
+    0.799,
+    0.983
+   ],
+   "tuning_auc": 0.68,
+   "direction": "AI higher",
+   "median_real": -23.672,
+   "median_ai": -13.291,
+   "plain_raw_arm_auc": 0.962
+  },
+  {
+   "feature": "trail_silence_s",
+   "kind": "gate feature",
+   "heldout_auc": 0.832,
+   "ci95": [
+    0.667,
+    0.958
+   ],
+   "tuning_auc": 0.0,
+   "direction": "AI lower",
+   "median_real": 1.34,
+   "median_ai": 0.16,
+   "plain_raw_arm_auc": 0.732
+  },
+  {
+   "feature": "duration_s",
+   "kind": "gate feature",
+   "heldout_auc": 0.823,
+   "ci95": [
+    0.696,
+    0.929
+   ],
+   "tuning_auc": 0.324,
+   "direction": "AI lower",
+   "median_real": 9.9,
+   "median_ai": 7.368,
+   "plain_raw_arm_auc": 0.823
+  },
+  {
+   "feature": "rolloff95_hz",
+   "kind": "gate feature",
+   "heldout_auc": 0.767,
+   "ci95": [
+    0.624,
+    0.893
+   ],
+   "tuning_auc": 0.424,
+   "direction": "AI lower",
+   "median_real": 1484.375,
+   "median_ai": 984.375,
+   "plain_raw_arm_auc": 0.767
+  },
+  {
+   "feature": "orig_bit_depth",
+   "kind": "metadata (discarded by the server)",
+   "heldout_auc": 0.5,
+   "ci95": [
+    0.5,
+    0.5
+   ],
+   "tuning_auc": 0.5,
+   "direction": "AI higher",
+   "median_real": 32.0,
+   "median_ai": 32.0,
+   "plain_raw_arm_auc": null
+  },
+  {
+   "feature": "arm_bit_depth",
+   "kind": "metadata (discarded by the server)",
+   "heldout_auc": 0.5,
+   "ci95": [
+    0.5,
+    0.5
+   ],
+   "tuning_auc": 0.5,
+   "direction": "AI higher",
+   "median_real": 16.0,
+   "median_ai": 16.0,
+   "plain_raw_arm_auc": null
+  },
+  {
+   "feature": "noise_floor_dbfs",
+   "kind": "gate feature",
+   "heldout_auc": 0.458,
+   "ci95": [
+    0.309,
+    0.637
+   ],
+   "tuning_auc": 0.676,
+   "direction": "AI higher",
+   "median_real": -82.031,
+   "median_ai": -76.01,
+   "plain_raw_arm_auc": 0.477
+  }
+ ],
+ "combined": {
+  "V7 the 7 gate features (the gate statistic)": {
+   "features": [
+    "duration_s",
+    "lead_silence_s",
+    "trail_silence_s",
+    "noise_floor_dbfs",
+    "rms_dbfs",
+    "peak_dbfs",
+    "rolloff95_hz"
+   ],
+   "heldout_auc": 0.918,
+   "ci95": [
+    0.814,
+    0.993
+   ],
+   "in_sample_tuning_auc": 1.0
+  },
+  "V9 the 7 + original sample rate + original bit depth": {
+   "features": [
+    "duration_s",
+    "lead_silence_s",
+    "trail_silence_s",
+    "noise_floor_dbfs",
+    "rms_dbfs",
+    "peak_dbfs",
+    "rolloff95_hz",
+    "orig_sample_rate_hz",
+    "orig_bit_depth"
+   ],
+   "heldout_auc": 0.849,
+   "ci95": [
+    0.708,
+    0.974
+   ],
+   "in_sample_tuning_auc": 1.0
+  },
+  "A1 without level features (rms, peak)": {
+   "features": [
+    "duration_s",
+    "lead_silence_s",
+    "trail_silence_s",
+    "noise_floor_dbfs",
+    "rolloff95_hz"
+   ],
+   "heldout_auc": 0.837,
+   "ci95": [
+    0.705,
+    0.95
+   ],
+   "in_sample_tuning_auc": 1.0
+  },
+  "A2 without silence features (lead, trail)": {
+   "features": [
+    "duration_s",
+    "noise_floor_dbfs",
+    "rms_dbfs",
+    "peak_dbfs",
+    "rolloff95_hz"
+   ],
+   "heldout_auc": 0.972,
+   "ci95": [
+    0.922,
+    1.0
+   ],
+   "in_sample_tuning_auc": 0.984
+  },
+  "A3 without level and silence features": {
+   "features": [
+    "duration_s",
+    "noise_floor_dbfs",
+    "rolloff95_hz"
+   ],
+   "heldout_auc": 0.769,
+   "ci95": [
+    0.623,
+    0.903
+   ],
+   "in_sample_tuning_auc": 0.715
+  },
+  "A4 without level, silence and duration": {
+   "features": [
+    "noise_floor_dbfs",
+    "rolloff95_hz"
+   ],
+   "heldout_auc": 0.582,
+   "ci95": [
+    0.422,
+    0.738
+   ],
+   "in_sample_tuning_auc": 0.629
+  }
+ },
+ "original_sample_rate_counts": {
+  "real": {
+   "16000": 40
+  },
+  "ai": {
+   "16000": 6,
+   "24000": 17,
+   "48000": 17
+  }
+ },
+ "heldout_ai_sample_rates": {
+  "24000": 12,
+  "48000": 12
+ },
+ "what_if_edge_silence_matched": {
+  "draws": 200,
+  "ai_median_duration_now_s": 7.37,
+  "single_duration_auc_mean_p5_p95": [
+   0.293,
+   0.259,
+   0.321
+  ],
+  "combined_duration_noise_rolloff_auc_mean_p5_p95": [
+   0.44,
+   0.397,
+   0.481
+  ],
+  "real_median_edge_silence_s": 1.61,
+  "ai_median_own_edge_silence_s": 0.2
+ }
+}
