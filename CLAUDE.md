@@ -522,3 +522,28 @@ Then wait for my "go" before writing code.
   `d1139ecce4c1ec1288f34171a2a2d17c671537800923e7c3ce2346ccef3020ad`.
 - **Limit:** very quiet recordings that the server rejects as silent are not
   covered by this evaluation.
+
+### 14.8 AI voice detection evaluation: audio preparation redesigned, two new arms (deviation D5)
+- **Status:** DONE on 2026-10-22, before any score existed (owner decision).
+  Full text, numbers and results: `data/voice_eval/PLAN.md` ("Deviations" D5 and
+  "Check log" C2, C3).
+- **Why:** the first clean arm trimmed at an absolute -45 dBFS before
+  normalizing to -23 dBFS. It cut 8%-91% of the energy of four quiet real clips
+  (HM05 91%: 7.44 s became 0.42 s) and the -1 dBFS peak cap left 15 real clips
+  quieter than every AI clip. Old shortcut numbers: clean arm AUC 0.733 [0.590,
+  0.866] (noise floor 0.861, peak 0.806, roll-off 0.742 as single features);
+  raw arm AUC 0.911 [0.819, 0.979].
+- **Changes:** (1) clean arm: normalize first, then trim (HM05 now keeps 7.14 s);
+  (2) clean arm: -28 dBFS RMS target in two gains, every clip within 0.05 dB
+  (the peak cap still bound on one clip by 0.03 dB); (3) new simulated
+  noise-matched arm (seeded pink noise added to AI clips so their noise floors
+  follow the real clips' of the same split); (4) new simulated level-randomized
+  raw arm (seeded gain U(-20, 0) dB on every clip). PLAN.md section 8 now uses
+  the clean, noise-matched and level-randomized raw arms as the gate arms, and a
+  shortcut-flagged gate arm (held-out AUC 0.75 or higher) keeps the feature OFF.
+- **Result:** held-out shortcut AUC clean 0.684, noise-matched 0.701 (not
+  flagged), **level-randomized raw 0.918 (flagged)**, plain raw 0.911
+  (descriptive). In the level-randomized raw arm the production server rejects 8
+  real and 0 AI clips as silent.
+- **Open:** the flagged gate arm is reported, nothing else was changed; options
+  await the owner's decision.

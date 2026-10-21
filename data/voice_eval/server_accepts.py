@@ -65,3 +65,27 @@ def server_samples(data: bytes):
     _, audio = _load()
     d = audio.decode(data)
     return d.samples, d.duration
+
+
+def server_samples_unchecked(data: bytes):
+    """The production server's ffmpeg conversion (same command, same limits, taken from voice-server/app/config)
+    but WITHOUT its silence / length / empty checks. Used only to MEASURE clips the server would reject, so that the
+    shortcut check can cover every clip. Returns float32 mono 16 kHz samples."""
+    import subprocess
+    import tempfile
+    import numpy as np
+    config, _ = _load()
+    fd, path = tempfile.mkstemp(prefix="clip-", suffix=".bin")
+    try:
+        with os.fdopen(fd, "wb") as f:
+            f.write(data)
+        cmd = [config.FFMPEG_BIN, "-nostdin", "-hide_banner", "-loglevel", "error", "-protocol_whitelist", "file", "-i", path,
+               "-vn", "-sn", "-dn", "-t", str(config.FFMPEG_READ_SECONDS), "-ac", "1", "-ar", str(config.SAMPLE_RATE),
+               "-f", "f32le", "pipe:1"]
+        out = subprocess.run(cmd, capture_output=True, timeout=config.FFMPEG_TIMEOUT_S, shell=False, check=True).stdout
+    finally:
+        try:
+            os.remove(path)
+        except OSError:
+            pass
+    return np.frombuffer(out[: len(out) - (len(out) % 4)], dtype=np.float32).copy()

@@ -1,28 +1,32 @@
-"""Stage 2 / step 6a: prepare the audio of the 80 clips exactly as PLAN.md section 2 says. NO scoring.
+"""Stage 2 / step 6a (version after deviation D5): prepare the audio of the 80 clips. NO scoring.
 
 For each of the 40 pairs there is a real clip (FLEURS) and an AI clip (selection.csv + ai_clips_record.csv).
+Four arms are written (all 16-bit PCM WAV, git-ignored under audio/):
 
-CLEAN ARM  (audio/clean/<pair>_<real|ai>.wav)
-  1. decode with the production voice server's own decoder (ffmpeg) from the ORIGINAL float32 file
-     -> 16 kHz mono float32 (never from a 16-bit copy);
-  2. trim leading and trailing silence: 20 ms non-overlapping frames (320 samples); a frame is silent if its
-     RMS is below -45 dBFS (absolute, full scale = 1.0); keep 10 frames = 0.2 s of padding each side;
-  3. RMS-normalise the trimmed clip to -23 dBFS with one gain; if the peak would exceed -1 dBFS the gain is
-     reduced so the peak is exactly -1 dBFS;
-  4. write 16-bit PCM WAV: round(x * 32767), clipped to the int16 range, no dither.
-RAW ARM  (audio/raw_arm/<pair>_<real|ai>.wav)
-  the original clip with ONLY the sample format converted to 16-bit PCM by the same rounding; sample rate,
-  channel count and content untouched (no resampling, trimming, gain).
+CLEAN ARM  (audio/clean/<pair>_<real|ai>.wav)   16 kHz mono
+  1. decode with the production voice server's own decoder (ffmpeg) from the ORIGINAL float32 file;
+  2. gain 1: bring the WHOLE decoded clip to -28 dBFS RMS (float, no peak limit at this intermediate stage);
+  3. trim leading/trailing silence: 20 ms non-overlapping frames (320 samples), silent if RMS < -45 dBFS (absolute),
+     keep 10 frames = 0.2 s of padding each side -> the same threshold now behaves the same on quiet and loud clips;
+  4. gain 2: bring the TRIMMED clip to exactly -28 dBFS RMS; the -1 dBFS peak cap is checked on this final clip only;
+  5. write 16-bit PCM: round(x * 32767), clipped to the int16 range, no dither.
+RAW ARM  (audio/raw_arm/)  original sample rate, mono; ONLY the sample format is converted to 16-bit PCM.
+NOISE-MATCHED ARM  (audio/noise_matched/)  SIMULATED. Clean-arm files; the AI clips additionally get seeded pink Gaussian
+  noise so that each AI clip's noise floor equals a draw from the noise floors of the REAL clips of the same split.
+LEVEL-RANDOMIZED RAW ARM  (audio/raw_level_random/)  SIMULATED. Raw arm with one seeded random gain, uniform -20..0 dB,
+  on every clip of both classes (applied to the original float samples, then one 16-bit rounding).
 
-Also computes the per-clip statistics (prepare_stats.csv) and verifies that trimming removed only silence.
-Standard library + numpy + soundfile; needs ffmpeg through server_accepts.py.
+Also writes prepare_stats.csv and prints the checks (trimming, equal RMS, peak cap, noise before/after, level arm).
+Needs numpy, soundfile and ffmpeg (through server_accepts.py).
 
     <.venv-vieneu>/python -I -X utf8 prepare_audio.py
 """
 import csv
 import hashlib
+import shutil
 import statistics as st
 import sys
+import zlib
 from pathlib import Path
 
 import numpy as np
@@ -31,21 +35,25 @@ import soundfile as sf
 HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
-from server_accepts import server_samples  # noqa: E402
+from server_accepts import server_decode, server_samples, server_samples_unchecked  # noqa: E402
 
-# ---- constants fixed in PLAN.md section 2 / written before any statistic was computed -------------
+# ---- constants fixed in PLAN.md sections 2 and 8 (D5), written before the new statistics were computed ----
 SR = 16_000
 FRAME = 320                  # 20 ms at 16 kHz
 SILENCE_DBFS = -45.0
 PAD_FRAMES = 10              # 0.2 s of padding each side
-TARGET_RMS_DBFS = -23.0
+TARGET_RMS_DBFS = -28.0
+RMS_TOLERANCE_DB = 0.05      # "every clip ends at the same RMS"
 PEAK_CAP_DBFS = -1.0
 PCM_SCALE = 32767
 NFFT, HOP, ROLLOFF_FRAC = 1024, 512, 0.95
-SHORT_S = 3.0                # clips shorter than this after trimming are counted (PLAN section 6: "Can't tell")
+SHORT_S = 3.0
+NOISE_SEED, LEVEL_SEED = 20261022, 20261023
+NOISE_ITERS, NOISE_TOL_DB = 8, 0.25
+LEVEL_GAIN_RANGE_DB = (-20.0, 0.0)
 
-CLEAN = HERE / "audio" / "clean"
-RAW = HERE / "audio" / "raw_arm"
+CLEAN, RAW = HERE / "audio" / "clean", HERE / "audio" / "raw_arm"
+NOISE, LEVEL = HERE / "audio" / "noise_matched", HERE / "audio" / "raw_level_random"
 STATS = HERE / "prepare_stats.csv"
 
 
@@ -53,69 +61,73 @@ def db(v):
     return 20.0 * np.log10(max(float(v), 1e-12))
 
 
+def rms_db(x):
+    return db(np.sqrt(np.mean(np.asarray(x, dtype=np.float64) ** 2)))
+
+
 def frame_dbfs(x):
-    """Level of each 20 ms frame in dBFS (the last frame may be shorter)."""
     n = int(np.ceil(len(x) / FRAME))
-    return np.array([db(np.sqrt(np.mean(x[i * FRAME:(i + 1) * FRAME].astype(np.float64) ** 2))) for i in range(n)])
+    return np.array([db(np.sqrt(np.mean(np.asarray(x[i * FRAME:(i + 1) * FRAME], dtype=np.float64) ** 2))) for i in range(n)])
 
 
 def rolloff95(x, sr):
-    """Frequency (Hz) below which 95% of the average power spectrum lies (1024-sample Hann frames, hop 512)."""
     x = np.asarray(x, dtype=np.float64)
     if len(x) < NFFT:
         x = np.pad(x, (0, NFFT - len(x)))
     win = np.hanning(NFFT)
     frames = np.stack([x[i:i + NFFT] * win for i in range(0, len(x) - NFFT + 1, HOP)])
     power = np.mean(np.abs(np.fft.rfft(frames, axis=1)) ** 2, axis=0)
-    cum = np.cumsum(power)
-    k = int(np.searchsorted(cum, ROLLOFF_FRAC * cum[-1]))
-    return k * sr / NFFT
+    return int(np.searchsorted(np.cumsum(power), ROLLOFF_FRAC * power.sum())) * sr / NFFT
+
+
+def noise_floor(x):
+    return float(np.percentile(frame_dbfs(x), 10))
 
 
 def features(x16):
-    """The seven shortcut-check features (also used for the statistics) of a 16 kHz mono signal."""
+    """The seven shortcut-check features of a 16 kHz mono signal."""
     f = frame_dbfs(x16)
     active = f >= SILENCE_DBFS
     if active.any():
-        lead = int(np.argmax(active))
-        trail = int(len(active) - 1 - np.max(np.where(active)))
+        lead, trail = int(np.argmax(active)), int(len(active) - 1 - np.max(np.where(active)))
     else:
         lead, trail = len(active), 0
     return {"duration_s": len(x16) / SR, "lead_silence_s": lead * FRAME / SR, "trail_silence_s": trail * FRAME / SR,
-            "noise_floor_dbfs": float(np.percentile(f, 10)), "rms_dbfs": db(np.sqrt(np.mean(np.asarray(x16, np.float64) ** 2))),
+            "noise_floor_dbfs": float(np.percentile(f, 10)), "rms_dbfs": rms_db(x16),
             "peak_dbfs": db(np.max(np.abs(x16))), "rolloff95_hz": rolloff95(x16, SR)}
 
 
 def trim(x):
-    """Returns (trimmed, info). Removes leading/trailing runs of silent frames, keeping 0.2 s of padding."""
     f = frame_dbfs(x)
     active = np.where(f >= SILENCE_DBFS)[0]
     if len(active) == 0:
         return x, {"no_active_frames": 1, "start": 0, "end": len(x)}
-    start = max(0, (int(active[0]) - PAD_FRAMES) * FRAME)
-    end = min(len(x), (int(active[-1]) + 1 + PAD_FRAMES) * FRAME)
-    return x[start:end], {"no_active_frames": 0, "start": start, "end": end}
-
-
-def normalise(y):
-    rms_db = db(np.sqrt(np.mean(y.astype(np.float64) ** 2)))
-    gain_db = TARGET_RMS_DBFS - rms_db
-    peak = float(np.max(np.abs(y)))
-    capped = False
-    if db(peak) + gain_db > PEAK_CAP_DBFS:
-        gain_db = PEAK_CAP_DBFS - db(peak)
-        capped = True
-    return (y.astype(np.float64) * 10 ** (gain_db / 20.0)), gain_db, capped
+    return x[max(0, (int(active[0]) - PAD_FRAMES) * FRAME):min(len(x), (int(active[-1]) + 1 + PAD_FRAMES) * FRAME)], \
+        {"no_active_frames": 0, "start": max(0, (int(active[0]) - PAD_FRAMES) * FRAME), "end": min(len(x), (int(active[-1]) + 1 + PAD_FRAMES) * FRAME)}
 
 
 def to_int16(x):
     q = np.round(np.asarray(x, dtype=np.float64) * PCM_SCALE)
-    clipped = int(np.sum(np.abs(q) > 32767))
-    return np.clip(q, -32768, 32767).astype("<i2"), clipped
+    return np.clip(q, -32768, 32767).astype("<i2"), int(np.sum(np.abs(q) > 32767))
 
 
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
+def rng_for(seed, clip_id):
+    return np.random.default_rng(np.random.SeedSequence([seed, zlib.crc32(clip_id.encode("utf-8"))]))
+
+
+def pink(n, rng):
+    """Gaussian noise with power proportional to 1/f (white noise shaped in the frequency domain), unit RMS."""
+    W = np.fft.rfft(rng.standard_normal(n))
+    f = np.arange(len(W), dtype=np.float64)
+    f[0] = 1.0
+    W = W / np.sqrt(f)
+    W[0] = 0.0
+    p = np.fft.irfft(W, n)
+    return p / np.sqrt(np.mean(p ** 2))
 
 
 def clip_list():
@@ -131,125 +143,210 @@ def clip_list():
     return out
 
 
+def write16(path, x, sr):
+    q, clipped = to_int16(x)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    sf.write(str(path), q, sr, subtype="PCM_16")
+    return clipped
+
+
+def add_features(row, prefix, x16):
+    for k, v in features(x16).items():
+        row[f"{prefix}_{k}"] = f"{v:.4f}"
+
+
 def process(c):
     info = sf.info(str(c["path"]))
     x_native, sr_native = sf.read(str(c["path"]), dtype="float64")
     assert info.channels == 1, c["clip_id"]
     row = {"clip_id": c["clip_id"], "pair_id": c["pair_id"], "class": c["cls"], "tool": c["tool"], "split": c["split"], "gender": c["gender"],
            "orig_sample_rate": sr_native, "orig_channels": info.channels, "orig_format": f"{info.format}/{info.subtype}",
-           "orig_bit_depth": {"FLOAT": 32, "PCM_16": 16, "PCM_24": 24, "DOUBLE": 64}.get(info.subtype, ""), "orig_duration_s": f"{len(x_native) / sr_native:.3f}",
-           "native_rolloff95_hz": f"{rolloff95(x_native, sr_native):.0f}", "orig_file": str(c["path"].relative_to(HERE)).replace("\\", "/"),
-           "orig_sha256": sha(c["path"])}
-    # ---- clean arm ----
-    x, _ = server_samples(c["path"].read_bytes())                     # 16 kHz mono float32, production decoder
-    pre = features(x)
-    for k, v in pre.items():
-        row[f"pre_{k}"] = f"{v:.4f}"
-    y, tinfo = trim(x)
-    lead_s, trail_s = tinfo["start"] / SR, (len(x) - tinfo["end"]) / SR
-    removed = np.concatenate([x[:tinfo["start"]], x[tinfo["end"]:]]) if (tinfo["start"] or tinfo["end"] < len(x)) else np.array([], dtype=np.float32)
+           "orig_bit_depth": {"FLOAT": 32, "PCM_16": 16, "PCM_24": 24, "DOUBLE": 64}.get(info.subtype, ""),
+           "orig_duration_s": f"{len(x_native) / sr_native:.3f}", "native_rolloff95_hz": f"{rolloff95(x_native, sr_native):.0f}",
+           "orig_file": str(c["path"].relative_to(HERE)).replace("\\", "/"), "orig_sha256": sha(c["path"])}
+    # ---------------- clean arm ----------------
+    x, _ = server_samples(c["path"].read_bytes())                      # 16 kHz mono float32, production decoder
+    add_features(row, "pre", x)
+    g1_db = TARGET_RMS_DBFS - rms_db(x)                                # gain 1: whole clip -> -28 dBFS (float, no cap)
+    xs = x.astype(np.float64) * 10 ** (g1_db / 20.0)
+    ys, ti = trim(xs)
+    removed = np.concatenate([xs[:ti["start"]], xs[ti["end"]:]]) if (ti["start"] or ti["end"] < len(xs)) else np.array([])
     rem_db = frame_dbfs(removed) if len(removed) else np.array([-200.0])
-    e_total = float(np.sum(x.astype(np.float64) ** 2))
-    row.update({"trim_lead_s": f"{lead_s:.3f}", "trim_trail_s": f"{trail_s:.3f}", "trim_total_s": f"{lead_s + trail_s:.3f}",
-                "trim_no_active_frames": tinfo["no_active_frames"],
+    e_total = float(np.sum(xs ** 2))
+    lead_s, trail_s = ti["start"] / SR, (len(xs) - ti["end"]) / SR
+    g2_db = TARGET_RMS_DBFS - rms_db(ys)                               # gain 2: trimmed clip -> -28 dBFS
+    capped = False
+    if db(np.max(np.abs(ys))) + g2_db > PEAK_CAP_DBFS:                 # the cap applies to the FINAL clip only
+        g2_db, capped = PEAK_CAP_DBFS - db(np.max(np.abs(ys))), True
+    zs = ys * 10 ** (g2_db / 20.0)
+    row.update({"gain1_db": f"{g1_db:.2f}", "intermediate_peak_dbfs": f"{db(np.max(np.abs(xs))):.2f}", "gain2_db": f"{g2_db:.2f}",
+                "peak_cap_applied": int(capped), "trim_lead_s": f"{lead_s:.3f}", "trim_trail_s": f"{trail_s:.3f}",
+                "trim_total_s": f"{lead_s + trail_s:.3f}", "trim_no_active_frames": ti["no_active_frames"],
                 "removed_max_frame_dbfs": f"{float(np.max(rem_db)):.1f}",
-                "removed_energy_fraction": f"{(float(np.sum(removed.astype(np.float64) ** 2)) / e_total) if e_total else 0.0:.6f}",
-                "removed_peak_dbfs": f"{db(np.max(np.abs(removed))) if len(removed) else -200.0:.1f}",
-                "trimmed_rms_dbfs": f"{db(np.sqrt(np.mean(y.astype(np.float64) ** 2))):.2f}", "trimmed_peak_dbfs": f"{db(np.max(np.abs(y))):.2f}"})
-    z, gain_db, capped = normalise(y)
-    q, n_clipped = to_int16(z)
-    CLEAN.mkdir(parents=True, exist_ok=True)
+                "removed_energy_fraction": f"{(float(np.sum(removed ** 2)) / e_total) if e_total and len(removed) else 0.0:.6f}",
+                "input_noise_floor_after_gain1_dbfs": f"{noise_floor(xs):.2f}"})
     cpath = CLEAN / f"{c['clip_id']}.wav"
-    sf.write(str(cpath), q, SR, subtype="PCM_16")
-    row.update({"gain_db": f"{gain_db:.2f}", "peak_cap_applied": int(capped), "clean_clipped_samples": n_clipped,
-                "clean_file": f"audio/clean/{cpath.name}", "clean_sha256": sha(cpath)})
+    row["clean_clipped_samples"] = write16(cpath, zs, SR)
+    row.update({"clean_file": f"audio/clean/{cpath.name}", "clean_sha256": sha(cpath)})
     xc, _ = sf.read(str(cpath), dtype="float64")
-    for k, v in features(xc).items():                                  # features of the file the detector will see
-        row[f"clean_{k}"] = f"{v:.4f}"
-    # ---- raw arm: ONLY the sample format changes ----
-    qr, n_clip_raw = to_int16(x_native)
-    RAW.mkdir(parents=True, exist_ok=True)
+    add_features(row, "clean", xc)
+    # ---------------- raw arm: ONLY the sample format changes ----------------
+    clip_raw = write16(RAW / f"{c['clip_id']}.wav", x_native, sr_native)
     rpath = RAW / f"{c['clip_id']}.wav"
-    sf.write(str(rpath), qr, sr_native, subtype="PCM_16")
     back, sr_back = sf.read(str(rpath), dtype="float64")
-    xr, _ = server_samples(rpath.read_bytes())                         # what the production server sees for the raw arm
     row.update({"raw_sample_rate": sr_back, "raw_channels": sf.info(str(rpath)).channels, "raw_frames_equal": int(len(back) == len(x_native)),
-                "raw_clipped_samples": n_clip_raw, "raw_max_quant_error": f"{float(np.max(np.abs(back - x_native))):.2e}",
+                "raw_clipped_samples": clip_raw, "raw_max_quant_error": f"{float(np.max(np.abs(back - x_native))):.2e}",
                 "raw_file": f"audio/raw_arm/{rpath.name}", "raw_sha256": sha(rpath)})
-    for k, v in features(xr).items():
-        row[f"raw_{k}"] = f"{v:.4f}"
+    add_features(row, "raw", server_samples_unchecked(rpath.read_bytes()))
+    # ---------------- level-randomized raw arm: seeded gain U(-20, 0) dB on every clip ----------------
+    g_db = float(rng_for(LEVEL_SEED, c["clip_id"]).uniform(*LEVEL_GAIN_RANGE_DB))
+    lpath = LEVEL / f"{c['clip_id']}.wav"
+    clipped_l = write16(lpath, x_native * 10 ** (g_db / 20.0), sr_native)
+    ok, code, _ = server_decode(lpath.read_bytes())
+    row.update({"lr_gain_db": f"{g_db:.2f}", "lr_whole_clip_rms_dbfs_native": f"{rms_db(x_native * 10 ** (g_db / 20.0)):.2f}",
+                "lr_server_decode": "ok" if ok else code, "lr_clipped_samples": clipped_l,
+                "lr_file": f"audio/raw_level_random/{lpath.name}", "lr_sha256": sha(lpath)})
+    add_features(row, "lr", server_samples_unchecked(lpath.read_bytes()))
     return row
 
 
-def summarise(rows):
-    def grp(sel):
-        return [r for r in rows if sel(r)]
+def noise_matched(rows):
+    """Second pass: noise-matched arm. Real clips are copied unchanged; AI clips get seeded pink noise."""
+    NOISE.mkdir(parents=True, exist_ok=True)
+    real_floors = {sp: sorted(float(r["clean_noise_floor_dbfs"]) for r in rows if r["class"] == "real" and r["split"] == sp)
+                   for sp in ("tuning", "heldout")}
+    for r in rows:
+        src, dst = HERE / r["clean_file"], NOISE / f"{r['clip_id']}.wav"
+        y, _ = sf.read(str(src), dtype="float64")
+        if r["class"] == "real":
+            shutil.copyfile(src, dst)
+            r.update({"nm_target_floor_dbfs": "", "nm_noise_level_dbfs": "", "nm_iterations": 0, "nm_status": "real clip unchanged"})
+        else:
+            rng = rng_for(NOISE_SEED, r["clip_id"])
+            target = float(rng.choice(real_floors[r["split"]]))
+            own = noise_floor(y)
+            status, level, it, mix = "", float("nan"), 0, y
+            if own >= target - NOISE_TOL_DB:
+                status = "no noise needed (own floor already at or above the draw)"
+                shutil.copyfile(src, dst)                                          # identical to the clean-arm file
+            else:
+                n0 = pink(len(y), rng)
+                level = target
+                for it in range(1, NOISE_ITERS + 1):
+                    mix = y + n0 * 10 ** (level / 20.0)
+                    err = target - noise_floor(mix)
+                    if abs(err) <= NOISE_TOL_DB:
+                        break
+                    level += float(np.clip(err, -6.0, 6.0))
+                status = "noise added" if abs(target - noise_floor(mix)) <= NOISE_TOL_DB else "did not converge"
+                mix = mix * 10 ** ((TARGET_RMS_DBFS - rms_db(mix)) / 20.0)        # back to exactly -28 dBFS RMS
+                if db(np.max(np.abs(mix))) > PEAK_CAP_DBFS:                        # record and respect the final peak cap
+                    mix = mix * 10 ** ((PEAK_CAP_DBFS - db(np.max(np.abs(mix)))) / 20.0)
+                    status += "; peak cap applied"
+                write16(dst, mix, SR)
+            r.update({"nm_target_floor_dbfs": f"{target:.2f}", "nm_noise_level_dbfs": "" if np.isnan(level) else f"{level:.2f}",
+                      "nm_iterations": it, "nm_status": status, "nm_own_floor_before_dbfs": f"{own:.2f}"})
+        r["nm_file"], r["nm_sha256"] = f"audio/noise_matched/{dst.name}", sha(dst)
+        add_features(r, "nm", sf.read(str(dst), dtype="float64")[0])
 
-    def mmm(rs, col):
-        v = [float(r[col]) for r in rs]
-        return f"{min(v):7.2f} / {st.median(v):7.2f} / {max(v):7.2f}"
-    groups = [("REAL (all 40)", grp(lambda r: r["class"] == "real")), ("AI (all 40)", grp(lambda r: r["class"] == "ai"))]
-    groups += [(f"AI {t}", grp(lambda r, t=t: r["class"] == "ai" and r["tool"] == t)) for t in ("mms", "vieneu-turbo", "vieneu-nano")]
-    print("\nSTATISTICS: min / median / max   (pre = decoded 16 kHz signal before trimming; trimmed = after trimming, before normalisation)")
+
+def mmm(vals):
+    return f"{min(vals):7.2f} / {st.median(vals):7.2f} / {max(vals):7.2f}"
+
+
+def report(rows):
+    f = lambda r, k: float(r[k])  # noqa: E731
+    real = [r for r in rows if r["class"] == "real"]
+    ai = [r for r in rows if r["class"] == "ai"]
+    print(f"\nprepared {len(rows)} clips -> {STATS.name}; arms: clean, raw_arm, noise_matched, raw_level_random")
+
+    print("\n== 1. NORMALISE FIRST, THEN TRIM: trimming check (removed parts must stay below the silence rule of %.0f dBFS)" % SILENCE_DBFS)
+    print("  clips whose removed parts contain a frame at or above the rule:", [r["clip_id"] for r in rows if f(r, "removed_max_frame_dbfs") >= SILENCE_DBFS] or "none")
+    print("  clips with no active frame (left untrimmed):", [r["clip_id"] for r in rows if int(r["trim_no_active_frames"]) == 1] or "none")
+    for name, rs in (("REAL", real), ("AI", ai)):
+        lead, trail = max(rs, key=lambda r: f(r, "trim_lead_s")), max(rs, key=lambda r: f(r, "trim_trail_s"))
+        tot, en = max(rs, key=lambda r: f(r, "trim_total_s")), max(rs, key=lambda r: f(r, "removed_energy_fraction"))
+        print(f"  {name:4s}: largest leading trim {lead['trim_lead_s']} s ({lead['clip_id']}), trailing {trail['trim_trail_s']} s ({trail['clip_id']}), total {tot['trim_total_s']} s ({tot['clip_id']}); "
+              f"loudest removed frame {max(f(r, 'removed_max_frame_dbfs') for r in rs):.1f} dBFS; largest share of energy removed {f(en, 'removed_energy_fraction') * 100:.4f}% ({en['clip_id']}); "
+              f"median trimmed {st.median(f(r, 'trim_total_s') for r in rs):.2f} s; clips trimmed by under 0.1 s: {sum(1 for r in rs if f(r, 'trim_total_s') < 0.1)}")
+    print("  real clips losing more than 1% of their energy:", [(r["clip_id"], f"{f(r, 'removed_energy_fraction') * 100:.2f}%") for r in real if f(r, "removed_energy_fraction") > 0.01] or "none")
+    hm05 = next(r for r in rows if r["clip_id"] == "HM05_real")
+    print(f"  HM05_real: {hm05['pre_duration_s']} s -> {hm05['clean_duration_s']} s after trimming (trimmed {hm05['trim_total_s']} s, energy removed {f(hm05, 'removed_energy_fraction') * 100:.3f}%); before D5 it was 0.42 s")
+    print("  real clips whose noise floor after gain 1 is at or above the -45 dBFS rule (their silence cannot be trimmed):",
+          [(r["clip_id"], r["input_noise_floor_after_gain1_dbfs"]) for r in real if f(r, "input_noise_floor_after_gain1_dbfs") >= SILENCE_DBFS] or "none")
+    print("  AI clips, same:", [(r["clip_id"], r["input_noise_floor_after_gain1_dbfs"]) for r in ai if f(r, "input_noise_floor_after_gain1_dbfs") >= SILENCE_DBFS] or "none")
+
+    print("\n== 2. -28 dBFS TARGET: every clip ends at the same RMS?")
+    cr = [f(r, "clean_rms_dbfs") for r in rows]
+    off = [(r["clip_id"], r["clean_rms_dbfs"]) for r in rows if abs(f(r, "clean_rms_dbfs") - TARGET_RMS_DBFS) > RMS_TOLERANCE_DB]
+    print(f"  final clean RMS dBFS min / median / max: {mmm(cr)} | clips outside {TARGET_RMS_DBFS} +- {RMS_TOLERANCE_DB} dB: {off or 'none'}")
+    print(f"  peak cap bound on the final clip: {[r['clip_id'] for r in rows if int(r['peak_cap_applied']) == 1] or 'none'} | final peak max {max(f(r, 'clean_peak_dbfs') for r in rows):.2f} dBFS | "
+          f"clipped samples {sum(int(r['clean_clipped_samples']) for r in rows)}")
+    print(f"  intermediate peak after gain 1 (float, no cap): max {max(f(r, 'intermediate_peak_dbfs') for r in rows):.2f} dBFS; clips above -1 dBFS at that stage: "
+          f"{[(r['clip_id'], r['intermediate_peak_dbfs']) for r in rows if f(r, 'intermediate_peak_dbfs') > PEAK_CAP_DBFS] or 'none'}")
+    short = [(r["clip_id"], r["clean_duration_s"]) for r in rows if f(r, "clean_duration_s") < SHORT_S]
+    print(f"  clips below {SHORT_S:g} s after trimming: {len(short)} of 80 -> {short or 'none'}")
+    print(f"  duration after trimming min / median / max (s): real {mmm([f(r, 'clean_duration_s') for r in real])} | AI {mmm([f(r, 'clean_duration_s') for r in ai])}")
+
+    print("\n== 3. NOISE-MATCHED ARM (SIMULATED): noise floor (10th percentile of 20 ms frame levels, dBFS) before and after, min / median / max")
+    for sp in ("tuning", "heldout"):
+        rr, aa = [r for r in real if r["split"] == sp], [r for r in ai if r["split"] == sp]
+        print(f"  split {sp:7s} REAL clean (unchanged)    n={len(rr):2d}  {mmm([f(r, 'clean_noise_floor_dbfs') for r in rr])}")
+        print(f"  {'':13s} AI   clean (before)      n={len(aa):2d}  {mmm([f(r, 'clean_noise_floor_dbfs') for r in aa])}")
+        print(f"  {'':13s} AI   noise-matched (after) n={len(aa):2d}  {mmm([f(r, 'nm_noise_floor_dbfs') for r in aa])}")
+    err = [abs(f(r, "nm_noise_floor_dbfs") - f(r, "nm_target_floor_dbfs")) for r in ai]
+    print(f"  measured floor vs the drawn target, absolute error (dB): mean {st.mean(err):.2f}, max {max(err):.2f}; status counts: "
+          f"{ {s: sum(1 for r in ai if r['nm_status'] == s) for s in sorted({r['nm_status'] for r in ai})} }; iterations max {max(int(r['nm_iterations']) for r in ai)}")
+    print("  noise type: pink Gaussian noise (power ~ 1/f), independent seeded draw per clip, seed %d; noise level added (dBFS RMS) min / median / max: %s" %
+          (NOISE_SEED, mmm([f(r, 'nm_noise_level_dbfs') for r in ai if r['nm_noise_level_dbfs']] or [0.0])))
+    print(f"  all noise-matched files end at -28 dBFS RMS within {max(abs(f(r, 'nm_rms_dbfs') - TARGET_RMS_DBFS) for r in rows):.3f} dB")
+
+    print("\n== 4. LEVEL-RANDOMIZED RAW ARM (SIMULATED): seeded gain U(%.0f, %.0f) dB on every clip, seed %d" % (*LEVEL_GAIN_RANGE_DB, LEVEL_SEED))
+    for name, rs in (("REAL", real), ("AI", ai)):
+        g = [f(r, "lr_gain_db") for r in rs]
+        rejected = [(r["clip_id"], r["lr_server_decode"], r["lr_whole_clip_rms_dbfs_native"]) for r in rs if r["lr_server_decode"] != "ok"]
+        print(f"  {name:4s}: gain dB min/median/max {mmm(g)} | whole-clip RMS after gain {mmm([f(r, 'lr_whole_clip_rms_dbfs_native') for r in rs])} dBFS | rejected by the production server: {len(rejected)} {rejected or ''}")
+    print(f"  clipped samples in this arm: {sum(int(r['lr_clipped_samples']) for r in rows)} | loudness (RMS dBFS of the server-converted clip) real {mmm([f(r, 'lr_rms_dbfs') for r in real])} vs AI {mmm([f(r, 'lr_rms_dbfs') for r in ai])}")
+
+    print("\n== 5. RAW ARM (only the sample format changed)")
+    print(f"  same frame count as the original: {sum(int(r['raw_frames_equal']) for r in rows)} of 80 | sample rates unchanged: "
+          f"{all(int(r['raw_sample_rate']) == int(r['orig_sample_rate']) for r in rows)} | channels all 1: {all(int(r['raw_channels']) == 1 for r in rows)} | "
+          f"clipped samples: {sum(int(r['raw_clipped_samples']) for r in rows)} | largest rounding error: {max(f(r, 'raw_max_quant_error') for r in rows):.1e}")
+
+    print("\n== 6. STATISTICS per class and per tool (min / median / max); pre = decoded 16 kHz signal before any gain or trim")
+    groups = [("REAL (40)", real), ("AI (40)", ai)] + [(f"AI {t}", [r for r in ai if r["tool"] == t]) for t in ("mms", "vieneu-turbo", "vieneu-nano")]
     for name, rs in groups:
-        print(f"\n== {name}  (n={len(rs)})")
-        print(f"  duration before trimming (s)       {mmm(rs, 'pre_duration_s')}")
-        print(f"  leading silence before trim (s)    {mmm(rs, 'pre_lead_silence_s')}")
-        print(f"  trailing silence before trim (s)   {mmm(rs, 'pre_trail_silence_s')}")
-        print(f"  RMS before normalisation (dBFS)    {mmm(rs, 'trimmed_rms_dbfs')}")
-        print(f"  peak before normalisation (dBFS)   {mmm(rs, 'trimmed_peak_dbfs')}")
-        print(f"  95% roll-off at 16 kHz (Hz)        {mmm(rs, 'pre_rolloff95_hz')}")
-        print(f"  95% roll-off at native rate (Hz)   {mmm(rs, 'native_rolloff95_hz')}")
-        print(f"  noise floor before trim (dBFS)     {mmm(rs, 'pre_noise_floor_dbfs')}")
-        rates = {}
+        rates, fmts = {}, {}
         for r in rs:
             rates[int(r["orig_sample_rate"])] = rates.get(int(r["orig_sample_rate"]), 0) + 1
-        fmts = {}
-        for r in rs:
-            key = f"{r['orig_format']} ({r['orig_bit_depth']}-bit)"
-            fmts[key] = fmts.get(key, 0) + 1
-        print(f"  original sample rate (Hz): {dict(sorted(rates.items()))} | original format: {fmts}")
-        print(f"  duration after trimming (s)        {mmm(rs, 'clean_duration_s')}")
+            fmts[f"{r['orig_format']} ({r['orig_bit_depth']}-bit)"] = fmts.get(f"{r['orig_format']} ({r['orig_bit_depth']}-bit)", 0) + 1
+        print(f"\n  {name}  (n={len(rs)})  original sample rate {dict(sorted(rates.items()))}  format {fmts}")
+        for label, col in (("duration before trimming (s)", "pre_duration_s"), ("leading silence before trim (s)", "pre_lead_silence_s"),
+                           ("trailing silence before trim (s)", "pre_trail_silence_s"), ("RMS before normalisation (dBFS)", "pre_rms_dbfs"),
+                           ("peak before normalisation (dBFS)", "pre_peak_dbfs"), ("noise floor before (dBFS)", "pre_noise_floor_dbfs"),
+                           ("95% roll-off at 16 kHz (Hz)", "pre_rolloff95_hz"), ("95% roll-off at native rate (Hz)", "native_rolloff95_hz"),
+                           ("duration after trimming (s)", "clean_duration_s"), ("clean-arm peak (dBFS)", "clean_peak_dbfs"),
+                           ("clean-arm noise floor (dBFS)", "clean_noise_floor_dbfs")):
+            print(f"    {label:34s} {mmm([f(r, col) for r in rs])}")
 
 
 def main():
     clips = clip_list()
+    for d in (CLEAN, RAW, NOISE, LEVEL):                  # rebuild every arm from scratch
+        if d.exists():
+            shutil.rmtree(d)
     rows = [process(c) for c in clips]
-    cols = list(rows[0])
-    with open(STATS, "w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=cols, lineterminator="\n")
+    noise_matched(rows)
+    cols = []
+    for r in rows:
+        for k in r:
+            if k not in cols:
+                cols.append(k)
+    with open(STATS, "w", encoding="utf-8", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=cols, lineterminator="\n", restval="")
         w.writeheader()
         w.writerows(rows)
-    print(f"prepared {len(rows)} clips: clean arm -> {CLEAN.name}/ (16-bit PCM, 16 kHz mono), raw arm -> {RAW.name}/ (16-bit PCM, original rate); statistics -> {STATS.name}")
-
-    # ---- trimming check: only silence removed ----
-    print("\nTRIM CHECK (the removed parts must stay below the silence rule of %.0f dBFS)" % SILENCE_DBFS)
-    bad = [r["clip_id"] for r in rows if float(r["removed_max_frame_dbfs"]) >= SILENCE_DBFS]
-    print(f"  clips whose removed parts contain a frame at or above {SILENCE_DBFS:.0f} dBFS: {bad or 'none'}")
-    print(f"  clips with no active frame (left untrimmed): {[r['clip_id'] for r in rows if int(r['trim_no_active_frames']) == 1] or 'none'}")
-    for cls in ("real", "ai"):
-        rs = [r for r in rows if r["class"] == cls]
-        lead = max(rs, key=lambda r: float(r["trim_lead_s"])); trail = max(rs, key=lambda r: float(r["trim_trail_s"]))
-        tot = max(rs, key=lambda r: float(r["trim_total_s"])); en = max(rs, key=lambda r: float(r["removed_energy_fraction"]))
-        loud = max(rs, key=lambda r: float(r["removed_max_frame_dbfs"]))
-        print(f"  {cls.upper():4s}: largest leading trim {lead['trim_lead_s']} s ({lead['clip_id']}), trailing {trail['trim_trail_s']} s ({trail['clip_id']}), "
-              f"total {tot['trim_total_s']} s ({tot['clip_id']}); loudest removed frame {loud['removed_max_frame_dbfs']} dBFS ({loud['clip_id']}); "
-              f"largest share of clip energy removed {float(en['removed_energy_fraction']) * 100:.4f}% ({en['clip_id']}); "
-              f"median trimmed {st.median(float(r['trim_total_s']) for r in rs):.2f} s")
-    # ---- normalisation / quantisation checks ----
-    capped = [r["clip_id"] for r in rows if int(r["peak_cap_applied"]) == 1]
-    print(f"\nNORMALISATION: clips where the -1 dBFS peak cap lowered the gain (end below -23 dBFS RMS): {capped or 'none'}")
-    print(f"  clean-arm clipped samples: {sum(int(r['clean_clipped_samples']) for r in rows)} | final clean RMS dBFS min/median/max: "
-          f"{min(float(r['clean_rms_dbfs']) for r in rows):.2f} / {st.median(float(r['clean_rms_dbfs']) for r in rows):.2f} / {max(float(r['clean_rms_dbfs']) for r in rows):.2f} "
-          f"| final peak max {max(float(r['clean_peak_dbfs']) for r in rows):.2f} dBFS")
-    print(f"RAW ARM: files with the same frame count as the original: {sum(int(r['raw_frames_equal']) for r in rows)} of 80 | sample rates unchanged: "
-          f"{all(int(r['raw_sample_rate']) == int(r['orig_sample_rate']) for r in rows)} | channels all 1: {all(int(r['raw_channels']) == 1 for r in rows)} | "
-          f"clipped samples: {sum(int(r['raw_clipped_samples']) for r in rows)} | largest rounding error (full scale = 1): {max(float(r['raw_max_quant_error']) for r in rows):.1e}")
-    short = [(r["clip_id"], r["clean_duration_s"]) for r in rows if float(r["clean_duration_s"]) < SHORT_S]
-    print(f"\nCLIPS BELOW {SHORT_S:g} s AFTER TRIMMING: {len(short)} of 80 -> {short or 'none'}")
-    for cls in ("real", "ai"):
-        print(f"  {cls}: {sum(1 for r in rows if r['class'] == cls and float(r['clean_duration_s']) < SHORT_S)}")
-    summarise(rows)
+    report(rows)
 
 
 if __name__ == "__main__":

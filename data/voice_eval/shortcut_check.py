@@ -1,16 +1,16 @@
-"""Stage 2 / step 6a: the SHORTCUT CHECK, exactly as defined in PLAN.md section 2. Does not touch the detector
-and scores nothing: it asks whether simple properties of the CLEAN-arm audio (not the voice itself) already
-separate the AI clips from the real clips.
+"""Stage 2 / step 6a: the SHORTCUT CHECK, as defined in PLAN.md section 2 and (since deviation D5) run on four arms.
+Does not touch the detector and scores nothing: it asks whether simple properties of the audio (not the voice
+itself) already separate the AI clips from the real clips.
 
-Fixed in code before it was ever run (see the constants below and PLAN.md section 2):
-  * features: the seven listed in FEATURES, measured on the clean-arm WAV files (what the detector will see);
+Fixed in code before it was run on the D5 arms (see the constants below and PLAN.md section 2):
+  * features: the seven listed in FEATURES, measured on the arm's files as the production server converts them
+    (prefix in prepare_stats.csv: clean_, nm_, raw_, lr_);
   * classifier: ridge logistic regression (L2 = 1.0), features standardised on the TUNING set, trained on the
     tuning clips (16 real + 16 AI), scored on the HELD-OUT clips (24 real + 24 AI); AI = positive class;
-  * the set is flagged CONFOUNDED if the held-out AUC is at least 0.75;
-  * interval: stratified bootstrap of the held-out clips (resample real and AI separately, with replacement),
-    2,000 resamples, seed 20261021, percentile 95%;
-  * also reported, descriptively only: the AUC of every single feature (direction chosen on the tuning set)
-    and the same check on the raw arm.
+  * an arm is FLAGGED if its held-out AUC is at least 0.75; a flagged GATE arm cannot be used for the ON gate;
+  * interval: stratified bootstrap of the held-out clips, 2,000 resamples, seed 20261021, percentile 95%;
+  * arms: clean (gate), noise-matched (gate), level-randomized raw (gate), plain raw (descriptive only);
+  * also reported, descriptively: the AUC of every single feature (direction chosen on the tuning set).
 Reads prepare_stats.csv, writes shortcut_check.json.
 
     python -I -X utf8 shortcut_check.py        (numpy only)
@@ -105,18 +105,25 @@ def show(name, res, decide):
     print("  standardised weights: " + ", ".join(f"{f} {v:+.2f}" for f, v in sorted(res["weights_standardised"].items(), key=lambda kv: -abs(kv[1]))))
 
 
+ARMS = [("clean", "clean", True), ("noise_matched", "nm", True), ("level_randomized_raw", "lr", True), ("raw", "raw", False)]
+
+
 def main():
     rows = list(csv.DictReader(open(HERE / "prepare_stats.csv", encoding="utf-8", newline="")))
     assert len(rows) == 80
-    clean = run(rows, "clean")
-    raw = run(rows, "raw")
-    show("CLEAN ARM (the decision arm)", clean, decide=True)
-    show("RAW ARM (descriptive only, as the plan says)", raw, decide=False)
-    out = {"features": FEATURES, "threshold": THRESHOLD, "l2": L2, "bootstrap": {"resamples": BOOT_B, "seed": BOOT_SEED, "stratified": True},
-           "clean_arm": clean, "raw_arm_descriptive": raw, "confounded": clean["heldout_auc"] >= THRESHOLD}
-    (HERE / "shortcut_check.json").write_text(json.dumps(out, indent=1), encoding="utf-8", newline="\n")
-    print("\nwritten: shortcut_check.json")
-    sys.exit(0)
+    out = {"features": FEATURES, "threshold": THRESHOLD, "l2": L2, "bootstrap": {"resamples": BOOT_B, "seed": BOOT_SEED, "stratified": True}, "arms": {}}
+    for name, prefix, gate in ARMS:
+        res = run(rows, prefix)
+        res["gate_arm"] = gate
+        res["flagged"] = bool(res["heldout_auc"] >= THRESHOLD)
+        out["arms"][name] = res
+        show(f"{name.upper()} ARM ({'GATE arm' if gate else 'descriptive only, not a gate arm'})", res, decide=True)
+    gates = {n: a for n, a in out["arms"].items() if a["gate_arm"]}
+    out["gate_arms_flagged"] = [n for n, a in gates.items() if a["flagged"]]
+    print()
+    print("GATE ARMS FLAGGED (held-out AUC >= %.2f): %s" % (THRESHOLD, out["gate_arms_flagged"] or "none"))
+    (HERE / "shortcut_check.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
+    print("written: shortcut_check.json")
 
 
 if __name__ == "__main__":
