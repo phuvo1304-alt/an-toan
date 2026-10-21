@@ -4,11 +4,29 @@ Exact versions, licences and where each was read. Nothing here is shipped in the
 
 Read on 2026-10-21 unless noted. `models.sha256` lists the sha256 of every downloaded model file (24 files).
 
-## Evaluation data (metadata only so far; no audio downloaded yet)
+## Evaluation data (metadata, plus the audio of the 40 selected real clips; local only, git-ignored)
 
 | Source | Pin | Licence | Notes |
 |---|---|---|---|
 | FLEURS Vietnamese (`google/fleurs`, config `vi_vn`) | dataset revision `70bb2e84b976b7e960aa89f1c648e09c59f894dd` | CC BY 4.0 (dataset card) | `train.tsv` sha256 `c714df11001942e0d1b3a00c0928828b30beb2e6331786032f7bf75d8ff88563`, `dev.tsv` (unused reserve) `c9bc17cede9765b1c75cb7a608f7066cb6bb6f8245cc75d721a5217a5dffb414`, `test.tsv` `eb744c2be5f677b49c35527d428a4f647294bd0f67abd790c296e91efaaffb93`. Credit required. |
+
+Audio: the 40 real clips named in the frozen `selection.csv` were streamed from the pinned revision's `train` and `test` tar.gz archives (2,091 MB read in total; no archive was stored) and kept under `audio/fleurs_orig/` (git-ignored). Their sha256 and original sample rate are in `fleurs_originals.csv`. After deviation D3 (five too-quiet clips replaced) a second streaming pass read another 2,052 MB for the replacement candidates; the 40 kept clips are the ones named in the final `selection.csv`, and every clip examined is listed in `d3_candidates.csv`.
+
+### FLEURS credit (CC BY 4.0) and citation
+
+FLEURS is licensed CC BY 4.0, so credit is required: wherever the evaluation data is credited (CREDITS.md, Settings -> About), name FLEURS (Google) and give the citation below. The text is copied **exactly** from the dataset card's "Citation Information" section at the pinned revision `70bb2e84b976b7e960aa89f1c648e09c59f894dd`, read 2026-10-21. Note that the card's BibTeX block, as published, ends after the `year` line without a closing brace; it is reproduced unchanged.
+
+You can access the FLEURS paper at https://arxiv.org/abs/2205.12446.
+Please cite the paper when referencing the FLEURS corpus as:
+
+```
+@article{fleurs2022arxiv,
+  title = {FLEURS: Few-shot Learning Evaluation of Universal Representations of Speech},
+  author = {Conneau, Alexis and Ma, Min and Khanuja, Simran and Zhang, Yu and Axelrod, Vera and Dalmia, Siddharth and Riesa, Jason and Rivera, Clara and Bapna, Ankur},
+  journal={arXiv preprint arXiv:2205.12446},
+  url = {https://arxiv.org/abs/2205.12446},
+  year = {2022},
+```
 
 ## Text-to-speech systems (used offline, to make the AI-voice test clips)
 

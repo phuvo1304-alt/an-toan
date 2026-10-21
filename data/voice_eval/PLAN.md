@@ -31,7 +31,7 @@ One gap: the server's content-type allow-list has no `amr`, `3gpp` or `caf`. `ap
 
 ## 1. Data and split
 
-**Rule.** FLEURS `vi_vn`, seed `20261021`. A sentence is eligible if its clip is 3–13 s, the text is at most 200 characters, **and (deviation D1, see "Deviations" at the end) the text contains only Vietnamese letters, spaces and a fixed punctuation list, with every word a valid Vietnamese syllable** (so digits, currency and other symbols, acronyms and foreign names or words are excluded). Sentences are ranked by `sha256("20261021|"+sentence_id)`. Each sentence gets exactly one real clip and one AI clip.
+**Rule.** FLEURS `vi_vn`, seed `20261021`. A sentence is eligible if its clip is 3–13 s, the text is at most 200 characters, **and (deviation D1, see "Deviations" at the end) the text contains only Vietnamese letters, spaces and a fixed punctuation list, with every word a valid Vietnamese syllable** (so digits, currency and other symbols, acronyms and foreign names or words are excluded). **A real clip is also eligible only if the production voice server would not reject it (deviation D3)**: it is decoded by the server's own decoder, with the server's own silence and length limits imported from `voice-server/app`, and must lie in the 3–13 s window. Sentences are ranked by `sha256("20261021|"+sentence_id)`. Each sentence gets exactly one real clip and one AI clip.
 
 | | Tuning | Held-out |
 |---|---|---|
@@ -162,7 +162,7 @@ This rule says nothing about old-style generators, since none are in held-out.
 ## 9. What results can and cannot claim, and in-app wording
 
 - **Can claim:** the observed error counts and intervals for these specific VieNeu voices versus FLEURS clean read speech, in these simulated conditions.
-- **Cannot claim:** old-style generators, cloned voices, paid tools, newer generators, real phone calls, other speakers or phones, or that a voice is real or safe.
+- **Cannot claim:** old-style generators, cloned voices, paid tools, newer generators, real phone calls, other speakers or phones, or that a voice is real or safe. Very quiet recordings that the server rejects as silent are not covered by this evaluation.
 
 **English.** "Voice check (experimental). It estimates whether a voice sounds more like a recording of a person or like computer-generated speech. It was tested on a small number of clean read-aloud clips and on voices from a few free computer-voice tools. It was not tested on cloned voices, paid voice tools or real phone calls, so it can be wrong either way. It is not proof that a voice is real or fake, or of who is speaking. 'Leans human' does not mean safe. Never send money because of a voice. Hang up and call back on a number you already know."
 
@@ -232,3 +232,17 @@ Any change to a rule above after "go" is logged here and in CLAUDE.md §14.
 | nano | Hữu Quân | male | male | 173 | 125-206 | advisory flag (borderline) |
 
 Limits: the listening check used one short neutral sentence per voice, one listener, and the voices' own declared labels as the reference; "human-blind-confirmed" means this listener heard the declared gender, not an independent proof. The tuning voices and MMS were not checked.
+
+**D3, 2026-10-21, before any TTS clip or score existed (owner decision).** Five of the 40 selected real clips were real but very quiet recordings (clip RMS 0.0014 to 0.0019, below the production voice server's silence threshold of 0.002), so the production server rejects them as `silent`. A real clip is now eligible only if the production voice server would not reject it. This is ONE general rule written in code (`select_sentences.py` with `server_accepts.py`): the clip is decoded by the server's own decoder and checked against the server's own silence and length limits, all imported from `voice-server/app` with no copied constants, plus the existing 3 to 13 s window. Every real clip, including the 35 that passed, goes through it. Replacement order, fixed in code: (1) another clip of the SAME sentence in the same FLEURS split and gender slot, in hash order of the clip file name; (2) only if none is eligible, the next unused sentence in that slot's existing sentence hash order (its clips again in clip hash order). Slots are handled in pair_id order, and tuning and held-out stay sentence-disjoint. Every clip examined, accepted or rejected, with its RMS, is in the committed `d3_candidates.csv` (46 rows), which also lets `select_sentences.py --check` reproduce the selection without any audio.
+
+`selection.csv` sha256: **old (D1)** `bb8b51b24c2f8208bfc52a038d983fb2878cff0ef36bc2685393fa34c84cf640` → **new (D3)** `d1139ecce4c1ec1288f34171a2a2d17c671537800923e7c3ce2346ccef3020ad`.
+
+| Slot | Rejected clip (sentence, RMS) | Replacement route | Replacement clip (sentence, RMS) |
+|---|---|---|---|
+| HM02 | 9088029412031891891.wav (1731, 0.00162) | same sentence | 9672827979950260572.wav (1731, 0.02853) |
+| HF03 | 6533195788186937056.wav (535, 0.00162) | next sentence (the same-sentence alternative 7645183277623857507.wav, RMS 0.00195, was also rejected as silent) | 17592022833946101415.wav (692, 0.01023) |
+| HF06 | 1400109587702781292.wav (1462, 0.00178) | same sentence | 16769593023567067772.wav (1462, 0.06736) |
+| HF07 | 9652404536445760873.wav (514, 0.00140) | next sentence (no other eligible clip of sentence 514) | 15565711173617988781.wav (761, 0.00278) |
+| HF09 | 5127889560336273519.wav (1387, 0.00190) | same sentence | 14316448862120873437.wav (1387, 0.03732) |
+
+Effects: the 12 owner-read sentences are unchanged (HM02 kept sentence 1731; only its clip changed). The tuning pairs and the male held-out pairs are unchanged. Because the AI voice and tool assignment is a hash function of the held-out female sentence set, five unaffected female pairs got different AI voices (HF02, HF04, HF05, HF10, HF12) and the Zalo TTS pick moved from HF07 to HF03; counts per tool, voice and gender are unchanged, and no TTS existed yet. Download: 2,052 MB read (537 MB test, 1,515 MB train, streamed; no archive stored); the 5 rejected originals and 27 unused candidates were deleted; 40 clips kept. All 40 final clips pass the production server's own decoder (RMS lowest 0.0020, still above the 0.002 threshold). Limit: very quiet recordings that the server rejects as silent are not covered by this evaluation.

@@ -496,3 +496,29 @@ Then wait for my "go" before writing code.
 - **Limits:** one listener, one short neutral sentence per voice, and the
   voices' own declared labels as the reference. The tuning voices and MMS were
   not checked. The pitch estimator is a simple autocorrelation method.
+
+### 14.7 AI voice detection evaluation: real clips must pass the production server (deviation D3)
+- **Status:** DONE on 2026-10-21, before any TTS clip or score existed (owner
+  decision). Full table and effects: `data/voice_eval/PLAN.md` ("Deviations").
+- **Found:** 5 of the 40 selected real FLEURS clips (HM02, HF03, HF06, HF07,
+  HF09) are real but very quiet (clip RMS 0.0014-0.0019, about -55 dBFS). The
+  production voice server rejects them as `silent` (its threshold is RMS 0.002),
+  so in the planned raw arm they would give an error instead of a score.
+- **Rule added (one general rule, in code):** a real clip is eligible only if
+  the production voice server would not reject it. `select_sentences.py` uses
+  `server_accepts.py`, which imports the server's own decoder and its silence
+  and length limits from `voice-server/app` (no copied constants), plus the
+  existing 3-13 s window. Failing clips are replaced in a fixed order: another
+  clip of the SAME sentence (same split and gender slot, clip-hash order), else
+  the next unused sentence in the slot's sentence-hash order. Every examined
+  clip and its RMS is logged in `d3_candidates.csv`.
+- **Result:** 3 slots kept their sentence (HM02, HF06, HF09), 2 took the next
+  sentence (HF03 -> 692, HF07 -> 761). No owner-read sentence changed. Five
+  unaffected female pairs received different AI voices because the assignment is
+  a hash of the sentence set (HF02, HF04, HF05, HF10, HF12); the Zalo TTS pick
+  moved from HF07 to HF03.
+- **selection.csv sha256:** old (D1)
+  `bb8b51b24c2f8208bfc52a038d983fb2878cff0ef36bc2685393fa34c84cf640`; new (D3)
+  `d1139ecce4c1ec1288f34171a2a2d17c671537800923e7c3ce2346ccef3020ad`.
+- **Limit:** very quiet recordings that the server rejects as silent are not
+  covered by this evaluation.
