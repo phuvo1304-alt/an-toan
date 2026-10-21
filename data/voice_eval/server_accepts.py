@@ -57,3 +57,11 @@ def server_decode(data: bytes):
         return True, "ok", d.duration
     except audio.AudioError as e:
         return False, e.code, None
+
+
+def server_samples(data: bytes):
+    """Decode with the production server's decoder. Returns (float32 mono 16 kHz samples, seconds).
+    Raises the server's own AudioError (silent / empty / too_long / invalid_audio)."""
+    _, audio = _load()
+    d = audio.decode(data)
+    return d.samples, d.duration
