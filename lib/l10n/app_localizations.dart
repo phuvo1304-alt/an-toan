@@ -1064,90 +1064,6 @@ abstract class AppLocalizations {
   /// **'Khác'**
   String get scamTypeOther;
 
-  /// No description provided for @tabAudio.
-  ///
-  /// In vi, this message translates to:
-  /// **'Giọng nói'**
-  String get tabAudio;
-
-  /// No description provided for @recordStart.
-  ///
-  /// In vi, this message translates to:
-  /// **'Bấm micro và nói (hoặc mở tin nhắn thoại gần điện thoại)'**
-  String get recordStart;
-
-  /// No description provided for @recordStop.
-  ///
-  /// In vi, this message translates to:
-  /// **'Dừng'**
-  String get recordStop;
-
-  /// No description provided for @listening.
-  ///
-  /// In vi, this message translates to:
-  /// **'Đang nghe...'**
-  String get listening;
-
-  /// No description provided for @audioPreparing.
-  ///
-  /// In vi, this message translates to:
-  /// **'Đang chuẩn bị micro...'**
-  String get audioPreparing;
-
-  /// No description provided for @audioSecondsLeft.
-  ///
-  /// In vi, this message translates to:
-  /// **'Còn {seconds} giây'**
-  String audioSecondsLeft(int seconds);
-
-  /// No description provided for @transcriptHint.
-  ///
-  /// In vi, this message translates to:
-  /// **'Lời nói sẽ hiện ở đây thành chữ. Bạn có thể sửa lại trước khi bấm Kiểm tra.'**
-  String get transcriptHint;
-
-  /// No description provided for @noSpeechDetected.
-  ///
-  /// In vi, this message translates to:
-  /// **'Không nghe được lời nói nào. Hãy thử lại ở nơi yên tĩnh, nói rõ hơn, hoặc gõ nội dung vào ô.'**
-  String get noSpeechDetected;
-
-  /// No description provided for @audioTranscriptEmpty.
-  ///
-  /// In vi, this message translates to:
-  /// **'Chưa có nội dung. Hãy bấm micro và nói, hoặc gõ nội dung vào ô trước khi kiểm tra.'**
-  String get audioTranscriptEmpty;
-
-  /// No description provided for @audioPermissionDenied.
-  ///
-  /// In vi, this message translates to:
-  /// **'An Toàn chưa được phép dùng micro nên không thể nghe. Để bật: mở Cài đặt của điện thoại, chọn Ứng dụng, An Toàn, Quyền, rồi cho phép Micro. Hoặc dùng thẻ Văn bản để gõ nội dung.'**
-  String get audioPermissionDenied;
-
-  /// No description provided for @audioLocaleUnavailable.
-  ///
-  /// In vi, this message translates to:
-  /// **'Điện thoại này chưa hỗ trợ nhận dạng giọng nói tiếng Việt. Vui lòng dùng thẻ Văn bản để gõ nội dung.'**
-  String get audioLocaleUnavailable;
-
-  /// No description provided for @audioNotSupported.
-  ///
-  /// In vi, this message translates to:
-  /// **'Điện thoại này không hỗ trợ nhận dạng giọng nói. Vui lòng dùng thẻ Văn bản để gõ hoặc dán nội dung.'**
-  String get audioNotSupported;
-
-  /// No description provided for @audioNotSupportedShort.
-  ///
-  /// In vi, this message translates to:
-  /// **'Không dùng được giọng nói trên máy này'**
-  String get audioNotSupportedShort;
-
-  /// No description provided for @audioFailed.
-  ///
-  /// In vi, this message translates to:
-  /// **'Không nhận dạng được giọng nói lúc này. Hãy thử lại, hoặc dùng thẻ Văn bản.'**
-  String get audioFailed;
-
   /// No description provided for @phoneAlreadyReported.
   ///
   /// In vi, this message translates to:
@@ -1370,59 +1286,239 @@ abstract class AppLocalizations {
   /// **'{count, plural, other{{count} năm trước}}'**
   String phoneCommentYearsAgo(int count);
 
-  /// No description provided for @cardVoiceCheck.
+  /// No description provided for @cardVoiceScan.
   ///
   /// In vi, this message translates to:
-  /// **'Kiểm tra cuộc gọi / giọng nói'**
-  String get cardVoiceCheck;
+  /// **'Phát hiện lừa đảo qua giọng nói'**
+  String get cardVoiceScan;
 
-  /// No description provided for @cardVoiceCheckDesc.
+  /// No description provided for @cardVoiceScanDesc.
   ///
   /// In vi, this message translates to:
-  /// **'Kiểm tra nội dung được nói trong cuộc gọi hoặc tin nhắn thoại'**
-  String get cardVoiceCheckDesc;
+  /// **'Nói hoặc tải âm thanh lên: chúng tôi kiểm tra dấu hiệu lừa đảo và đoán giọng là người hay AI'**
+  String get cardVoiceScanDesc;
 
-  /// No description provided for @voiceCheckTitle.
+  /// No description provided for @voiceIntro.
   ///
   /// In vi, this message translates to:
-  /// **'Kiểm tra cuộc gọi / giọng nói'**
-  String get voiceCheckTitle;
+  /// **'Ghi âm bằng micro hoặc tải lên một tệp âm thanh, tối đa 60 giây. Âm thanh được gửi đến máy chủ của chúng tôi để chuyển thành chữ và phân tích, rồi xóa ngay.'**
+  String get voiceIntro;
 
-  /// No description provided for @voiceHonestyTitle.
+  /// No description provided for @voiceRecord.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ghi âm'**
+  String get voiceRecord;
+
+  /// No description provided for @voiceStop.
+  ///
+  /// In vi, this message translates to:
+  /// **'Dừng'**
+  String get voiceStop;
+
+  /// No description provided for @voiceUpload.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tải tệp lên'**
+  String get voiceUpload;
+
+  /// No description provided for @voiceRecording.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang ghi âm...'**
+  String get voiceRecording;
+
+  /// No description provided for @voiceSecondsLeft.
+  ///
+  /// In vi, this message translates to:
+  /// **'Còn {seconds} giây'**
+  String voiceSecondsLeft(int seconds);
+
+  /// No description provided for @voiceClipRecorded.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bản ghi âm {seconds} giây'**
+  String voiceClipRecorded(int seconds);
+
+  /// No description provided for @voiceClipFile.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tệp: {name}'**
+  String voiceClipFile(String name);
+
+  /// No description provided for @voiceRemove.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xóa âm thanh này'**
+  String get voiceRemove;
+
+  /// No description provided for @voiceAnalyze.
+  ///
+  /// In vi, this message translates to:
+  /// **'Phân tích'**
+  String get voiceAnalyze;
+
+  /// No description provided for @voiceAnalyzing.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang phân tích...'**
+  String get voiceAnalyzing;
+
+  /// No description provided for @voicePrivacyShort.
+  ///
+  /// In vi, this message translates to:
+  /// **'Âm thanh chỉ được gửi đi khi bạn bấm Phân tích. Nó bị xóa ngay sau khi phân tích, không được lưu hay ghi lại. Đừng gửi mật khẩu, mã OTP hay thông tin ngân hàng.'**
+  String get voicePrivacyShort;
+
+  /// No description provided for @voiceConsentTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Trước khi dùng tính năng này'**
+  String get voiceConsentTitle;
+
+  /// No description provided for @voiceConsentBody.
+  ///
+  /// In vi, this message translates to:
+  /// **'Để kiểm tra một cuộc gọi hay tin nhắn thoại, An Toàn gửi âm thanh bạn ghi hoặc chọn đến máy chủ của chúng tôi. Máy chủ chuyển lời nói thành chữ và phân tích, rồi xóa âm thanh ngay lập tức. Âm thanh không bao giờ được lưu hay ghi lại. Phần chữ được gửi đến một dịch vụ AI để phân tích dấu hiệu lừa đảo. Chỉ ghi âm hoặc tải lên khi bạn có quyền làm vậy, và đừng gửi thông tin nhạy cảm.'**
+  String get voiceConsentBody;
+
+  /// No description provided for @voiceConsentAgree.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tôi đồng ý, tiếp tục'**
+  String get voiceConsentAgree;
+
+  /// No description provided for @voiceConsentDecline.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không đồng ý'**
+  String get voiceConsentDecline;
+
+  /// No description provided for @voiceSectionScam.
+  ///
+  /// In vi, this message translates to:
+  /// **'Phân tích nội dung được nói'**
+  String get voiceSectionScam;
+
+  /// No description provided for @voiceSectionGuess.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đoán giọng nói'**
+  String get voiceSectionGuess;
+
+  /// No description provided for @voiceGuessHuman.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chúng tôi đoán: giọng người'**
+  String get voiceGuessHuman;
+
+  /// No description provided for @voiceGuessAi.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chúng tôi đoán: giọng AI'**
+  String get voiceGuessAi;
+
+  /// No description provided for @voiceGuessCantTell.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể xác định'**
+  String get voiceGuessCantTell;
+
+  /// No description provided for @voiceGuessNote.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đây là kết quả từ hệ thống và thuật toán của chúng tôi, không phải sự thật. Xin đừng mặc nhiên tin vào nó. Chúng tôi chỉ đoán giọng này là người hay AI. Trong các bài kiểm tra trên giọng tiếng Việt, phép kiểm tra này không đáng tin cậy và đôi khi sai, kể cả coi giọng do máy tạo ra là giọng người.'**
+  String get voiceGuessNote;
+
+  /// No description provided for @voiceAdviceTitle.
   ///
   /// In vi, this message translates to:
   /// **'Điều cần nhớ'**
-  String get voiceHonestyTitle;
+  String get voiceAdviceTitle;
 
-  /// No description provided for @voiceHonestyBody.
+  /// No description provided for @voiceAdviceBody.
   ///
   /// In vi, this message translates to:
-  /// **'Chúng tôi không thể biết một giọng nói là thật hay do máy tạo ra. Hãy cúp máy và gọi lại bằng một số bạn đã biết. Đừng bao giờ chuyển tiền hoặc đưa mã OTP vì một cuộc gọi.'**
-  String get voiceHonestyBody;
+  /// **'Nếu cuộc gọi đòi tiền hoặc mã OTP: hãy cúp máy và gọi lại bằng một số bạn đã biết. Đừng bao giờ chuyển tiền hoặc đưa mã OTP vì một cuộc gọi.'**
+  String get voiceAdviceBody;
 
-  /// No description provided for @voiceCheckIntro.
+  /// No description provided for @voiceTranscriptTitle.
   ///
   /// In vi, this message translates to:
-  /// **'Nói, hoặc phát tin nhắn thoại gần điện thoại. An Toàn chuyển lời nói thành chữ và chỉ kiểm tra nội dung được nói. Không có tệp âm thanh nào được lưu hay gửi đi.'**
-  String get voiceCheckIntro;
+  /// **'Nội dung chúng tôi nghe được'**
+  String get voiceTranscriptTitle;
 
-  /// No description provided for @voiceCheckNotSupported.
+  /// No description provided for @voiceErrUnavailable.
   ///
   /// In vi, this message translates to:
-  /// **'Máy hoặc trình duyệt này không nhận dạng được giọng nói. Bạn vẫn có thể gõ hoặc dán nội dung cuộc gọi vào ô bên dưới rồi bấm Kiểm tra.'**
-  String get voiceCheckNotSupported;
+  /// **'Tính năng kiểm tra giọng nói đang được thiết lập. Vui lòng thử lại sau.'**
+  String get voiceErrUnavailable;
 
-  /// No description provided for @voiceCheckLocaleUnavailable.
+  /// No description provided for @voiceErrTooLarge.
   ///
   /// In vi, this message translates to:
-  /// **'Máy hoặc trình duyệt này chưa hỗ trợ nhận dạng giọng nói tiếng Việt. Bạn vẫn có thể gõ hoặc dán nội dung vào ô bên dưới.'**
-  String get voiceCheckLocaleUnavailable;
+  /// **'Tệp âm thanh quá lớn. Hãy chọn tệp ngắn hơn (tối đa 60 giây).'**
+  String get voiceErrTooLarge;
 
-  /// No description provided for @voiceCheckFailed.
+  /// No description provided for @voiceErrUnsupported.
   ///
   /// In vi, this message translates to:
-  /// **'Không nhận dạng được giọng nói lúc này. Hãy thử lại, hoặc gõ nội dung vào ô bên dưới.'**
-  String get voiceCheckFailed;
+  /// **'Loại tệp này chưa được hỗ trợ. Hãy dùng WAV, MP3, M4A, AAC, OGG, WEBM hoặc FLAC.'**
+  String get voiceErrUnsupported;
+
+  /// No description provided for @voiceErrRateLimited.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn đã kiểm tra quá nhiều lần. Hãy thử lại sau ít phút.'**
+  String get voiceErrRateLimited;
+
+  /// No description provided for @voiceErrTooLong.
+  ///
+  /// In vi, this message translates to:
+  /// **'Âm thanh dài hơn 60 giây. Hãy chọn đoạn ngắn hơn.'**
+  String get voiceErrTooLong;
+
+  /// No description provided for @voiceErrSilent.
+  ///
+  /// In vi, this message translates to:
+  /// **'Âm thanh gần như im lặng. Hãy thử ghi lại gần hơn hoặc chọn tệp khác.'**
+  String get voiceErrSilent;
+
+  /// No description provided for @voiceErrUnreadable.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không đọc được tệp âm thanh này. Hãy thử tệp khác.'**
+  String get voiceErrUnreadable;
+
+  /// No description provided for @voiceErrNetwork.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không có kết nối mạng hoặc mạng quá chậm. Hãy kiểm tra internet rồi thử lại.'**
+  String get voiceErrNetwork;
+
+  /// No description provided for @voiceErrGeneric.
+  ///
+  /// In vi, this message translates to:
+  /// **'Có lỗi xảy ra. Hãy thử lại sau.'**
+  String get voiceErrGeneric;
+
+  /// No description provided for @voiceErrMicDenied.
+  ///
+  /// In vi, this message translates to:
+  /// **'An Toàn chưa được phép dùng micro. Hãy cho phép micro trong cài đặt của máy hoặc trình duyệt, hoặc tải một tệp âm thanh lên.'**
+  String get voiceErrMicDenied;
+
+  /// No description provided for @voiceErrMicUnavailable.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không dùng được micro lúc này. Bạn có thể tải một tệp âm thanh lên.'**
+  String get voiceErrMicUnavailable;
+
+  /// No description provided for @voiceErrNoAudio.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có âm thanh. Hãy ghi âm hoặc tải một tệp lên trước.'**
+  String get voiceErrNoAudio;
 }
 
 class _AppLocalizationsDelegate

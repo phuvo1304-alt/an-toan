@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../../app/theme.dart';
 import '../../l10n/app_localizations.dart';
 
-/// The card that is always shown with the Voice check, before, during and
-/// after a check: An Toàn does NOT judge whether a voice is real or
-/// computer-made, and what to do instead. Text lives in the ARB files.
+/// The advice card shown with the Voice scam detection, on the screen and on
+/// its result: whatever the analysis says, hang up and call back on a number
+/// you already know, and never send money or an OTP because of a call. Text
+/// lives in the ARB files.
 class VoiceHonestyCard extends StatelessWidget {
   const VoiceHonestyCard({super.key});
 
@@ -32,12 +33,12 @@ class VoiceHonestyCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(t.voiceHonestyTitle,
+                  Text(t.voiceAdviceTitle,
                       style: textTheme.titleSmall?.copyWith(
                           color: scheme.onSecondaryContainer,
                           fontWeight: FontWeight.w700)),
                   const SizedBox(height: AppSpace.xs),
-                  Text(t.voiceHonestyBody,
+                  Text(t.voiceAdviceBody,
                       style: textTheme.bodyMedium
                           ?.copyWith(color: scheme.onSecondaryContainer)),
                 ],

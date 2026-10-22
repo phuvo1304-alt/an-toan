@@ -38,6 +38,10 @@ void main() {
   });
 
   testWidgets('fresh app shows onboarding first, then lands on Home', (tester) async {
+    // Home now has 5 cards: a taller surface so every card is built (the list is lazy).
+    tester.view.physicalSize = const Size(800, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     SharedPreferences.setMockInitialValues({}); // onboarding_complete unset
     await tester.pumpWidget(const ProviderScope(child: AnToanApp()));
     await tester.pumpAndSettle();
@@ -84,6 +88,10 @@ void main() {
   });
 
   testWidgets('a returning user starts on Home and cannot open /onboarding', (tester) async {
+    // Home now has 5 cards: a taller surface so every card is built (the list is lazy).
+    tester.view.physicalSize = const Size(800, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     SharedPreferences.setMockInitialValues({'onboarding_complete': true});
     // Same as main(): the saved flag is known before the first frame.
     await tester.pumpWidget(ProviderScope(

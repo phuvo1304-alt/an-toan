@@ -22,6 +22,8 @@ import 'package:an_toan/features/scam_checker/result_screen.dart';
 import 'package:an_toan/features/scam_checker/scam_result.dart';
 import 'package:an_toan/features/settings/settings_screen.dart';
 import 'package:an_toan/features/voice_check/voice_check_screen.dart';
+import 'package:an_toan/features/voice_check/voice_consent.dart';
+import 'package:an_toan/features/voice_check/voice_result.dart';
 import 'package:an_toan/l10n/app_localizations.dart';
 
 Widget _wrapAtWorstCaseCombinedScale(Widget child, {Locale? locale}) {
@@ -74,7 +76,7 @@ ScamResult _longestResult({required RiskLevel riskLevel}) => ScamResult(
 void main() {
   testWidgets('Home screen (five cards) has no overflow at the worst-case combined scale',
       (tester) async {
-    await tester.pumpWidget(_wrapAtWorstCaseCombinedScale(const HomeScreen()));
+    await tester.pumpWidget(_wrapAtWorstCaseCombinedScale(const ProviderScope(child: HomeScreen())));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });
@@ -141,32 +143,41 @@ void main() {
   });
 
   for (final lang in ['vi', 'en']) {
+    for (final consented in [false, true]) {
+      testWidgets(
+          'Voice scam detection screen ($lang, ${consented ? 'main view' : 'consent notice'}) has no overflow at the worst-case combined scale',
+          (tester) async {
+        SharedPreferences.setMockInitialValues({if (consented) voiceConsentKey: true});
+        tester.view.physicalSize = const Size(360, 1200); // narrow Android width
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        await tester.pumpWidget(_wrapAtWorstCaseCombinedScale(
+            const ProviderScope(child: VoiceCheckScreen()),
+            locale: Locale(lang)));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+      });
+    }
+  }
+
+  for (final guess in VoiceGuess.values) {
     testWidgets(
-        'Voice check screen ($lang) has no overflow at the worst-case combined scale',
+        'Result screen from Voice scam detection (longest content, voice guess ${guess.name}) has no overflow at the worst-case combined scale',
         (tester) async {
-      tester.view.physicalSize = const Size(360, 1200); // narrow Android width
+      tester.view.physicalSize = const Size(360, 1200);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
+      final scam = _longestResult(riskLevel: RiskLevel.likelyScam);
       await tester.pumpWidget(_wrapAtWorstCaseCombinedScale(
-          const ProviderScope(child: VoiceCheckScreen()),
-          locale: Locale(lang)));
+          ResultScreen(
+              result: scam,
+              voice: VoiceResult(
+                  scam: scam,
+                  transcript: 'A fairly long transcript of what was said on the call, written out so it wraps.',
+                  guess: guess)),
+          locale: const Locale('vi')));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
     });
   }
-
-  testWidgets(
-      'Result screen from the Voice check (longest content + the voice notice) '
-      'has no overflow at the worst-case combined scale', (tester) async {
-    tester.view.physicalSize = const Size(360, 1200);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
-    await tester.pumpWidget(_wrapAtWorstCaseCombinedScale(
-        ResultScreen(
-            result: _longestResult(riskLevel: RiskLevel.likelyScam),
-            showVoiceNotice: true),
-        locale: const Locale('vi')));
-    await tester.pumpAndSettle();
-    expect(tester.takeException(), isNull);
-  });
 }

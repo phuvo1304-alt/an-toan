@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -50,7 +51,7 @@ void main() {
       (tester) async {
     mockClipboard(tester);
     await setTallSurface(tester);
-    await tester.pumpWidget(_wrap(const HomeScreen()));
+    await tester.pumpWidget(_wrap(const ProviderScope(child: HomeScreen())));
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
@@ -83,7 +84,7 @@ void main() {
     addTearDown(() => messenger.setMockMethodCallHandler(SystemChannels.platform, null));
     await setTallSurface(tester);
 
-    await tester.pumpWidget(_wrap(const HomeScreen()));
+    await tester.pumpWidget(_wrap(const ProviderScope(child: HomeScreen())));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byIcon(Icons.copy).at(1)); // bank is first, account second

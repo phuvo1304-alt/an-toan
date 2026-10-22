@@ -50,9 +50,25 @@
 5. **Bilingual UI**: Vietnamese default, English switchable in Settings. All strings go through localization (no hard-coded text in widgets).
 6. **Safety basics:** a disclaimer, a privacy screen, and links to official Vietnam resources (for example reporting to the police, the 156 hotline or the national anti-fraud channels). Verify each official contact is current before shipping.
 
-### Post-MVP, approved by owner on 2026-10-20
-- **AI voice detection** ("Giọng thật hay AI?" / "Real or AI voice?", route `/voice`, 5th Home card). The user picks or records a clip (max 60 s); the app sends it to the Supabase Edge Function `analyze-voice`, which forwards it to a private Python model server (`garystafford/wav2vec2-deepfake-voice-detector`, Apache-2.0). Result is one of three outcomes (Leans human / Leans AI / Can't tell), never a percentage and never proof. Behind a `--dart-define` build flag (OFF in release until the owner approves the Vietnamese evaluation) and a server kill switch `VOICE_ENABLED`. Audio is never stored or logged. **Status (2026-10-22): evaluated; not shipping.** Only the model server (`voice-server/`) and the evaluation (`data/voice_eval/`) exist; the Edge Function, Flutter screen and store texts (Stages 3-5) were not built. Results and limits: section 14.11.
-- **Voice check ("Kiểm tra cuộc gọi / giọng nói", "Check a call or voice"), SHIPPED in the code 2026-10-22** (pushed; the Netlify web deploy is confirmed separately by the owner) (5th Home card, route `/voice`, result at `/voice/result`; ON for everyone, Android, iOS and web). It does NOT say whether a voice is human or AI. It turns speech into text with the existing on-device / browser speech-to-text (60 s cap, no audio stored or sent), sends only the editable text to the existing `analyze-scam`, and always shows: "We can't tell if a voice is real or computer-made. Hang up and call back on a number you already know. Never send money or share an OTP because of a call." (Vietnamese + English). Where speech recognition is unavailable (e.g. Firefox) the same box is a plain text box. The AI-voice detector (Part B of the plan) is **not built yet**: no `analyze-voice` function, no flag, no detector screen.
+### Post-MVP: Voice scam detection ("Phát hiện lừa đảo qua giọng nói" / "Voice scam detection"), redesigned 2026-10-22
+- **What it is now (owner decision, supersedes the 2026-10-20 plan and the text-only "Voice check" of 2026-10-22):** Home card
+  directly below "Check a message", route `/voice`. The user records with the microphone or uploads an audio file (max 60 s;
+  Android, iOS and web, `record` + `file_picker`). **The audio IS sent to our server for analysis and deleted immediately; it is
+  never saved or logged** (consent notice before first use, remembered in shared_preferences; privacy policy, Info.plist and
+  manifest say so). One result screen: (a) the scam analysis of what is said (same style as the normal result), (b) a voice guess:
+  three outcomes only ("We guess: human" / "We guess: AI" / "Can't tell", no percentages) with the full note always visible
+  ("This is the result of our own system and algorithms, not a fact ... in our tests on Vietnamese voices this check was
+  unreliable and sometimes wrong, including calling computer-made voices human"), plus the "hang up and call back on a number you
+  already know" advice card.
+- **Availability first, privacy first:** before any audio leaves the device the app calls `analyze-voice/health` (no audio, no user
+  data). Only if it answers OK is the audio uploaded; otherwise the user sees "The voice check is still being set up. Please try
+  again soon." and nothing is sent. Real user errors (413, 415, 429, too long, silent, unreadable, no network) have their own
+  messages. Never a raw technical error.
+- **Visibility:** `VOICE_SCAM_ENABLED` (`--dart-define`, default **true**, web and app) shows or hides the card and the route; the
+  server kill switch is `VOICE_ENABLED`. **Before store submission set `VOICE_SCAM_ENABLED=false` unless the model server is live
+  and tested** (see the checklist in section 12).
+- **The detector is NOT validated** (section 14.11): with the pre-registered cut-offs there is no usable gap, so the guess is always
+  "Can't tell" until a new pre-registered evaluation supplies valid cut-offs. Slice status: section 14.12.
 
 ### Later (do NOT build until the MVP is shipped)
 - User accounts and login, cloud-synced progress, leaderboards
@@ -183,7 +199,7 @@ Create via migrations in `supabase/migrations/`. **Enable Row Level Security on 
 ## 7. Screens (MVP)
 
 1. **Onboarding** (3 slides, language choice, short privacy note)
-2. **Home** — five big cards: *Check a message*, *Check a phone number*, *Train*, *Quiz*, *Check a call or voice*
+2. **Home** — five big cards: *Check a message*, *Voice scam detection* (directly below it), *Check a phone number*, *Train*, *Quiz*
 3. **Scam Checker** — tabs for Text / Screenshot / Audio → loading state → **Result screen** (color-coded risk, flags, steps, disclaimer, "Report a number" shortcut)
 4. **Phone Checker** — search field → result card → "Report this number" form
 5. **Training** — scenario list → interactive scenario → feedback
@@ -294,6 +310,7 @@ If I'm behind, **cut Training Mode first, then Audio**. Don't cut safety/privacy
 - [ ] `flutter analyze` clean, tests passing, AI test set reviewed
 - [ ] Android `.aab` and iOS TestFlight builds installed on real devices
 - [ ] Store listings complete (VI + EN)
+- [ ] Before store submission, set VOICE_SCAM_ENABLED=false unless the model server is live and tested
 
 ---
 
@@ -649,31 +666,23 @@ Then wait for my "go" before writing code.
   converted to 16 kHz by the server, real clips are natively 16 kHz: the original sample rate separates the
   classes perfectly in every arm, and the arms cannot remove it); shortcut flags on the phone-like arms
   (7-feature check 0.865 / 0.769 / 0.780).
+- **Later the same day (owner decision):** a redesigned Voice scam detection feature built on this detector was approved and is
+  visible by default, with the guess limited to three outcomes and an always-visible unreliability note; with these cut-offs it can
+  only say "Can't tell". The conclusion above is unchanged; see section 14.12.
 - **What would justify reopening:** more matched data, such as the real clip itself re-synthesised through the
   same codec path so content, timing and loudness are identical, or real deepfake data with recorded
   provenance, and/or a different detector, under a NEW pre-registered plan written before any score. The
   present data cannot be re-used to justify shipping.
 
-### 14.12 Voice check (Part A) shipped; AI-voice detector (Part B) not built; detector not validated
-- **Status:** Part A built and tested 2026-10-22 (commit message "Add Voice check ..."). Part B (Edge Function `analyze-voice`,
-  the `VOICE_DETECTOR_ENABLED` flag, the detector screen, `record` package) **is not built**; the owner decided: record
-  package later (fake recorder in tests), `analyze-voice` code and tests only (no deploy), and B answers "can't tell" until a new
-  pre-registered evaluation supplies valid cut-offs. Plan: `voice_feature_plan.md` (outside the repo).
-- **What Part A is and is not:** it checks WHAT IS SAID through `analyze-scam` (text only). It never judges the voice itself. The
-  detector evaluated in 14.11 is **not validated** and is not used anywhere in the app.
-- **Files:** `lib/features/voice_check/` (screen, honesty card), `/voice` and `/voice/result` in `lib/app/router.dart`,
-  `showVoiceNotice` on `ResultScreen`, 5th card in `home_screen.dart`, `AudioTab(standalone: true)`, shared
-  `scam_error_text.dart`, ARB keys `voiceCheck*` / `voiceHonesty*` / `cardVoiceCheck*` (vi + en), privacy policy section 1b
-  (new card; browsers' own speech services may process speech on the web). Info.plist, AndroidManifest and Settings -> About
-  are unchanged (the microphone and speech texts already exist; no new data use).
-- **Tests added:** `test/voice_check_test.dart` (5 cards, honesty card vi/en, no verdict wording on screens or in ARB keys,
-  only text sent, text-box fallback when speech is unsupported, `/voice/result` without a result redirects, no `dart:io` in
-  `lib/`, no audio/recorder code in the voice-check files) and text-scale overflow tests for the screen (vi, en) and its result.
-- **Pre-existing flaky test fixed (test code only):** `text_scale_widget_test.dart` "Quiz screen..." failed about 1 run in 6 on
-  the unchanged code (random question order; a long question pushes the answer button out of the lazily built list, so
-  `ensureVisible(find.text('Scam'))` had no element). It now scrolls until the button is built. 10 of 10 isolated runs and 3
-  of 3 full-suite runs passed afterwards.
-- **Verified:** `flutter analyze` clean; `flutter test` 233 passed (3 runs); `flutter build web --release` compiled (dummy
-  backend values); checked by hand in headless Chrome driven through the DevTools protocol (see the report). **Not verified:**
-  a real microphone on a phone or in a desktop browser, Safari, Firefox itself (emulated by removing the speech API), a real
-  analyze-scam answer through the web page (no backend was configured), the Netlify deploy.
+### 14.12 Voice scam detection (redesign, 2026-10-22): slices and status
+- **Supersedes** the text-only "Voice check" (Part A, commit 5a9b02e) and the old Part B plan. The Scam Checker now has only the
+  Text and Screenshot tabs (the on-device speech-to-text and the `speech_to_text` package were removed; nothing else used them).
+- **Slice 1 (Flutter, 2026-10-22): built and tested.** `lib/features/voice_check/` (screen, consent, `VoiceApi` with the health
+  check, `AudioCapture` over `record`, `AudioPicker` over `file_picker`, guess card, advice card), flag `VOICE_SCAM_ENABLED`
+  (default true), ARB strings vi + en, privacy policy 1b, iOS microphone text (speech-recognition key removed), Android manifest
+  (speech-recognizer query removed). Tests: `test/voice_check_test.dart` (fake HTTP server that records requests: for 404, 500, 502,
+  503, timeout, no network and garbage answers the friendly message appears and **zero audio bytes are sent**; 413/415/429/too
+  long/silent/unreadable stay distinct; three outcomes, note always visible, no percentages; consent before first use; flag false
+  hides the card and route) plus the text-scale overflow suite. **Not verified:** a real microphone on Android, iOS or in a
+  browser; real file picking; any real `analyze-voice` answer (the function does not exist yet).
+- **Slice 2 (Edge Function `analyze-voice` + voice-server transcription): see the report; slice 3 (hosting report): see the report.**

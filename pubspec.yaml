@@ -48,7 +48,6 @@ dependencies:
     sdk: flutter
   intl: any
   url_launcher: ^6.3.3
-  speech_to_text: ^7.5.0
   crypto: ^3.0.7
   image: ^4.10.1
   # VietQR donation card (Settings only): generates a NAPAS 247 bank-transfer
@@ -59,6 +58,8 @@ dependencies:
   # downloads) and also supports latest stable.
   vietqr_gen: ^1.2.0
   qr_flutter: ^4.1.0
+  record: 7.1.2
+  file_picker: 13.1.0
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/feature_flags.dart';
 import '../core/onboarding_provider.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
@@ -15,6 +16,7 @@ import '../features/training/training_data.dart';
 import '../features/training/training_list_screen.dart';
 import '../features/training/training_scenario_screen.dart';
 import '../features/voice_check/voice_check_screen.dart';
+import '../features/voice_check/voice_result.dart';
 
 /// The app's router. It lives in a provider so its redirect can read the
 /// onboarding flag. Built once: the redirect reads the flag through a
@@ -38,8 +40,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       // `as ScamResult` cast would crash the whole app on load. Redirect
       // Home instead of crashing; there's no check content to show anyway.
       if (state.uri.path == '/result' && state.extra is! ScamResult) return '/';
-      // Same for the Voice check's result page.
-      if (state.uri.path == '/voice/result' && state.extra is! ScamResult) return '/voice';
+      // Voice scam detection: hidden when the flag is off (the card is hidden too).
+      final onVoice = state.uri.path == '/voice' || state.uri.path.startsWith('/voice/');
+      if (onVoice && !ref.read(voiceScamEnabledProvider)) return '/';
+      // Its result page also needs an in-memory result: a reload goes back to /voice.
+      if (state.uri.path == '/voice/result' && state.extra is! VoiceResult) return '/voice';
       return null;
     },
     routes: [
@@ -65,10 +70,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: 'result',
-            builder: (context, state) => ResultScreen(
-              result: state.extra as ScamResult,
-              showVoiceNotice: true,
-            ),
+            builder: (context, state) {
+              final voice = state.extra as VoiceResult;
+              return ResultScreen(result: voice.scam, voice: voice);
+            },
           ),
         ],
       ),

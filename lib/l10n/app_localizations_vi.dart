@@ -565,58 +565,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get scamTypeOther => 'Khác';
 
   @override
-  String get tabAudio => 'Giọng nói';
-
-  @override
-  String get recordStart =>
-      'Bấm micro và nói (hoặc mở tin nhắn thoại gần điện thoại)';
-
-  @override
-  String get recordStop => 'Dừng';
-
-  @override
-  String get listening => 'Đang nghe...';
-
-  @override
-  String get audioPreparing => 'Đang chuẩn bị micro...';
-
-  @override
-  String audioSecondsLeft(int seconds) {
-    return 'Còn $seconds giây';
-  }
-
-  @override
-  String get transcriptHint =>
-      'Lời nói sẽ hiện ở đây thành chữ. Bạn có thể sửa lại trước khi bấm Kiểm tra.';
-
-  @override
-  String get noSpeechDetected =>
-      'Không nghe được lời nói nào. Hãy thử lại ở nơi yên tĩnh, nói rõ hơn, hoặc gõ nội dung vào ô.';
-
-  @override
-  String get audioTranscriptEmpty =>
-      'Chưa có nội dung. Hãy bấm micro và nói, hoặc gõ nội dung vào ô trước khi kiểm tra.';
-
-  @override
-  String get audioPermissionDenied =>
-      'An Toàn chưa được phép dùng micro nên không thể nghe. Để bật: mở Cài đặt của điện thoại, chọn Ứng dụng, An Toàn, Quyền, rồi cho phép Micro. Hoặc dùng thẻ Văn bản để gõ nội dung.';
-
-  @override
-  String get audioLocaleUnavailable =>
-      'Điện thoại này chưa hỗ trợ nhận dạng giọng nói tiếng Việt. Vui lòng dùng thẻ Văn bản để gõ nội dung.';
-
-  @override
-  String get audioNotSupported =>
-      'Điện thoại này không hỗ trợ nhận dạng giọng nói. Vui lòng dùng thẻ Văn bản để gõ hoặc dán nội dung.';
-
-  @override
-  String get audioNotSupportedShort => 'Không dùng được giọng nói trên máy này';
-
-  @override
-  String get audioFailed =>
-      'Không nhận dạng được giọng nói lúc này. Hãy thử lại, hoặc dùng thẻ Văn bản.';
-
-  @override
   String get phoneAlreadyReported =>
       'Bạn đã báo cáo số này trong 24 giờ qua. Cảm ơn bạn, mỗi người chỉ cần báo cáo một lần.';
 
@@ -766,35 +714,142 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get cardVoiceCheck => 'Kiểm tra cuộc gọi / giọng nói';
+  String get cardVoiceScan => 'Phát hiện lừa đảo qua giọng nói';
 
   @override
-  String get cardVoiceCheckDesc =>
-      'Kiểm tra nội dung được nói trong cuộc gọi hoặc tin nhắn thoại';
+  String get cardVoiceScanDesc =>
+      'Nói hoặc tải âm thanh lên: chúng tôi kiểm tra dấu hiệu lừa đảo và đoán giọng là người hay AI';
 
   @override
-  String get voiceCheckTitle => 'Kiểm tra cuộc gọi / giọng nói';
+  String get voiceIntro =>
+      'Ghi âm bằng micro hoặc tải lên một tệp âm thanh, tối đa 60 giây. Âm thanh được gửi đến máy chủ của chúng tôi để chuyển thành chữ và phân tích, rồi xóa ngay.';
 
   @override
-  String get voiceHonestyTitle => 'Điều cần nhớ';
+  String get voiceRecord => 'Ghi âm';
 
   @override
-  String get voiceHonestyBody =>
-      'Chúng tôi không thể biết một giọng nói là thật hay do máy tạo ra. Hãy cúp máy và gọi lại bằng một số bạn đã biết. Đừng bao giờ chuyển tiền hoặc đưa mã OTP vì một cuộc gọi.';
+  String get voiceStop => 'Dừng';
 
   @override
-  String get voiceCheckIntro =>
-      'Nói, hoặc phát tin nhắn thoại gần điện thoại. An Toàn chuyển lời nói thành chữ và chỉ kiểm tra nội dung được nói. Không có tệp âm thanh nào được lưu hay gửi đi.';
+  String get voiceUpload => 'Tải tệp lên';
 
   @override
-  String get voiceCheckNotSupported =>
-      'Máy hoặc trình duyệt này không nhận dạng được giọng nói. Bạn vẫn có thể gõ hoặc dán nội dung cuộc gọi vào ô bên dưới rồi bấm Kiểm tra.';
+  String get voiceRecording => 'Đang ghi âm...';
 
   @override
-  String get voiceCheckLocaleUnavailable =>
-      'Máy hoặc trình duyệt này chưa hỗ trợ nhận dạng giọng nói tiếng Việt. Bạn vẫn có thể gõ hoặc dán nội dung vào ô bên dưới.';
+  String voiceSecondsLeft(int seconds) {
+    return 'Còn $seconds giây';
+  }
 
   @override
-  String get voiceCheckFailed =>
-      'Không nhận dạng được giọng nói lúc này. Hãy thử lại, hoặc gõ nội dung vào ô bên dưới.';
+  String voiceClipRecorded(int seconds) {
+    return 'Bản ghi âm $seconds giây';
+  }
+
+  @override
+  String voiceClipFile(String name) {
+    return 'Tệp: $name';
+  }
+
+  @override
+  String get voiceRemove => 'Xóa âm thanh này';
+
+  @override
+  String get voiceAnalyze => 'Phân tích';
+
+  @override
+  String get voiceAnalyzing => 'Đang phân tích...';
+
+  @override
+  String get voicePrivacyShort =>
+      'Âm thanh chỉ được gửi đi khi bạn bấm Phân tích. Nó bị xóa ngay sau khi phân tích, không được lưu hay ghi lại. Đừng gửi mật khẩu, mã OTP hay thông tin ngân hàng.';
+
+  @override
+  String get voiceConsentTitle => 'Trước khi dùng tính năng này';
+
+  @override
+  String get voiceConsentBody =>
+      'Để kiểm tra một cuộc gọi hay tin nhắn thoại, An Toàn gửi âm thanh bạn ghi hoặc chọn đến máy chủ của chúng tôi. Máy chủ chuyển lời nói thành chữ và phân tích, rồi xóa âm thanh ngay lập tức. Âm thanh không bao giờ được lưu hay ghi lại. Phần chữ được gửi đến một dịch vụ AI để phân tích dấu hiệu lừa đảo. Chỉ ghi âm hoặc tải lên khi bạn có quyền làm vậy, và đừng gửi thông tin nhạy cảm.';
+
+  @override
+  String get voiceConsentAgree => 'Tôi đồng ý, tiếp tục';
+
+  @override
+  String get voiceConsentDecline => 'Không đồng ý';
+
+  @override
+  String get voiceSectionScam => 'Phân tích nội dung được nói';
+
+  @override
+  String get voiceSectionGuess => 'Đoán giọng nói';
+
+  @override
+  String get voiceGuessHuman => 'Chúng tôi đoán: giọng người';
+
+  @override
+  String get voiceGuessAi => 'Chúng tôi đoán: giọng AI';
+
+  @override
+  String get voiceGuessCantTell => 'Không thể xác định';
+
+  @override
+  String get voiceGuessNote =>
+      'Đây là kết quả từ hệ thống và thuật toán của chúng tôi, không phải sự thật. Xin đừng mặc nhiên tin vào nó. Chúng tôi chỉ đoán giọng này là người hay AI. Trong các bài kiểm tra trên giọng tiếng Việt, phép kiểm tra này không đáng tin cậy và đôi khi sai, kể cả coi giọng do máy tạo ra là giọng người.';
+
+  @override
+  String get voiceAdviceTitle => 'Điều cần nhớ';
+
+  @override
+  String get voiceAdviceBody =>
+      'Nếu cuộc gọi đòi tiền hoặc mã OTP: hãy cúp máy và gọi lại bằng một số bạn đã biết. Đừng bao giờ chuyển tiền hoặc đưa mã OTP vì một cuộc gọi.';
+
+  @override
+  String get voiceTranscriptTitle => 'Nội dung chúng tôi nghe được';
+
+  @override
+  String get voiceErrUnavailable =>
+      'Tính năng kiểm tra giọng nói đang được thiết lập. Vui lòng thử lại sau.';
+
+  @override
+  String get voiceErrTooLarge =>
+      'Tệp âm thanh quá lớn. Hãy chọn tệp ngắn hơn (tối đa 60 giây).';
+
+  @override
+  String get voiceErrUnsupported =>
+      'Loại tệp này chưa được hỗ trợ. Hãy dùng WAV, MP3, M4A, AAC, OGG, WEBM hoặc FLAC.';
+
+  @override
+  String get voiceErrRateLimited =>
+      'Bạn đã kiểm tra quá nhiều lần. Hãy thử lại sau ít phút.';
+
+  @override
+  String get voiceErrTooLong =>
+      'Âm thanh dài hơn 60 giây. Hãy chọn đoạn ngắn hơn.';
+
+  @override
+  String get voiceErrSilent =>
+      'Âm thanh gần như im lặng. Hãy thử ghi lại gần hơn hoặc chọn tệp khác.';
+
+  @override
+  String get voiceErrUnreadable =>
+      'Không đọc được tệp âm thanh này. Hãy thử tệp khác.';
+
+  @override
+  String get voiceErrNetwork =>
+      'Không có kết nối mạng hoặc mạng quá chậm. Hãy kiểm tra internet rồi thử lại.';
+
+  @override
+  String get voiceErrGeneric => 'Có lỗi xảy ra. Hãy thử lại sau.';
+
+  @override
+  String get voiceErrMicDenied =>
+      'An Toàn chưa được phép dùng micro. Hãy cho phép micro trong cài đặt của máy hoặc trình duyệt, hoặc tải một tệp âm thanh lên.';
+
+  @override
+  String get voiceErrMicUnavailable =>
+      'Không dùng được micro lúc này. Bạn có thể tải một tệp âm thanh lên.';
+
+  @override
+  String get voiceErrNoAudio =>
+      'Chưa có âm thanh. Hãy ghi âm hoặc tải một tệp lên trước.';
 }

@@ -14,6 +14,18 @@ class AppConfig {
 
   /// Address of the Edge Function that talks to Gemini.
   static String get analyzeScamUrl => '$supabaseUrl/functions/v1/analyze-scam';
+
+  /// Address of the Edge Function for Voice scam detection (audio goes here, and only
+  /// after its health check answered OK).
+  static String get analyzeVoiceUrl => '$supabaseUrl/functions/v1/analyze-voice';
+
+  /// Shows the Voice scam detection card and the /voice route. ON by default (owner
+  /// decision, 2026-10-22: there are no real users yet). Build with
+  /// --dart-define=VOICE_SCAM_ENABLED=false to hide it. CLAUDE.md pre-submission
+  /// checklist: set it to false before store submission unless the model server is
+  /// live and tested.
+  static const voiceScamEnabled =
+      bool.fromEnvironment('VOICE_SCAM_ENABLED', defaultValue: true);
 }
 
 // ---------------------------------------------------------------------------

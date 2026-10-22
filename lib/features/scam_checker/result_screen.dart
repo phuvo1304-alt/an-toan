@@ -6,7 +6,9 @@ import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../settings/official_contacts.dart';
+import '../voice_check/voice_guess_card.dart';
 import '../voice_check/voice_honesty_card.dart';
+import '../voice_check/voice_result.dart';
 import 'reference_cases.dart';
 import 'scam_result.dart';
 
@@ -43,10 +45,10 @@ String _consequenceFor(AppLocalizations t, String scamType) {
 class ResultScreen extends StatefulWidget {
   final ScamResult result;
 
-  /// True when the result comes from the Voice check: adds the card that says
-  /// we cannot tell whether a voice is real or computer-made.
-  final bool showVoiceNotice;
-  const ResultScreen({super.key, required this.result, this.showVoiceNotice = false});
+  /// Set when the result comes from Voice scam detection: adds the voice guess
+  /// (with its always-visible note), the call-back advice and what was heard.
+  final VoiceResult? voice;
+  const ResultScreen({super.key, required this.result, this.voice});
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
@@ -372,6 +374,7 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                 padding: const EdgeInsets.fromLTRB(
                     AppSpace.md, AppSpace.lg, AppSpace.md, AppSpace.md),
                 children: [
+                  if (widget.voice != null) SectionTitle(t.voiceSectionScam),
                   if (result.summary.isNotEmpty) Text(result.summary, style: textTheme.bodyLarge),
                   const SizedBox(height: AppSpace.lg),
 
@@ -589,9 +592,17 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                     Text(result.confidenceNote),
                   ],
 
-                  if (widget.showVoiceNotice) ...[
+                  if (widget.voice != null) ...[
                     const SizedBox(height: AppSpace.lg),
+                    SectionTitle(t.voiceSectionGuess),
+                    VoiceGuessCard(guess: widget.voice!.guess),
+                    const SizedBox(height: AppSpace.md),
                     const VoiceHonestyCard(),
+                    if (widget.voice!.transcript.trim().isNotEmpty) ...[
+                      const SizedBox(height: AppSpace.md),
+                      SectionTitle(t.voiceTranscriptTitle),
+                      Text(widget.voice!.transcript),
+                    ],
                   ],
                   const SizedBox(height: AppSpace.lg),
                   // Disclaimer on every result.

@@ -48,15 +48,18 @@ Nhiều người dùng của chúng tôi chưa đủ 18 tuổi, vì vậy ứng 
   <li>Đừng gửi mật khẩu, mã OTP, số thẻ, thông tin ngân hàng hay thông tin cá nhân của bạn hoặc người khác.</li>
 </ul>
 
-<h3>1b. Kiểm tra bằng giọng nói (thẻ Giọng nói và thẻ “Kiểm tra cuộc gọi / giọng nói”)</h3>
+<h3>1b. Phát hiện lừa đảo qua giọng nói (âm thanh CÓ được gửi đi)</h3>
 <ul>
-  <li>Thẻ Giọng nói dùng micro và bộ nhận dạng giọng nói có sẵn trên điện thoại (thường là của Google trên Android,
-      của Apple trên iPhone) để chuyển lời nói thành chữ ngay khi bạn nói, tối đa 60 giây.</li>
-  <li>An Toàn <strong>không ghi âm và không lưu tệp âm thanh nào</strong>. Chỉ phần chữ (bạn có thể sửa trước) được gửi đi để kiểm tra, như ở mục 1.</li>
-  <li>Tùy điện thoại, giọng nói có thể được xử lý ngay trên máy hoặc được gửi đến máy chủ của Google hay Apple để nhận dạng,
-      theo chính sách quyền riêng tư của các công ty đó. Micro chỉ được dùng khi bạn bấm nút micro.</li>
-  <li>Thẻ “Kiểm tra cuộc gọi / giọng nói” trên trang chủ dùng đúng cách này: chỉ kiểm tra <strong>nội dung được nói</strong> (phần chữ), không xác định giọng đó là thật hay do máy tạo ra, và không gửi hay lưu âm thanh.</li>
-  <li>Trên bản web, việc nhận dạng giọng nói do chính trình duyệt của bạn thực hiện (ví dụ Chrome có thể gửi âm thanh đến Google); An Toàn không nhận âm thanh đó. Nếu trình duyệt không hỗ trợ, bạn có thể gõ hoặc dán nội dung cuộc gọi.</li>
+  <li>Thẻ “Phát hiện lừa đảo qua giọng nói” cho bạn ghi âm bằng micro hoặc tải lên một tệp âm thanh (tối đa 60 giây).
+      <strong>Âm thanh này được gửi đến máy chủ của chúng tôi để phân tích</strong>: chuyển lời nói thành chữ, tìm dấu hiệu lừa đảo
+      trong nội dung, và đoán giọng nói là của người hay do máy tạo ra. Kết quả về giọng nói chỉ là một phỏng đoán và có thể sai.</li>
+  <li>Âm thanh <strong>được xóa ngay sau khi phân tích; chúng tôi không lưu và không ghi lại âm thanh</strong>.
+      Phần chữ được chuyển thành từ âm thanh được gửi đến dịch vụ AI (Anthropic) để phân tích dấu hiệu lừa đảo, như ở mục 1.</li>
+  <li>Trước lần dùng đầu tiên, ứng dụng hiện thông báo và xin bạn đồng ý; lựa chọn này chỉ được nhớ trên điện thoại của bạn.
+      Âm thanh chỉ rời khỏi thiết bị khi bạn bấm Phân tích, và chỉ sau khi ứng dụng kiểm tra nhanh (không gửi âm thanh) rằng dịch vụ đang hoạt động.
+      Nếu dịch vụ chưa sẵn sàng, ứng dụng không gửi gì cả.</li>
+  <li>Micro chỉ được dùng khi bạn bấm Ghi âm. Máy chủ phân tích giọng nói do chúng tôi vận hành tại một nhà cung cấp hạ tầng đám mây
+      (tên nhà cung cấp sẽ được ghi ở đây khi dịch vụ chính thức hoạt động). Hãy chỉ ghi âm hoặc tải lên âm thanh mà bạn có quyền chia sẻ.</li>
 </ul>
 
 <h3>2. Báo cáo số điện thoại</h3>
@@ -83,7 +86,7 @@ Nhiều người dùng của chúng tôi chưa đủ 18 tuổi, vì vậy ứng 
 
 <h3>4. Dữ liệu chỉ lưu trên điện thoại của bạn</h3>
 <p>Ngôn ngữ bạn chọn, cỡ chữ, giao diện (Sáng / Tối / Theo hệ thống / Giấy cũ), trạng thái đã xem
-phần giới thiệu, và điểm cao nhất của phần Đố vui. Những dữ liệu này không được gửi cho chúng tôi.</p>
+phần giới thiệu, việc bạn đã đồng ý với thông báo phát hiện lừa đảo qua giọng nói, và điểm cao nhất của phần Đố vui. Những dữ liệu này không được gửi cho chúng tôi.</p>
 
 <h3>5. Những gì chúng tôi KHÔNG làm</h3>
 <ul>
@@ -149,15 +152,18 @@ Many of our users are under 18, so the app is designed to
   <li>Do not submit passwords, OTP codes, card numbers, banking details, or personal information about you or anyone else.</li>
 </ul>
 
-<h3>1b. Voice check (the Voice tab and the “Check a call or voice” card)</h3>
+<h3>1b. Voice scam detection (audio IS sent)</h3>
 <ul>
-  <li>The Voice tab uses the microphone and your phone's built-in speech recognizer (usually Google's on Android,
-      Apple's on iPhone) to turn speech into text as you speak, for up to 60 seconds.</li>
-  <li>An Toàn <strong>does not record or save any audio file</strong>. Only the text (which you can edit first) is sent for checking, as in section 1.</li>
-  <li>Depending on the phone, the speech may be processed on the device or sent to Google's or Apple's servers for recognition,
-      under those companies' privacy policies. The microphone is only used when you tap the mic button.</li>
-  <li>The “Check a call or voice” card on the home screen works the same way: it checks only <strong>what is said</strong> (the text), does not decide whether a voice is real or computer-made, and does not send or store any audio.</li>
-  <li>On the web version, speech recognition is done by your own browser (for example Chrome may send audio to Google); An Toàn does not receive that audio. If your browser does not support it, you can type or paste what was said.</li>
+  <li>The “Voice scam detection” card lets you record with the microphone or upload an audio file (up to 60 seconds).
+      <strong>This audio is sent to our server for analysis</strong>: turning the speech into text, looking for scam signs
+      in what is said, and guessing whether the voice is human or computer-made. The voice result is only a guess and can be wrong.</li>
+  <li>The audio is <strong>deleted immediately after analysis; we do not save or log it</strong>.
+      The text made from the audio is sent to the AI service (Anthropic) to look for scam signs, as in section 1.</li>
+  <li>Before first use the app shows a notice and asks for your agreement; that choice is remembered on your phone only.
+      Audio leaves your device only when you tap Analyze, and only after the app has quickly checked (without sending audio) that the service is running.
+      If the service is not ready, the app sends nothing.</li>
+  <li>The microphone is only used when you tap Record. The voice analysis server is run by us at a cloud infrastructure provider
+      (the provider's name will be listed here when the service goes live). Only record or upload audio you have the right to share.</li>
 </ul>
 
 <h3>2. Phone number reports</h3>
@@ -184,7 +190,7 @@ Many of our users are under 18, so the app is designed to
 
 <h3>4. Data that stays on your phone</h3>
 <p>Your chosen language, text size, appearance (Light / Dark / System / Sepia), whether you have
-seen the introduction, and your best Quiz score. These are never sent to us.</p>
+seen the introduction, whether you agreed to the voice scam detection notice, and your best Quiz score. These are never sent to us.</p>
 
 <h3>5. What we do NOT do</h3>
 <ul>

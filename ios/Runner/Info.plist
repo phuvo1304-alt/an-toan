@@ -3,9 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>An Toàn uses the microphone to let you check a suspicious voice message by turning it into text.</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>An Toàn turns your speech into text so it can be checked for scam patterns.</string>
+	<string>An Toàn uses the microphone only when you tap Record in Voice scam detection. The recording is sent to our server for analysis and deleted immediately; it is never saved or logged.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>An Toàn needs access to your photo library so you can pick a screenshot of a suspicious message and check it for scam content.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>

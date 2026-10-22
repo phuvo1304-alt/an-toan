@@ -161,20 +161,6 @@
   "scamTypeRomance": "Romance scam",
   "scamTypeLoan": "Loan",
   "scamTypeOther": "Other",
-  "tabAudio": "Voice",
-  "recordStart": "Tap the mic and speak (or play a voice message near the phone)",
-  "recordStop": "Stop",
-  "listening": "Listening...",
-  "audioPreparing": "Getting the microphone ready...",
-  "audioSecondsLeft": "{seconds}s left",
-  "transcriptHint": "Your speech appears here as text. You can edit it before you press Check.",
-  "noSpeechDetected": "No speech was heard. Try again somewhere quiet, speak more clearly, or type the content in the box.",
-  "audioTranscriptEmpty": "There is nothing to check yet. Tap the mic and speak, or type the content in the box first.",
-  "audioPermissionDenied": "An Toàn is not allowed to use the microphone, so it cannot listen. To allow it: open your phone's Settings, then Apps, An Toàn, Permissions, and allow Microphone. Or use the Text tab to type it.",
-  "audioLocaleUnavailable": "English voice input isn't available on this device. Please use the Text tab to type it instead.",
-  "audioNotSupported": "This device does not support speech recognition. Please use the Text tab to type or paste the content.",
-  "audioNotSupportedShort": "Voice input is not available on this device",
-  "audioFailed": "Speech recognition did not work just now. Try again, or use the Text tab.",
   "phoneAlreadyReported": "You already reported this number in the last 24 hours. Thank you, one report per person is enough.",
   "phoneDisputeAction": "Looks wrong? Flag it",
   "phoneDisputeConfirmTitle": "Do these reports look wrong?",
@@ -212,13 +198,64 @@
   "phoneCommentDaysAgo": "{count, plural, one{1 day ago} other{{count} days ago}}",
   "phoneCommentMonthsAgo": "{count, plural, one{1 month ago} other{{count} months ago}}",
   "phoneCommentYearsAgo": "{count, plural, one{1 year ago} other{{count} years ago}}",
-  "cardVoiceCheck": "Check a call or voice",
-  "cardVoiceCheckDesc": "Checks what is said in a call or voice message",
-  "voiceCheckTitle": "Check a call or voice",
-  "voiceHonestyTitle": "Please remember",
-  "voiceHonestyBody": "We can't tell if a voice is real or computer-made. Hang up and call back on a number you already know. Never send money or share an OTP because of a call.",
-  "voiceCheckIntro": "Speak, or play a voice message near the phone. An Toàn turns the speech into text and checks only what is said. No audio file is saved or sent.",
-  "voiceCheckNotSupported": "This device or browser can't recognize speech. You can still type or paste what was said into the box below, then press Check.",
-  "voiceCheckLocaleUnavailable": "This device or browser doesn't support English speech recognition. You can still type or paste what was said into the box below.",
-  "voiceCheckFailed": "Speech recognition did not work just now. Try again, or type what was said into the box below."
+  "cardVoiceScan": "Voice scam detection",
+  "cardVoiceScanDesc": "Say or upload audio: we check for scam signs and guess if the voice is human or AI",
+  "voiceIntro": "Record with the microphone or upload an audio file, up to 60 seconds. The audio is sent to our server to be turned into text and analyzed, then deleted right away.",
+  "voiceRecord": "Record",
+  "voiceStop": "Stop",
+  "voiceUpload": "Upload a file",
+  "voiceRecording": "Recording...",
+  "voiceSecondsLeft": "{seconds}s left",
+  "@voiceSecondsLeft": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "voiceClipRecorded": "Recording, {seconds} seconds",
+  "@voiceClipRecorded": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "voiceClipFile": "File: {name}",
+  "@voiceClipFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "voiceRemove": "Remove this audio",
+  "voiceAnalyze": "Analyze",
+  "voiceAnalyzing": "Analyzing...",
+  "voicePrivacyShort": "The audio is only sent when you tap Analyze. It is deleted right after analysis and never saved or logged. Do not send passwords, OTP codes or banking details.",
+  "voiceConsentTitle": "Before you use this feature",
+  "voiceConsentBody": "To check a call or voice message, An Toàn sends the audio you record or choose to our server. The server turns the speech into text and analyzes it, then deletes the audio immediately. The audio is never saved or logged. The text is sent to an AI service to look for scam signs. Only record or upload audio you have the right to share, and do not send sensitive information.",
+  "voiceConsentAgree": "I agree, continue",
+  "voiceConsentDecline": "No thanks",
+  "voiceSectionScam": "Analysis of what is said",
+  "voiceSectionGuess": "Voice guess",
+  "voiceGuessHuman": "We guess: human",
+  "voiceGuessAi": "We guess: AI",
+  "voiceGuessCantTell": "Can't tell",
+  "voiceGuessNote": "This is the result of our own system and algorithms, not a fact. Please do not take it for granted. We only guess whether this voice is human or AI. In our tests on Vietnamese voices this check was unreliable and sometimes wrong, including calling computer-made voices human.",
+  "voiceAdviceTitle": "Please remember",
+  "voiceAdviceBody": "If a call asks for money or an OTP: hang up and call back on a number you already know. Never send money or share an OTP because of a call.",
+  "voiceTranscriptTitle": "What we heard",
+  "voiceErrUnavailable": "The voice check is still being set up. Please try again soon.",
+  "voiceErrTooLarge": "That audio file is too large. Please choose a shorter one (up to 60 seconds).",
+  "voiceErrUnsupported": "That file type is not supported. Please use WAV, MP3, M4A, AAC, OGG, WEBM or FLAC.",
+  "voiceErrRateLimited": "You have checked too many times. Please try again in a few minutes.",
+  "voiceErrTooLong": "That audio is longer than 60 seconds. Please choose a shorter part.",
+  "voiceErrSilent": "That audio is almost silent. Try recording closer to the sound, or choose another file.",
+  "voiceErrUnreadable": "We could not read that audio file. Please try another one.",
+  "voiceErrNetwork": "No internet connection, or it is too slow. Please check your internet and try again.",
+  "voiceErrGeneric": "Something went wrong. Please try again later.",
+  "voiceErrMicDenied": "An Toàn is not allowed to use the microphone. Allow it in your device or browser settings, or upload an audio file instead.",
+  "voiceErrMicUnavailable": "The microphone can't be used right now. You can upload an audio file instead.",
+  "voiceErrNoAudio": "There is no audio yet. Record or upload a file first."
 }

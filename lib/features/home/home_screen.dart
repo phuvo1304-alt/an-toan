@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../core/config.dart';
+import '../../core/feature_flags.dart';
 import '../../l10n/app_localizations.dart';
 import '../settings/donation_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -41,6 +43,13 @@ class HomeScreen extends StatelessWidget {
               onTap: () => context.push('/check'),
               primary: true,
             ),
+            if (ref.watch(voiceScamEnabledProvider))
+              _HomeCard(
+                icon: Icons.record_voice_over_outlined,
+                title: t.cardVoiceScan,
+                subtitle: t.cardVoiceScanDesc,
+                onTap: () => context.push('/voice'),
+              ),
             _HomeCard(
               icon: Icons.phone_in_talk_outlined,
               title: t.cardCheckPhone,
@@ -58,12 +67,6 @@ class HomeScreen extends StatelessWidget {
               title: t.cardQuiz,
               subtitle: t.cardQuizDesc,
               onTap: () => context.push('/quiz'),
-            ),
-            _HomeCard(
-              icon: Icons.record_voice_over_outlined,
-              title: t.cardVoiceCheck,
-              subtitle: t.cardVoiceCheckDesc,
-              onTap: () => context.push('/voice'),
             ),
             // Same component, same gating check as Settings -- see
             // lib/features/settings/settings_screen.dart and

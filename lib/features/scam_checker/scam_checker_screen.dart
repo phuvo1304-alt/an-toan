@@ -8,7 +8,6 @@ import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../core/locale_provider.dart';
 import '../../l10n/app_localizations.dart';
-import 'audio_tab.dart';
 import 'image_prep.dart';
 import 'image_selection.dart';
 import 'scam_api.dart';
@@ -24,21 +23,18 @@ class ScamCheckerScreen extends ConsumerStatefulWidget {
 class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
     with SingleTickerProviderStateMixin {
   final _textController = TextEditingController();
-  final _transcriptController = TextEditingController(); // Voice tab
-  // Tabs: 0 = Text, 1 = Screenshot, 2 = Voice.
-  late final TabController _tabs = TabController(length: 3, vsync: this);
+  // Tabs: 0 = Text, 1 = Screenshot.
+  late final TabController _tabs = TabController(length: 2, vsync: this);
   late final ScamApi _api = ref.read(scamApiProvider);
 
   final _images = ImageSelection(); // Screenshot tab, in sending order
   bool _preparingImages = false;
   bool _loading = false;
   String? _errorText;
-  bool _audioListening = false;
 
   @override
   void dispose() {
     _textController.dispose();
-    _transcriptController.dispose();
     _tabs.dispose();
     super.dispose();
   }
@@ -102,14 +98,8 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
     final t = AppLocalizations.of(context)!;
     final tab = _tabs.index;
     final useImage = tab == 1;
-    // The Voice tab sends its (edited) transcript through the same text path.
-    final text =
-        (tab == 2 ? _transcriptController : _textController).text.trim();
+    final text = _textController.text.trim();
 
-    if (tab == 2 && text.isEmpty) {
-      setState(() => _errorText = t.audioTranscriptEmpty);
-      return;
-    }
     if ((!useImage && text.isEmpty) || (useImage && _images.isEmpty)) {
       setState(() => _errorText = t.errorEmpty);
       return;
@@ -153,7 +143,6 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
           tabs: [
             Tab(icon: const Icon(Icons.notes), text: t.tabText),
             Tab(icon: const Icon(Icons.image_outlined), text: t.tabScreenshot),
-            Tab(icon: const Icon(Icons.mic_none), text: t.tabAudio),
           ],
         ),
       ),
@@ -175,13 +164,6 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
                     decoration: InputDecoration(hintText: t.pasteHint),
                   ),
                   _imageTab(t),
-                  AudioTab(
-                    controller: _transcriptController,
-                    enabled: !_loading,
-                    onListeningChanged: (listening) {
-                      if (mounted) setState(() => _audioListening = listening);
-                    },
-                  ),
                 ],
               ),
             ),
@@ -210,9 +192,7 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
                 child: StatusBanner(message: _errorText!),
               ),
             FilledButton.icon(
-              // Not while the Voice tab is still listening: stop first, then check.
-              onPressed:
-                  _loading || _audioListening || _preparingImages ? null : _check,
+              onPressed: _loading || _preparingImages ? null : _check,
               icon: _loading
                   ? const ButtonSpinner()
                   : const Icon(Icons.shield_outlined),

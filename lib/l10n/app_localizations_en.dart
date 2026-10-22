@@ -568,59 +568,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scamTypeOther => 'Other';
 
   @override
-  String get tabAudio => 'Voice';
-
-  @override
-  String get recordStart =>
-      'Tap the mic and speak (or play a voice message near the phone)';
-
-  @override
-  String get recordStop => 'Stop';
-
-  @override
-  String get listening => 'Listening...';
-
-  @override
-  String get audioPreparing => 'Getting the microphone ready...';
-
-  @override
-  String audioSecondsLeft(int seconds) {
-    return '${seconds}s left';
-  }
-
-  @override
-  String get transcriptHint =>
-      'Your speech appears here as text. You can edit it before you press Check.';
-
-  @override
-  String get noSpeechDetected =>
-      'No speech was heard. Try again somewhere quiet, speak more clearly, or type the content in the box.';
-
-  @override
-  String get audioTranscriptEmpty =>
-      'There is nothing to check yet. Tap the mic and speak, or type the content in the box first.';
-
-  @override
-  String get audioPermissionDenied =>
-      'An Toàn is not allowed to use the microphone, so it cannot listen. To allow it: open your phone\'s Settings, then Apps, An Toàn, Permissions, and allow Microphone. Or use the Text tab to type it.';
-
-  @override
-  String get audioLocaleUnavailable =>
-      'English voice input isn\'t available on this device. Please use the Text tab to type it instead.';
-
-  @override
-  String get audioNotSupported =>
-      'This device does not support speech recognition. Please use the Text tab to type or paste the content.';
-
-  @override
-  String get audioNotSupportedShort =>
-      'Voice input is not available on this device';
-
-  @override
-  String get audioFailed =>
-      'Speech recognition did not work just now. Try again, or use the Text tab.';
-
-  @override
   String get phoneAlreadyReported =>
       'You already reported this number in the last 24 hours. Thank you, one report per person is enough.';
 
@@ -774,35 +721,142 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get cardVoiceCheck => 'Check a call or voice';
+  String get cardVoiceScan => 'Voice scam detection';
 
   @override
-  String get cardVoiceCheckDesc =>
-      'Checks what is said in a call or voice message';
+  String get cardVoiceScanDesc =>
+      'Say or upload audio: we check for scam signs and guess if the voice is human or AI';
 
   @override
-  String get voiceCheckTitle => 'Check a call or voice';
+  String get voiceIntro =>
+      'Record with the microphone or upload an audio file, up to 60 seconds. The audio is sent to our server to be turned into text and analyzed, then deleted right away.';
 
   @override
-  String get voiceHonestyTitle => 'Please remember';
+  String get voiceRecord => 'Record';
 
   @override
-  String get voiceHonestyBody =>
-      'We can\'t tell if a voice is real or computer-made. Hang up and call back on a number you already know. Never send money or share an OTP because of a call.';
+  String get voiceStop => 'Stop';
 
   @override
-  String get voiceCheckIntro =>
-      'Speak, or play a voice message near the phone. An Toàn turns the speech into text and checks only what is said. No audio file is saved or sent.';
+  String get voiceUpload => 'Upload a file';
 
   @override
-  String get voiceCheckNotSupported =>
-      'This device or browser can\'t recognize speech. You can still type or paste what was said into the box below, then press Check.';
+  String get voiceRecording => 'Recording...';
 
   @override
-  String get voiceCheckLocaleUnavailable =>
-      'This device or browser doesn\'t support English speech recognition. You can still type or paste what was said into the box below.';
+  String voiceSecondsLeft(int seconds) {
+    return '${seconds}s left';
+  }
 
   @override
-  String get voiceCheckFailed =>
-      'Speech recognition did not work just now. Try again, or type what was said into the box below.';
+  String voiceClipRecorded(int seconds) {
+    return 'Recording, $seconds seconds';
+  }
+
+  @override
+  String voiceClipFile(String name) {
+    return 'File: $name';
+  }
+
+  @override
+  String get voiceRemove => 'Remove this audio';
+
+  @override
+  String get voiceAnalyze => 'Analyze';
+
+  @override
+  String get voiceAnalyzing => 'Analyzing...';
+
+  @override
+  String get voicePrivacyShort =>
+      'The audio is only sent when you tap Analyze. It is deleted right after analysis and never saved or logged. Do not send passwords, OTP codes or banking details.';
+
+  @override
+  String get voiceConsentTitle => 'Before you use this feature';
+
+  @override
+  String get voiceConsentBody =>
+      'To check a call or voice message, An Toàn sends the audio you record or choose to our server. The server turns the speech into text and analyzes it, then deletes the audio immediately. The audio is never saved or logged. The text is sent to an AI service to look for scam signs. Only record or upload audio you have the right to share, and do not send sensitive information.';
+
+  @override
+  String get voiceConsentAgree => 'I agree, continue';
+
+  @override
+  String get voiceConsentDecline => 'No thanks';
+
+  @override
+  String get voiceSectionScam => 'Analysis of what is said';
+
+  @override
+  String get voiceSectionGuess => 'Voice guess';
+
+  @override
+  String get voiceGuessHuman => 'We guess: human';
+
+  @override
+  String get voiceGuessAi => 'We guess: AI';
+
+  @override
+  String get voiceGuessCantTell => 'Can\'t tell';
+
+  @override
+  String get voiceGuessNote =>
+      'This is the result of our own system and algorithms, not a fact. Please do not take it for granted. We only guess whether this voice is human or AI. In our tests on Vietnamese voices this check was unreliable and sometimes wrong, including calling computer-made voices human.';
+
+  @override
+  String get voiceAdviceTitle => 'Please remember';
+
+  @override
+  String get voiceAdviceBody =>
+      'If a call asks for money or an OTP: hang up and call back on a number you already know. Never send money or share an OTP because of a call.';
+
+  @override
+  String get voiceTranscriptTitle => 'What we heard';
+
+  @override
+  String get voiceErrUnavailable =>
+      'The voice check is still being set up. Please try again soon.';
+
+  @override
+  String get voiceErrTooLarge =>
+      'That audio file is too large. Please choose a shorter one (up to 60 seconds).';
+
+  @override
+  String get voiceErrUnsupported =>
+      'That file type is not supported. Please use WAV, MP3, M4A, AAC, OGG, WEBM or FLAC.';
+
+  @override
+  String get voiceErrRateLimited =>
+      'You have checked too many times. Please try again in a few minutes.';
+
+  @override
+  String get voiceErrTooLong =>
+      'That audio is longer than 60 seconds. Please choose a shorter part.';
+
+  @override
+  String get voiceErrSilent =>
+      'That audio is almost silent. Try recording closer to the sound, or choose another file.';
+
+  @override
+  String get voiceErrUnreadable =>
+      'We could not read that audio file. Please try another one.';
+
+  @override
+  String get voiceErrNetwork =>
+      'No internet connection, or it is too slow. Please check your internet and try again.';
+
+  @override
+  String get voiceErrGeneric => 'Something went wrong. Please try again later.';
+
+  @override
+  String get voiceErrMicDenied =>
+      'An Toàn is not allowed to use the microphone. Allow it in your device or browser settings, or upload an audio file instead.';
+
+  @override
+  String get voiceErrMicUnavailable =>
+      'The microphone can\'t be used right now. You can upload an audio file instead.';
+
+  @override
+  String get voiceErrNoAudio =>
+      'There is no audio yet. Record or upload a file first.';
 }
