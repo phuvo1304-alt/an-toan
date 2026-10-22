@@ -59,6 +59,12 @@ class HomeScreen extends StatelessWidget {
               subtitle: t.cardQuizDesc,
               onTap: () => context.push('/quiz'),
             ),
+            _HomeCard(
+              icon: Icons.record_voice_over_outlined,
+              title: t.cardVoiceCheck,
+              subtitle: t.cardVoiceCheckDesc,
+              onTap: () => context.push('/voice'),
+            ),
             // Same component, same gating check as Settings -- see
             // lib/features/settings/settings_screen.dart and
             // lib/core/config.dart. Deliberately not a second copy: showing

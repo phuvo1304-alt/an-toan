@@ -1369,6 +1369,60 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'{count, plural, other{{count} năm trước}}'**
   String phoneCommentYearsAgo(int count);
+
+  /// No description provided for @cardVoiceCheck.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kiểm tra cuộc gọi / giọng nói'**
+  String get cardVoiceCheck;
+
+  /// No description provided for @cardVoiceCheckDesc.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kiểm tra nội dung được nói trong cuộc gọi hoặc tin nhắn thoại'**
+  String get cardVoiceCheckDesc;
+
+  /// No description provided for @voiceCheckTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kiểm tra cuộc gọi / giọng nói'**
+  String get voiceCheckTitle;
+
+  /// No description provided for @voiceHonestyTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Điều cần nhớ'**
+  String get voiceHonestyTitle;
+
+  /// No description provided for @voiceHonestyBody.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chúng tôi không thể biết một giọng nói là thật hay do máy tạo ra. Hãy cúp máy và gọi lại bằng một số bạn đã biết. Đừng bao giờ chuyển tiền hoặc đưa mã OTP vì một cuộc gọi.'**
+  String get voiceHonestyBody;
+
+  /// No description provided for @voiceCheckIntro.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nói, hoặc phát tin nhắn thoại gần điện thoại. An Toàn chuyển lời nói thành chữ và chỉ kiểm tra nội dung được nói. Không có tệp âm thanh nào được lưu hay gửi đi.'**
+  String get voiceCheckIntro;
+
+  /// No description provided for @voiceCheckNotSupported.
+  ///
+  /// In vi, this message translates to:
+  /// **'Máy hoặc trình duyệt này không nhận dạng được giọng nói. Bạn vẫn có thể gõ hoặc dán nội dung cuộc gọi vào ô bên dưới rồi bấm Kiểm tra.'**
+  String get voiceCheckNotSupported;
+
+  /// No description provided for @voiceCheckLocaleUnavailable.
+  ///
+  /// In vi, this message translates to:
+  /// **'Máy hoặc trình duyệt này chưa hỗ trợ nhận dạng giọng nói tiếng Việt. Bạn vẫn có thể gõ hoặc dán nội dung vào ô bên dưới.'**
+  String get voiceCheckLocaleUnavailable;
+
+  /// No description provided for @voiceCheckFailed.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không nhận dạng được giọng nói lúc này. Hãy thử lại, hoặc gõ nội dung vào ô bên dưới.'**
+  String get voiceCheckFailed;
 }
 
 class _AppLocalizationsDelegate

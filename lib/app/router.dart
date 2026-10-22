@@ -14,6 +14,7 @@ import '../features/settings/settings_screen.dart';
 import '../features/training/training_data.dart';
 import '../features/training/training_list_screen.dart';
 import '../features/training/training_scenario_screen.dart';
+import '../features/voice_check/voice_check_screen.dart';
 
 /// The app's router. It lives in a provider so its redirect can read the
 /// onboarding flag. Built once: the redirect reads the flag through a
@@ -37,6 +38,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       // `as ScamResult` cast would crash the whole app on load. Redirect
       // Home instead of crashing; there's no check content to show anyway.
       if (state.uri.path == '/result' && state.extra is! ScamResult) return '/';
+      // Same for the Voice check's result page.
+      if (state.uri.path == '/voice/result' && state.extra is! ScamResult) return '/voice';
       return null;
     },
     routes: [
@@ -55,6 +58,19 @@ final routerProvider = Provider<GoRouter>((ref) {
           final result = state.extra as ScamResult;
           return ResultScreen(result: result);
         },
+      ),
+      GoRoute(
+        path: '/voice',
+        builder: (context, state) => const VoiceCheckScreen(),
+        routes: [
+          GoRoute(
+            path: 'result',
+            builder: (context, state) => ResultScreen(
+              result: state.extra as ScamResult,
+              showVoiceNotice: true,
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: '/phone',

@@ -1,6 +1,6 @@
 // Overflow checks for the combined text-scaling feature
 // (lib/app/text_scaling.dart + lib/core/text_scale_provider.dart), on the
-// screens with the longest content: Home's four cards, and the Result
+// screens with the longest content: Home's five cards, and the Result
 // screen's longest case (max red flags + max what-to-do steps + reference
 // cases). Stresses the worst case the app can actually produce: a sizable OS
 // text setting (1.3x, simulated as the "ambient" scaler) ON TOP of the app's
@@ -21,6 +21,7 @@ import 'package:an_toan/features/quiz/quiz_screen.dart';
 import 'package:an_toan/features/scam_checker/result_screen.dart';
 import 'package:an_toan/features/scam_checker/scam_result.dart';
 import 'package:an_toan/features/settings/settings_screen.dart';
+import 'package:an_toan/features/voice_check/voice_check_screen.dart';
 import 'package:an_toan/l10n/app_localizations.dart';
 
 Widget _wrapAtWorstCaseCombinedScale(Widget child, {Locale? locale}) {
@@ -71,7 +72,7 @@ ScamResult _longestResult({required RiskLevel riskLevel}) => ScamResult(
     );
 
 void main() {
-  testWidgets('Home screen (four cards) has no overflow at the worst-case combined scale',
+  testWidgets('Home screen (five cards) has no overflow at the worst-case combined scale',
       (tester) async {
     await tester.pumpWidget(_wrapAtWorstCaseCombinedScale(const HomeScreen()));
     await tester.pumpAndSettle();
@@ -129,9 +130,42 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
 
+    // The question order is random, and a long question can push the answer
+    // buttons out of the ListView's lazily-built range (then find.text('Scam')
+    // has no element yet): scroll until the button is built, not just ensureVisible.
     final scam = find.text('Scam');
-    await tester.ensureVisible(scam);
+    await tester.scrollUntilVisible(scam, 200, scrollable: find.byType(Scrollable).first);
     await tester.tap(scam);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final lang in ['vi', 'en']) {
+    testWidgets(
+        'Voice check screen ($lang) has no overflow at the worst-case combined scale',
+        (tester) async {
+      tester.view.physicalSize = const Size(360, 1200); // narrow Android width
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(_wrapAtWorstCaseCombinedScale(
+          const ProviderScope(child: VoiceCheckScreen()),
+          locale: Locale(lang)));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets(
+      'Result screen from the Voice check (longest content + the voice notice) '
+      'has no overflow at the worst-case combined scale', (tester) async {
+    tester.view.physicalSize = const Size(360, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(_wrapAtWorstCaseCombinedScale(
+        ResultScreen(
+            result: _longestResult(riskLevel: RiskLevel.likelyScam),
+            showVoiceNotice: true),
+        locale: const Locale('vi')));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });

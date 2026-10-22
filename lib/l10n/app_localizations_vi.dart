@@ -764,4 +764,37 @@ class AppLocalizationsVi extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get cardVoiceCheck => 'Kiểm tra cuộc gọi / giọng nói';
+
+  @override
+  String get cardVoiceCheckDesc =>
+      'Kiểm tra nội dung được nói trong cuộc gọi hoặc tin nhắn thoại';
+
+  @override
+  String get voiceCheckTitle => 'Kiểm tra cuộc gọi / giọng nói';
+
+  @override
+  String get voiceHonestyTitle => 'Điều cần nhớ';
+
+  @override
+  String get voiceHonestyBody =>
+      'Chúng tôi không thể biết một giọng nói là thật hay do máy tạo ra. Hãy cúp máy và gọi lại bằng một số bạn đã biết. Đừng bao giờ chuyển tiền hoặc đưa mã OTP vì một cuộc gọi.';
+
+  @override
+  String get voiceCheckIntro =>
+      'Nói, hoặc phát tin nhắn thoại gần điện thoại. An Toàn chuyển lời nói thành chữ và chỉ kiểm tra nội dung được nói. Không có tệp âm thanh nào được lưu hay gửi đi.';
+
+  @override
+  String get voiceCheckNotSupported =>
+      'Máy hoặc trình duyệt này không nhận dạng được giọng nói. Bạn vẫn có thể gõ hoặc dán nội dung cuộc gọi vào ô bên dưới rồi bấm Kiểm tra.';
+
+  @override
+  String get voiceCheckLocaleUnavailable =>
+      'Máy hoặc trình duyệt này chưa hỗ trợ nhận dạng giọng nói tiếng Việt. Bạn vẫn có thể gõ hoặc dán nội dung vào ô bên dưới.';
+
+  @override
+  String get voiceCheckFailed =>
+      'Không nhận dạng được giọng nói lúc này. Hãy thử lại, hoặc gõ nội dung vào ô bên dưới.';
 }

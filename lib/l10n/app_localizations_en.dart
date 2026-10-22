@@ -772,4 +772,37 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get cardVoiceCheck => 'Check a call or voice';
+
+  @override
+  String get cardVoiceCheckDesc =>
+      'Checks what is said in a call or voice message';
+
+  @override
+  String get voiceCheckTitle => 'Check a call or voice';
+
+  @override
+  String get voiceHonestyTitle => 'Please remember';
+
+  @override
+  String get voiceHonestyBody =>
+      'We can\'t tell if a voice is real or computer-made. Hang up and call back on a number you already know. Never send money or share an OTP because of a call.';
+
+  @override
+  String get voiceCheckIntro =>
+      'Speak, or play a voice message near the phone. An Toàn turns the speech into text and checks only what is said. No audio file is saved or sent.';
+
+  @override
+  String get voiceCheckNotSupported =>
+      'This device or browser can\'t recognize speech. You can still type or paste what was said into the box below, then press Check.';
+
+  @override
+  String get voiceCheckLocaleUnavailable =>
+      'This device or browser doesn\'t support English speech recognition. You can still type or paste what was said into the box below.';
+
+  @override
+  String get voiceCheckFailed =>
+      'Speech recognition did not work just now. Try again, or type what was said into the box below.';
 }

@@ -211,5 +211,14 @@
   "phoneCommentYesterday": "Yesterday",
   "phoneCommentDaysAgo": "{count, plural, one{1 day ago} other{{count} days ago}}",
   "phoneCommentMonthsAgo": "{count, plural, one{1 month ago} other{{count} months ago}}",
-  "phoneCommentYearsAgo": "{count, plural, one{1 year ago} other{{count} years ago}}"
+  "phoneCommentYearsAgo": "{count, plural, one{1 year ago} other{{count} years ago}}",
+  "cardVoiceCheck": "Check a call or voice",
+  "cardVoiceCheckDesc": "Checks what is said in a call or voice message",
+  "voiceCheckTitle": "Check a call or voice",
+  "voiceHonestyTitle": "Please remember",
+  "voiceHonestyBody": "We can't tell if a voice is real or computer-made. Hang up and call back on a number you already know. Never send money or share an OTP because of a call.",
+  "voiceCheckIntro": "Speak, or play a voice message near the phone. An Toàn turns the speech into text and checks only what is said. No audio file is saved or sent.",
+  "voiceCheckNotSupported": "This device or browser can't recognize speech. You can still type or paste what was said into the box below, then press Check.",
+  "voiceCheckLocaleUnavailable": "This device or browser doesn't support English speech recognition. You can still type or paste what was said into the box below.",
+  "voiceCheckFailed": "Speech recognition did not work just now. Try again, or type what was said into the box below."
 }

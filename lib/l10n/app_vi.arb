@@ -355,5 +355,14 @@
         "type": "int"
       }
     }
-  }
+  },
+  "cardVoiceCheck": "Kiểm tra cuộc gọi / giọng nói",
+  "cardVoiceCheckDesc": "Kiểm tra nội dung được nói trong cuộc gọi hoặc tin nhắn thoại",
+  "voiceCheckTitle": "Kiểm tra cuộc gọi / giọng nói",
+  "voiceHonestyTitle": "Điều cần nhớ",
+  "voiceHonestyBody": "Chúng tôi không thể biết một giọng nói là thật hay do máy tạo ra. Hãy cúp máy và gọi lại bằng một số bạn đã biết. Đừng bao giờ chuyển tiền hoặc đưa mã OTP vì một cuộc gọi.",
+  "voiceCheckIntro": "Nói, hoặc phát tin nhắn thoại gần điện thoại. An Toàn chuyển lời nói thành chữ và chỉ kiểm tra nội dung được nói. Không có tệp âm thanh nào được lưu hay gửi đi.",
+  "voiceCheckNotSupported": "Máy hoặc trình duyệt này không nhận dạng được giọng nói. Bạn vẫn có thể gõ hoặc dán nội dung cuộc gọi vào ô bên dưới rồi bấm Kiểm tra.",
+  "voiceCheckLocaleUnavailable": "Máy hoặc trình duyệt này chưa hỗ trợ nhận dạng giọng nói tiếng Việt. Bạn vẫn có thể gõ hoặc dán nội dung vào ô bên dưới.",
+  "voiceCheckFailed": "Không nhận dạng được giọng nói lúc này. Hãy thử lại, hoặc gõ nội dung vào ô bên dưới."
 }

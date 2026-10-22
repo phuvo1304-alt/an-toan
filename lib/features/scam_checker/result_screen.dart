@@ -6,6 +6,7 @@ import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../settings/official_contacts.dart';
+import '../voice_check/voice_honesty_card.dart';
 import 'reference_cases.dart';
 import 'scam_result.dart';
 
@@ -41,7 +42,11 @@ String _consequenceFor(AppLocalizations t, String scamType) {
 
 class ResultScreen extends StatefulWidget {
   final ScamResult result;
-  const ResultScreen({super.key, required this.result});
+
+  /// True when the result comes from the Voice check: adds the card that says
+  /// we cannot tell whether a voice is real or computer-made.
+  final bool showVoiceNotice;
+  const ResultScreen({super.key, required this.result, this.showVoiceNotice = false});
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
@@ -584,6 +589,10 @@ class _ResultScreenState extends State<ResultScreen> with SingleTickerProviderSt
                     Text(result.confidenceNote),
                   ],
 
+                  if (widget.showVoiceNotice) ...[
+                    const SizedBox(height: AppSpace.lg),
+                    const VoiceHonestyCard(),
+                  ],
                   const SizedBox(height: AppSpace.lg),
                   // Disclaimer on every result.
                   StatusBanner(message: t.disclaimerBody, kind: BannerKind.info),

@@ -61,11 +61,16 @@ class AudioTab extends ConsumerStatefulWidget {
   final ValueChanged<bool> onListeningChanged;
   final bool enabled;
 
+  /// True on the stand-alone Voice check screen, where the fallback is the
+  /// box right below (there is no "Text tab" to point to).
+  final bool standalone;
+
   const AudioTab({
     super.key,
     required this.controller,
     required this.onListeningChanged,
     this.enabled = true,
+    this.standalone = false,
   });
 
   @override
@@ -223,15 +228,15 @@ class _AudioTabState extends ConsumerState<AudioTab> {
       case _Problem.none:
         return null;
       case _Problem.notSupported:
-        return t.audioNotSupported;
+        return widget.standalone ? t.voiceCheckNotSupported : t.audioNotSupported;
       case _Problem.permissionDenied:
         return t.audioPermissionDenied;
       case _Problem.localeUnavailable:
-        return t.audioLocaleUnavailable;
+        return widget.standalone ? t.voiceCheckLocaleUnavailable : t.audioLocaleUnavailable;
       case _Problem.noSpeech:
         return t.noSpeechDetected;
       case _Problem.failed:
-        return t.audioFailed;
+        return widget.standalone ? t.voiceCheckFailed : t.audioFailed;
     }
   }
 

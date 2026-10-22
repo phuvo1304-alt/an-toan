@@ -12,6 +12,7 @@ import 'audio_tab.dart';
 import 'image_prep.dart';
 import 'image_selection.dart';
 import 'scam_api.dart';
+import 'scam_error_text.dart';
 
 class ScamCheckerScreen extends ConsumerStatefulWidget {
   const ScamCheckerScreen({super.key});
@@ -137,28 +138,7 @@ class _ScamCheckerScreenState extends ConsumerState<ScamCheckerScreen>
     }
   }
 
-  String _messageFor(ScamError e, AppLocalizations t) {
-    switch (e) {
-      case ScamError.notConfigured:
-        return t.errorNotConfigured;
-      case ScamError.empty:
-        return t.errorEmpty;
-      case ScamError.tooLong:
-        return t.errorTooLong;
-      case ScamError.imageTooLarge:
-        return t.errorImageTooLarge;
-      case ScamError.tooManyImages:
-        return t.errorTooManyImages;
-      case ScamError.unsupportedImage:
-        return t.imageUnsupported;
-      case ScamError.rateLimited:
-        return t.errorRateLimited;
-      case ScamError.network:
-        return t.errorNetwork;
-      case ScamError.generic:
-        return t.errorGeneric;
-    }
-  }
+  String _messageFor(ScamError e, AppLocalizations t) => scamErrorText(e, t);
 
   @override
   Widget build(BuildContext context) {
