@@ -51,7 +51,7 @@
 6. **Safety basics:** a disclaimer, a privacy screen, and links to official Vietnam resources (for example reporting to the police, the 156 hotline or the national anti-fraud channels). Verify each official contact is current before shipping.
 
 ### Post-MVP, approved by owner on 2026-10-20
-- **AI voice detection** ("Giọng thật hay AI?" / "Real or AI voice?", route `/voice`, 5th Home card). The user picks or records a clip (max 60 s); the app sends it to the Supabase Edge Function `analyze-voice`, which forwards it to a private Python model server (`garystafford/wav2vec2-deepfake-voice-detector`, Apache-2.0). Result is one of three outcomes (Leans human / Leans AI / Can't tell), never a percentage and never proof. Behind a `--dart-define` build flag (OFF in release until the owner approves the Vietnamese evaluation) and a server kill switch `VOICE_ENABLED`. Audio is never stored or logged. Known limits are tracked in section 14 once written.
+- **AI voice detection** ("Giọng thật hay AI?" / "Real or AI voice?", route `/voice`, 5th Home card). The user picks or records a clip (max 60 s); the app sends it to the Supabase Edge Function `analyze-voice`, which forwards it to a private Python model server (`garystafford/wav2vec2-deepfake-voice-detector`, Apache-2.0). Result is one of three outcomes (Leans human / Leans AI / Can't tell), never a percentage and never proof. Behind a `--dart-define` build flag (OFF in release until the owner approves the Vietnamese evaluation) and a server kill switch `VOICE_ENABLED`. Audio is never stored or logged. **Status (2026-10-22): evaluated; not shipping.** Only the model server (`voice-server/`) and the evaluation (`data/voice_eval/`) exist; the Edge Function, Flutter screen and store texts (Stages 3-5) were not built. Results and limits: section 14.11.
 
 ### Later (do NOT build until the MVP is shipped)
 - User accounts and login, cloud-synced progress, leaderboards
@@ -604,3 +604,51 @@ Then wait for my "go" before writing code.
   two definitions). Corrected: the human zone ends at the second-highest tuning real score, the AI
   zone starts at the second-lowest tuning AI score, usable iff t_hum <= t_ai, the band between is
   "Can't tell". See PLAN.md D8.
+
+### 14.11 AI voice detection: Vietnamese evaluation, 2026-10-22
+- **Status:** CLOSED. Feature **not shipped; Stages 3-5 (Edge Function, Flutter UI, store texts) not built.**
+  Nothing in `lib/`, `ios/`, `android/`, `supabase/`, `docs/privacy-policy/` or `netlify.toml` refers to
+  it. The model server (`voice-server/`, commit 975af22) and the evaluation (`data/voice_eval/`) stay in
+  the repo as records. Scope of the conclusion: **this detector model
+  (`garystafford/wav2vec2-deepfake-voice-detector`, revision `c66306024a7ede0be291e9c4558b37634782dc4e`),
+  these voices and these conditions only.** It is NOT a finding that AI-voice detection does not work in general.
+- **Pre-registered rules** (`data/voice_eval/PLAN.md`, frozen before any score; manifest sha256
+  `a0442301de7c9274e731befe3261609681eb05d40d252773efdbb1fa4665eacb`): 40 real FLEURS vi_vn clips paired
+  with 40 clips from local TTS (VieNeu Turbo and Nano, reported as ONE family, plus MMS-TTS-vie in tuning
+  only); tuning 16 + 16, held-out 24 + 24, seed 20261021. Seven audio arms (clean, noise-matched, matched
+  raw, plain raw, phone-like AAC, Opus, AMR-NB; the phone-like ones simulated). Clip score = mean of
+  piece scores from the real voice server. Cut-offs from the clean arm's tuning clips only. Held-out AUC with
+  a stratified bootstrap 95% interval; reading (a) upper bound < 0.70 or AUC <= 0.5, (b) lower bound >= 0.80
+  (NOT evidence the detector hears the voice, because of the confounds), (c) in between. Every reading keeps
+  the feature OFF; all scores are descriptive, not validation.
+- **Deviations, one line each:** D1 sentences with digits, symbols or foreign words excluded (text rule);
+  D2 voice gender decided by a blind human check, pitch advisory only; D3 real clips must be accepted by the
+  production server (5 quiet clips replaced); D4 was not needed (the completeness check found no defective clip; numbering kept); D5 clean
+  arm redesigned (normalize first, -28 dBFS) plus noise-matched and level-randomized arms; D6 matched raw arm
+  replaces the level-randomized raw gate arm (single repair attempt, hard stop); D7 sample-rate trace rule
+  (direction-free trace AUC >= 0.75 excludes an arm; §8 item 2 not reworded); D8 direction of the section 7
+  cut-off definitions corrected before any score.
+- **Results (run once, 560 of 560 clips scored, 0 server rejections):** cut-offs from the clean arm tuning
+  clips **t_hum 0.1779 and t_ai 0.0020: t_hum > t_ai, no usable gap**, so every clip in every arm is "Can't
+  tell" (the 0 false-positive / 0 false-negative counts mean nothing was labelled). Held-out AUC [95%
+  interval], Turbo / Nano / both: clean 0.832 [0.641, 1.0] / 0.724 [0.479, 0.941] / 0.778 [0.627, 0.917];
+  plain raw 0.792 [0.562, 1.0] / 0.694 [0.438, 0.927] / 0.743 [0.573, 0.896]; noise-matched 0.155 [0.023,
+  0.339] / 0.304 [0.099, 0.552] / 0.229 [0.085, 0.387]; matched raw 0.307 [0.115, 0.521] / 0.158 [0.024,
+  0.347] / 0.233 [0.106, 0.387]; phone AAC 0.332 [0.161, 0.528] / 0.323 [0.132, 0.545] / 0.327 [0.175,
+  0.49]; phone Opus 0.351 [0.175, 0.544] / 0.339 [0.135, 0.562] / 0.345 [0.192, 0.511]; phone AMR-NB 0.396
+  [0.222, 0.592] / 0.328 [0.134, 0.549] / 0.362 [0.203, 0.525]. **Readings: (c) inconclusive for clean and
+  plain raw (all three groups); (a) credible negative for noise-matched, matched raw and the three
+  phone-like arms (all three groups); no (b).** PLAN §8 item 2 cannot be met (the D7 trace rule excludes the
+  noise-matched arm, 0.760 direction-free). Raw scores: `data/voice_eval/results/`.
+- **Limits:** small sample (24 + 24 held-out; intervals are wide, often 0.3 wide); ONE detector model; VieNeu
+  and MMS voices only; no cloned voices; no real phone calls (phone-like arms are simulated with the local
+  ffmpeg, AMR on the production image's ffmpeg unverified; the Zalo set was never recorded); no old-style
+  generator in the held-out set; real clips come from FLEURS only (male test, female train block, so gender is
+  confounded with recording batch); **unresolved sample-rate trace** (AI clips were made at 24 or 48 kHz and
+  converted to 16 kHz by the server, real clips are natively 16 kHz: the original sample rate separates the
+  classes perfectly in every arm, and the arms cannot remove it); shortcut flags on the phone-like arms
+  (7-feature check 0.865 / 0.769 / 0.780).
+- **What would justify reopening:** more matched data, such as the real clip itself re-synthesised through the
+  same codec path so content, timing and loudness are identical, or real deepfake data with recorded
+  provenance, and/or a different detector, under a NEW pre-registered plan written before any score. The
+  present data cannot be re-used to justify shipping.
