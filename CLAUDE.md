@@ -692,4 +692,9 @@ Then wait for my "go" before writing code.
   CORS code moved to `supabase/functions/_shared/` (behaviour unchanged, checked line by line). voice-server gained `/transcribe`
   and `/readyz` (PhoWhisper-small, BSD-3-Clause, pinned revision and sha256). Guess cut-offs: the pre-registered pair has no usable
   gap, so the function always answers `cant_tell` unless the secrets `VOICE_T_HUM` / `VOICE_T_AI` (from a NEW pre-registered
-  evaluation) say otherwise. Slice 3 (hosting report): see the report.
+  evaluation) say otherwise.
+- **Slice 3 (hosting report, research only, nothing set up):** recommended host for the model server is Google Cloud Run (scale to
+  zero, 4 GiB / 2 vCPU, max instances 1, free grant about 940 analyses per month, about $0.0055 per 60 s analysis beyond it; a
+  guardian must hold the billing account). Peak RAM measured about 2.3 GB; a 60 s clip takes about 54 s on a laptop CPU, close to
+  the Edge Function's 150 s limit. Before going live: name the provider and region in the privacy policy, deploy `analyze-voice`
+  and `analyze-scam` together, and keep the checklist item in section 12.
