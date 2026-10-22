@@ -1,0 +1,2219 @@
+{
+ "descriptive_only": true,
+ "cutoffs_from_clean_arm_tuning": {
+  "t_ai": 0.002,
+  "t_hum": 0.1779,
+  "usable_gap": false
+ },
+ "arms": {
+  "clean": {
+   "groups": {
+    "VieNeu Turbo": {
+     "heldout_auc": 0.832,
+     "ci95": [
+      0.641,
+      1.0
+     ],
+     "reading": "c_inconclusive",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu Nano": {
+     "heldout_auc": 0.724,
+     "ci95": [
+      0.479,
+      0.941
+     ],
+     "reading": "c_inconclusive",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu (both)": {
+     "heldout_auc": 0.778,
+     "ci95": [
+      0.627,
+      0.917
+     ],
+     "reading": "c_inconclusive",
+     "n_scored": [
+      24,
+      24
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 48,
+      "n": 48,
+      "rate": 1.0,
+      "wilson95": [
+       0.926,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      }
+     }
+    }
+   },
+   "tuning_optimistic": {
+    "auc": 0.836,
+    "ci95": [
+     0.656,
+     0.988
+    ],
+    "note": "optimistic: cut-offs were chosen on these clips"
+   },
+   "server_rejected": {
+    "real": 0,
+    "ai": 0
+   }
+  },
+  "noise_matched": {
+   "groups": {
+    "VieNeu Turbo": {
+     "heldout_auc": 0.155,
+     "ci95": [
+      0.023,
+      0.339
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu Nano": {
+     "heldout_auc": 0.304,
+     "ci95": [
+      0.099,
+      0.552
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu (both)": {
+     "heldout_auc": 0.229,
+     "ci95": [
+      0.085,
+      0.387
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      24
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 48,
+      "n": 48,
+      "rate": 1.0,
+      "wilson95": [
+       0.926,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      }
+     }
+    }
+   },
+   "tuning_optimistic": {
+    "auc": 0.609,
+    "ci95": [
+     0.363,
+     0.813
+    ],
+    "note": "optimistic: cut-offs were chosen on these clips"
+   },
+   "server_rejected": {
+    "real": 0,
+    "ai": 0
+   }
+  },
+  "matched_raw": {
+   "groups": {
+    "VieNeu Turbo": {
+     "heldout_auc": 0.307,
+     "ci95": [
+      0.115,
+      0.521
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu Nano": {
+     "heldout_auc": 0.158,
+     "ci95": [
+      0.024,
+      0.347
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu (both)": {
+     "heldout_auc": 0.233,
+     "ci95": [
+      0.106,
+      0.387
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      24
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 48,
+      "n": 48,
+      "rate": 1.0,
+      "wilson95": [
+       0.926,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      }
+     }
+    }
+   },
+   "tuning_optimistic": {
+    "auc": 0.543,
+    "ci95": [
+     0.316,
+     0.77
+    ],
+    "note": "optimistic: cut-offs were chosen on these clips"
+   },
+   "server_rejected": {
+    "real": 0,
+    "ai": 0
+   }
+  },
+  "raw": {
+   "groups": {
+    "VieNeu Turbo": {
+     "heldout_auc": 0.792,
+     "ci95": [
+      0.562,
+      1.0
+     ],
+     "reading": "c_inconclusive",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu Nano": {
+     "heldout_auc": 0.694,
+     "ci95": [
+      0.438,
+      0.927
+     ],
+     "reading": "c_inconclusive",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu (both)": {
+     "heldout_auc": 0.743,
+     "ci95": [
+      0.573,
+      0.896
+     ],
+     "reading": "c_inconclusive",
+     "n_scored": [
+      24,
+      24
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 48,
+      "n": 48,
+      "rate": 1.0,
+      "wilson95": [
+       0.926,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      }
+     }
+    }
+   },
+   "tuning_optimistic": {
+    "auc": 0.812,
+    "ci95": [
+     0.625,
+     1.0
+    ],
+    "note": "optimistic: cut-offs were chosen on these clips"
+   },
+   "server_rejected": {
+    "real": 0,
+    "ai": 0
+   }
+  },
+  "phone_aac": {
+   "groups": {
+    "VieNeu Turbo": {
+     "heldout_auc": 0.332,
+     "ci95": [
+      0.161,
+      0.528
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu Nano": {
+     "heldout_auc": 0.323,
+     "ci95": [
+      0.132,
+      0.545
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu (both)": {
+     "heldout_auc": 0.327,
+     "ci95": [
+      0.175,
+      0.49
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      24
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 48,
+      "n": 48,
+      "rate": 1.0,
+      "wilson95": [
+       0.926,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      }
+     }
+    }
+   },
+   "tuning_optimistic": {
+    "auc": 0.334,
+    "ci95": [
+     0.141,
+     0.543
+    ],
+    "note": "optimistic: cut-offs were chosen on these clips"
+   },
+   "server_rejected": {
+    "real": 0,
+    "ai": 0
+   }
+  },
+  "phone_opus": {
+   "groups": {
+    "VieNeu Turbo": {
+     "heldout_auc": 0.351,
+     "ci95": [
+      0.175,
+      0.544
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu Nano": {
+     "heldout_auc": 0.339,
+     "ci95": [
+      0.135,
+      0.562
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu (both)": {
+     "heldout_auc": 0.345,
+     "ci95": [
+      0.192,
+      0.511
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      24
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 48,
+      "n": 48,
+      "rate": 1.0,
+      "wilson95": [
+       0.926,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      }
+     }
+    }
+   },
+   "tuning_optimistic": {
+    "auc": 0.416,
+    "ci95": [
+     0.211,
+     0.645
+    ],
+    "note": "optimistic: cut-offs were chosen on these clips"
+   },
+   "server_rejected": {
+    "real": 0,
+    "ai": 0
+   }
+  },
+  "phone_amr": {
+   "groups": {
+    "VieNeu Turbo": {
+     "heldout_auc": 0.396,
+     "ci95": [
+      0.222,
+      0.592
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu Nano": {
+     "heldout_auc": 0.328,
+     "ci95": [
+      0.134,
+      0.549
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      12
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 12,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.242
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 12,
+      "n": 12,
+      "rate": 1.0,
+      "wilson95": [
+       0.758,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 36,
+      "n": 36,
+      "rate": 1.0,
+      "wilson95": [
+       0.904,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 6,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.39
+        ]
+       }
+      }
+     }
+    },
+    "VieNeu (both)": {
+     "heldout_auc": 0.362,
+     "ci95": [
+      0.203,
+      0.525
+     ],
+     "reading": "a_credible_negative",
+     "n_scored": [
+      24,
+      24
+     ],
+     "false_positive_real_leans_ai": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "false_negative_ai_leans_human": {
+      "k": 0,
+      "n": 24,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.138
+      ]
+     },
+     "cant_tell_real": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_ai": {
+      "k": 24,
+      "n": 24,
+      "rate": 1.0,
+      "wilson95": [
+       0.862,
+       1.0
+      ]
+     },
+     "cant_tell_all": {
+      "k": 48,
+      "n": 48,
+      "rate": 1.0,
+      "wilson95": [
+       0.926,
+       1.0
+      ]
+     },
+     "by_gender": {
+      "male": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      },
+      "female": {
+       "real_leans_ai": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       },
+       "ai_leans_human": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "wilson95": [
+         0.0,
+         0.242
+        ]
+       }
+      }
+     }
+    }
+   },
+   "tuning_optimistic": {
+    "auc": 0.422,
+    "ci95": [
+     0.199,
+     0.652
+    ],
+    "note": "optimistic: cut-offs were chosen on these clips"
+   },
+   "server_rejected": {
+    "real": 0,
+    "ai": 0
+   }
+  }
+ },
+ "trace_rule_d7": {
+  "threshold": 0.75,
+  "direction_free_auc": {
+   "clean": 0.597,
+   "noise_matched": 0.76,
+   "matched_raw": 0.693,
+   "phone_aac": 0.632,
+   "phone_opus": 0.604,
+   "phone_amr": 0.635,
+   "raw": 0.597,
+   "level_randomized_raw": 0.592
+  },
+  "excluded_arms": [
+   "noise_matched"
+  ]
+ },
+ "on_limited_item2_satisfiable": false,
+ "feature_state": "OFF (every reading in PLAN 8a keeps it OFF; scores are descriptive, not validation)"
+}
