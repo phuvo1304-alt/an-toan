@@ -88,3 +88,11 @@ def split(samples: np.ndarray) -> list[np.ndarray]:
     n = max(1, math.ceil(total / (config.MAX_PIECE_SECONDS * config.SAMPLE_RATE)))
     bounds = np.linspace(0, total, n + 1, dtype=int)
     return [samples[bounds[i]:bounds[i + 1]] for i in range(n)]
+
+
+def split_for_asr(samples: np.ndarray) -> list[np.ndarray]:
+    """Split evenly into the fewest pieces of at most ASR_PIECE_SECONDS (Whisper reads 30 s windows)."""
+    total = len(samples)
+    n = max(1, math.ceil(total / (config.ASR_PIECE_SECONDS * config.SAMPLE_RATE)))
+    bounds = np.linspace(0, total, n + 1, dtype=int)
+    return [samples[bounds[i]:bounds[i + 1]] for i in range(n)]

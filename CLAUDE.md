@@ -685,4 +685,11 @@ Then wait for my "go" before writing code.
   long/silent/unreadable stay distinct; three outcomes, note always visible, no percentages; consent before first use; flag false
   hides the card and route) plus the text-scale overflow suite. **Not verified:** a real microphone on Android, iOS or in a
   browser; real file picking; any real `analyze-voice` answer (the function does not exist yet).
-- **Slice 2 (Edge Function `analyze-voice` + voice-server transcription): see the report; slice 3 (hosting report): see the report.**
+- **Slice 2 (backend, built and tested, NOT deployed):** Edge Function `analyze-voice` (`supabase/functions/analyze-voice/`: kill
+  switch `VOICE_ENABLED`, `/health` route with no audio, size/type/length checks, own rate-limit key prefixes `voice:` (10/h) and
+  `voice-health:`, pinned CORS, audio never stored or logged, secrets `VOICE_SERVER_URL` and `VOICE_SERVER_KEY` only) calling the
+  private model server for transcription and the detector, then the shared scam analysis; analyze-scam's core, rate limit and
+  CORS code moved to `supabase/functions/_shared/` (behaviour unchanged, checked line by line). voice-server gained `/transcribe`
+  and `/readyz` (PhoWhisper-small, BSD-3-Clause, pinned revision and sha256). Guess cut-offs: the pre-registered pair has no usable
+  gap, so the function always answers `cant_tell` unless the secrets `VOICE_T_HUM` / `VOICE_T_AI` (from a NEW pre-registered
+  evaluation) say otherwise. Slice 3 (hosting report): see the report.

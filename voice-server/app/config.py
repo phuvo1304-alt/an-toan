@@ -8,6 +8,15 @@ import os
 MODEL_REPO = "garystafford/wav2vec2-deepfake-voice-detector"
 MODEL_REVISION = "c66306024a7ede0be291e9c4558b37634782dc4e"
 
+# Speech-to-text model for the transcription endpoint (BSD-3-Clause). Pinned to an exact commit
+# (looked up on the Hugging Face API on 2026-10-22). Weights are a pickle-format pytorch_model.bin:
+# download_asr.py checks its sha256 before it is ever loaded.
+ASR_REPO = "vinai/PhoWhisper-small"
+ASR_REVISION = "a86b604c346caf7148c37512eafe783a16420adb"
+ASR_WEIGHTS_SHA256 = "9ec6f07c5bd321fc8f477cf778c43c3fd94b0e33a9f20283fc61cc6d22cbfded"  # sha256 of pytorch_model.bin at the pinned revision (matches the LFS hash on the model page)
+ASR_PIECE_SECONDS = 28.0    # Whisper reads 30 s windows; longer clips are split evenly under this
+ASR_MAX_NEW_TOKENS = 220    # per piece; a 28 s Vietnamese window is well under this
+
 SAMPLE_RATE = 16_000
 MAX_SECONDS = 60.0          # clips longer than this are rejected (too_long)
 FFMPEG_READ_SECONDS = 61    # ffmpeg never decodes more than this
@@ -27,6 +36,7 @@ MAX_BODY_BYTES = _int("VOICE_MAX_BODY_BYTES", 10 * 1024 * 1024)
 FFMPEG_TIMEOUT_S = _int("VOICE_FFMPEG_TIMEOUT_S", 30)
 FFMPEG_BIN = os.environ.get("VOICE_FFMPEG_BIN", "ffmpeg")
 MODEL_DIR = os.environ.get("VOICE_MODEL_DIR", "model")
+ASR_DIR = os.environ.get("VOICE_ASR_DIR", "model-asr")
 TORCH_THREADS = _int("VOICE_TORCH_THREADS", 0)  # 0 = torch default
 
 ALLOWED_CONTENT_TYPES = {

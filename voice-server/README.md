@@ -25,7 +25,14 @@ Errors are `{"error": "<code>"}`: `unauthorized` 401, `unsupported_type` 415,
 `silent` 422, `too_long` 422 (over 60 s), `busy` 429 (another request is running),
 `internal` 500.
 
+`POST /transcribe` — same request rules as `/analyze` (secret, audio type, size, 60 s, one at a time with
+`/analyze`). 200: `{"duration_s": 40.0, "text": "..."}`: Vietnamese text from the pinned speech-to-text model
+(PhoWhisper-small). `503 asr_unavailable` if the model folder is missing (the detector still works). The text is
+never logged. Whisper-style models can invent words on noise or silence; treat the text as a best effort.
+
 `GET /healthz` → `{"ok": true}` (no secret; for the host's health check).
+`GET /readyz` → `{"ok": true, "detector": true, "asr": true}` (no secret, no data; `ok` is true only when both models
+are loaded; the Edge Function's health check uses it).
 
 ## Safety properties
 
@@ -45,6 +52,7 @@ Errors are `{"error": "<code>"}`: `unauthorized` 401, `unsupported_type` 415,
 |---|---|---|
 | `VOICE_SHARED_SECRET` | **yes** | — (set it as a host secret; same value goes in the Supabase secret `VOICE_SHARED_SECRET`) |
 | `VOICE_MODEL_DIR` | no | `model` (`/srv/model` in the image) |
+| `VOICE_ASR_DIR` | no | `model-asr` (`/srv/model-asr` in the image) |
 | `VOICE_FFMPEG_BIN` | no | `ffmpeg` |
 | `VOICE_MAX_BODY_BYTES` | no | 10485760 |
 | `VOICE_FFMPEG_TIMEOUT_S` | no | 30 |
@@ -57,6 +65,7 @@ cd voice-server
 python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements-dev.txt
 .venv\Scripts\python download_model.py          # ~1.2 GB into ./model (git-ignored)
+.venv\Scripts\python download_asr.py            # ~0.97 GB into ./model-asr (git-ignored), sha256 checked
 winget install Gyan.FFmpeg                       # then set VOICE_FFMPEG_BIN if ffmpeg is not on PATH
 $env:VOICE_SHARED_SECRET = "some-long-random-string"
 .venv\Scripts\python -m uvicorn app.asgi:app --port 8765
@@ -72,6 +81,14 @@ These come from running the real model locally, not from a container:
 - 40 s clip (4 pieces): ≈ 13–14 s warm
 - peak memory of the server process while serving a 40 s clip: ≈ 1.8 GB
 - an on-host cold start will also include starting the container and pulling the image
+
+## Speech-to-text (added 2026-10-22)
+
+`vinai/PhoWhisper-small` (BSD-3-Clause; 244 M parameters; revision `a86b604c346caf7148c37512eafe783a16420adb`;
+`pytorch_model.bin` 967 MB, sha256 `9ec6f07c...6cc6d22cbfded`, a pickle-format file: `download_asr.py` checks the hash
+before anything loads it). Published word error rates (PhoWhisper GitHub page, Vietnamese test sets): Common Voice
+11.08 %, VIVOS 6.33 %, VLSP 2020 task 1 15.93 %, task 2 32.96 %. Speed and accuracy on this dev laptop are in the
+voice scam report (about 0.7 s of CPU per second of audio, indicative only).
 
 ## Deploy (host-agnostic; Google Cloud Run is the candidate)
 
@@ -94,9 +111,14 @@ docker run --rm -p 8080:8080 -e VOICE_SHARED_SECRET=... an-toan-voice
 ## Rollback
 
 Set `VOICE_ENABLED` to anything other than `true` in the Supabase secrets (the Edge
-Function then returns `feature_disabled`), and/or scale the host service to zero.
+Function then returns `disabled`), and/or scale the host service to zero.
 
 ## Credits and licences
+
+Speech-to-text: vinai/PhoWhisper-small (BSD-3-Clause), Le, Nguyen and Nguyen, "PhoWhisper: Automatic Speech Recognition for
+Vietnamese" (the authors ask that the paper be cited when the model is used in published results); fine-tuned from OpenAI
+Whisper (MIT).
+
 
 Model: garystafford/wav2vec2-deepfake-voice-detector (Apache-2.0), fine-tuned from
 Gustking/wav2vec2-large-xlsr-deepfake-audio-classification (per the model card), on

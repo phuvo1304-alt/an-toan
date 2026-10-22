@@ -1,4 +1,4 @@
-// Tests for the analyze-scam image rules (supabase/functions/analyze-scam/images.ts).
+// Tests for the analyze-scam image rules (supabase/functions/_shared/images.ts).
 // Run: npx deno test test/images_test.ts
 
 import { assert, assertEquals } from "jsr:@std/assert@^1.0.0";
@@ -11,7 +11,7 @@ import {
   MAX_MULTI_IMAGE_BYTES,
   MAX_TOTAL_IMAGE_BYTES,
   parseImages,
-} from "../supabase/functions/analyze-scam/images.ts";
+} from "../supabase/functions/_shared/images.ts";
 
 /// A base64 string that decodes to exactly `bytes` bytes (bytes divisible by 3).
 function b64OfSize(bytes: number, fill = "A"): string {

@@ -11,3 +11,4 @@ __pycache__/
 *.opus
 *.flac
 *.webm
+model-asr/

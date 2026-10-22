@@ -18,10 +18,13 @@ RUN pip install -r requirements.txt
 
 # Bake the pinned model weights into the image so startup never downloads.
 COPY app ./app
-COPY download_model.py .
+COPY download_model.py download_asr.py ./
 RUN python download_model.py /srv/model && rm -rf /srv/model/.cache
+# Speech-to-text weights (PhoWhisper-small, a pickle-format .bin): download_asr.py refuses to continue unless the
+# sha256 matches the pinned value, before anything ever loads the file.
+RUN python download_asr.py /srv/model-asr && rm -rf /srv/model-asr/.cache
 
-ENV VOICE_MODEL_DIR=/srv/model HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+ENV VOICE_MODEL_DIR=/srv/model VOICE_ASR_DIR=/srv/model-asr HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 
 RUN useradd --system --no-create-home appuser
 USER appuser

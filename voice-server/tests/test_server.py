@@ -171,3 +171,117 @@ def test_40s_clip_reaches_model_as_four_pieces(client, clip, fake):
     assert r.status_code == 200
     assert len(r.json()["piece_scores"]) == 4
     assert len(fake.calls[-1]) == 4
+
+
+# ---- /transcribe and /readyz -------------------------------------------------
+
+class FakeAsr:
+    """Test double: returns a fixed text and records the piece lengths. Used in tests only."""
+
+    def __init__(self, text="xin chào đây là công an"):
+        self.text = text
+        self.calls = []
+
+    def transcribe(self, pieces):
+        self.calls.append([len(p) for p in pieces])
+        return self.text
+
+
+@pytest.fixture
+def fake_asr():
+    return FakeAsr()
+
+
+@pytest.fixture
+def client_asr(fake, fake_asr):
+    return TestClient(create_app(model=fake, asr=fake_asr))
+
+
+def post_t(client, body, ctype="audio/wav", secret=SECRET):
+    h = {"content-type": ctype}
+    if secret is not None:
+        h["x-voice-secret"] = secret
+    return client.post("/transcribe", content=body, headers=h)
+
+
+def test_readyz_reports_which_models_are_loaded(client, client_asr):
+    assert client.get("/readyz").json() == {"ok": False, "detector": True, "asr": False}
+    assert client_asr.get("/readyz").json() == {"ok": True, "detector": True, "asr": True}
+
+
+def test_transcribe_returns_text_and_duration_only(client_asr, clip, fake_asr):
+    r = post_t(client_asr, clip("wav", 5.0))
+    assert r.status_code == 200, r.text
+    assert set(r.json()) == {"duration_s", "text"}
+    assert r.json()["text"] == fake_asr.text
+    assert len(fake_asr.calls[-1:]) == 1
+
+
+def test_transcribe_needs_the_secret_even_when_asr_is_missing(client, client_asr, clip):
+    assert post_t(client_asr, clip(), secret=None).status_code == 401
+    assert post_t(client_asr, clip(), secret="wrong-secret-0123456789").status_code == 401
+    assert post_t(client, clip(), secret=None).status_code == 401  # no ASR loaded: still 401, not 503
+
+
+def test_transcribe_without_the_model_is_503_asr_unavailable(client, clip):
+    r = post_t(client, clip())
+    assert (r.status_code, r.json()["error"]) == (503, "asr_unavailable")
+
+
+@pytest.mark.parametrize("seconds,expected", [(5, 1), (28, 1), (29, 2), (60, 3)])
+def test_transcribe_splits_long_audio_under_28s(seconds, expected):
+    samples = np.ones(int(seconds * config.SAMPLE_RATE), dtype=np.float32)
+    pieces = audio.split_for_asr(samples)
+    assert len(pieces) == expected
+    assert sum(len(p) for p in pieces) == len(samples)
+    assert max(len(p) for p in pieces) <= config.ASR_PIECE_SECONDS * config.SAMPLE_RATE
+
+
+def test_transcribe_60s_clip_reaches_the_model_as_three_pieces(client_asr, clip, fake_asr):
+    assert post_t(client_asr, clip("wav", 60.0)).status_code == 200
+    assert len(fake_asr.calls[-1]) == 3
+
+
+def test_transcribe_rejects_like_analyze(client_asr, clip):
+    assert post_t(client_asr, b"x" * 100, ctype="application/json").status_code == 415
+    assert post_t(client_asr, b"").status_code == 400
+    r = post_t(client_asr, os.urandom(5000))
+    assert (r.status_code, r.json()["error"]) == (422, "invalid_audio")
+    r = post_t(client_asr, clip("wav", 5.0, silent=True))
+    assert (r.status_code, r.json()["error"]) == (422, "silent")
+    r = post_t(client_asr, clip("wav", 70.0))
+    assert (r.status_code, r.json()["error"]) == (422, "too_long")
+
+
+def test_transcribe_shares_the_one_at_a_time_lock(client_asr, clip):
+    assert _busy.acquire(blocking=False)
+    try:
+        r = post_t(client_asr, clip())
+        assert (r.status_code, r.json()["error"]) == (429, "busy")
+    finally:
+        _busy.release()
+
+
+def test_transcribe_failure_is_a_generic_500_and_the_text_is_never_logged(clip, caplog):
+    class Boom(FakeAsr):
+        def transcribe(self, pieces):
+            raise RuntimeError("secret transcript words")
+
+    c = TestClient(create_app(model=FakeModel(), asr=Boom()))
+    with caplog.at_level("DEBUG"):
+        r = post_t(c, clip())
+    assert (r.status_code, r.json()["error"]) == (500, "internal")
+    assert "secret transcript words" not in r.text
+
+
+def test_transcript_text_is_not_logged_on_success(client_asr, clip, caplog):
+    with caplog.at_level("DEBUG"):
+        post_t(client_asr, clip())
+    assert "công an" not in caplog.text
+
+
+def test_transcribe_temp_files_are_deleted(client_asr, clip):
+    before = set(leftover_temp_files())
+    post_t(client_asr, clip())
+    post_t(client_asr, os.urandom(3000))
+    assert set(leftover_temp_files()) == before

@@ -100,6 +100,7 @@ class VoiceApi {
             case 'too_long':
               throw const VoiceApiException(VoiceError.tooLong);
             case 'silent':
+            case 'no_speech': // nothing was heard: the same advice as silent audio
               throw const VoiceApiException(VoiceError.silent);
             default:
               throw const VoiceApiException(VoiceError.unreadable);

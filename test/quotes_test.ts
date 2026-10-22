@@ -1,8 +1,8 @@
-// Tests for the red-flag quote check (supabase/functions/analyze-scam/quotes.ts).
+// Tests for the red-flag quote check (supabase/functions/_shared/quotes.ts).
 // Run: npx deno test test/quotes_test.ts
 
 import { assert, assertEquals } from "jsr:@std/assert@^1.0.0";
-import { keepVerifiedFlags, normalizeForMatch, quoteFoundIn } from "../supabase/functions/analyze-scam/quotes.ts";
+import { keepVerifiedFlags, normalizeForMatch, quoteFoundIn } from "../supabase/functions/_shared/quotes.ts";
 
 const msg =
   "Chào bạn, bên mình tuyển cộng tác viên làm online. Nhiệm vụ đầu tiên nhận ngay 50.000đ để làm quen. " +

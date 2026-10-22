@@ -1,4 +1,4 @@
-// Tests for the rule-based pre-check (supabase/functions/analyze-scam/patterns.ts).
+// Tests for the rule-based pre-check (supabase/functions/_shared/patterns.ts).
 // Run: npx deno test test/pattern_test.ts
 //
 // For each category: input [0] is the messageVi of the matching isScam:true
@@ -8,7 +8,7 @@
 // message copied).
 
 import { assert, assertEquals } from "jsr:@std/assert@^1.0.0";
-import { preCheck } from "../supabase/functions/analyze-scam/patterns.ts";
+import { preCheck } from "../supabase/functions/_shared/patterns.ts";
 
 const SCAM_INPUTS: Record<string, [string, string]> = {
   fake_job: [

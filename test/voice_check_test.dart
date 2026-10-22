@@ -358,6 +358,15 @@ void main() {
     }
   }
 
+  testWidgets('the server finding no speech (422 no_speech) gets the "almost silent" advice, not a technical error',
+      (tester) async {
+    final server = _healthyServer(status: 422, error: {'error': 'no_speech'});
+    await openApp(tester, server);
+    await recordAndAnalyze(tester, 'vi');
+    expect(find.textContaining('im lặng'), findsOneWidget);
+    expect(find.textContaining('no_speech'), findsNothing);
+  });
+
   testWidgets('no network during the upload is its own "no internet" message, not "still being set up"',
       (tester) async {
     final server = FakeServer((req) {
