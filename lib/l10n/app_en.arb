@@ -232,6 +232,7 @@
   "voiceRemove": "Remove this audio",
   "voiceAnalyze": "Analyze",
   "voiceAnalyzing": "Analyzing...",
+  "voiceWakingUp": "Waking up the voice checker. This can take about a minute...",
   "voicePrivacyShort": "The audio is only sent when you tap Analyze. It is deleted right after analysis and never saved or logged. Do not send passwords, OTP codes or banking details.",
   "voiceConsentTitle": "Before you use this feature",
   "voiceConsentBody": "To check a call or voice message, An Toàn sends the audio you record or choose to our server. The server turns the speech into text and analyzes it, then deletes the audio immediately. The audio is never saved or logged. The text is sent to an AI service to look for scam signs. Only record or upload audio you have the right to share, and do not send sensitive information.",

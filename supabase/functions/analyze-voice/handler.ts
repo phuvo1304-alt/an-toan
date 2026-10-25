@@ -27,7 +27,9 @@ export const HEALTH_RATE_LIMIT = 120; // health checks per window per IP (no aud
 /// exceed the transcription budget: then the answer is the generic 'unavailable' (see the hosting report).
 export const TRANSCRIBE_TIMEOUT_MS = 85_000;
 export const DETECT_TIMEOUT_MS = 15_000;
-export const HEALTH_TIMEOUT_MS = 4_000;
+// Long on purpose: on a scale-to-zero host the first /readyz is what wakes the model server (about a minute).
+// The app shows a "waking up" message meanwhile. 60 s leaves room under the 150 s function limit.
+export const HEALTH_TIMEOUT_MS = 60_000;
 
 export const ALLOWED_AUDIO_TYPES = [
   "audio/wav", "audio/x-wav", "audio/wave", "audio/mpeg", "audio/mp3", "audio/mp4", "audio/x-m4a",

@@ -761,6 +761,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get voiceAnalyzing => 'Đang phân tích...';
 
   @override
+  String get voiceWakingUp =>
+      'Đang đánh thức bộ kiểm tra giọng nói. Việc này có thể mất khoảng một phút...';
+
+  @override
   String get voicePrivacyShort =>
       'Âm thanh chỉ được gửi đi khi bạn bấm Phân tích. Nó bị xóa ngay sau khi phân tích, không được lưu hay ghi lại. Đừng gửi mật khẩu, mã OTP hay thông tin ngân hàng.';
 

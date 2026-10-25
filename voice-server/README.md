@@ -50,7 +50,7 @@ are loaded; the Edge Function's health check uses it).
 
 | Name | Required | Default |
 |---|---|---|
-| `VOICE_SHARED_SECRET` | **yes** | — (set it as a host secret; same value goes in the Supabase secret `VOICE_SHARED_SECRET`) |
+| `VOICE_SHARED_SECRET` | **yes** | — (set it as a host secret; the same value goes in the Supabase secret `VOICE_SERVER_KEY`, and the server's address in `VOICE_SERVER_URL`) |
 | `VOICE_MODEL_DIR` | no | `model` (`/srv/model` in the image) |
 | `VOICE_ASR_DIR` | no | `model-asr` (`/srv/model-asr` in the image) |
 | `VOICE_FFMPEG_BIN` | no | `ffmpeg` |
@@ -95,8 +95,8 @@ voice scam report (about 0.7 s of CPU per second of audio, indicative only).
 Recommended limits. Check them against the host's current docs/pricing before use:
 
 - **Memory 4 GiB**, 2 vCPU (measured peak is ≈ 1.8 GB; leave headroom).
-- **Concurrency 1** (one request per instance) and **max instances 2** (a hard cap on cost and abuse).
-- **Min instances 0** (pay nothing when idle; the app already shows "waking up the voice checker, about a minute").
+- **Concurrency 1** (one request per instance) and **max instances 1** (a hard cap on cost and abuse; matches CLAUDE.md 14.12).
+- **Min instances 0** (pay nothing when idle; the app shows "waking up the voice checker, about a minute" after 5 s of waiting, and the Edge Function's health check waits up to 60 s for the server to start).
 - **Request timeout 120 s** (the Supabase Edge Function limit is 150 s; keep the server's below it).
 - Private ingress: require authentication or at least keep the URL secret; the shared secret header is the only app-level gate.
 - **Budget alert:** create a monthly budget alert on the host account (e.g. at 50 % / 90 % / 100 % of a small cap you choose) before turning the feature on. The Supabase side rate limit is 10 requests/hour/IP.
@@ -107,6 +107,28 @@ Build and run (on a machine with Docker; **not built or run on the dev machine**
 docker build -t an-toan-voice .
 docker run --rm -p 8080:8080 -e VOICE_SHARED_SECRET=... an-toan-voice
 ```
+
+## Run from your laptop with a free Cloudflare quick tunnel (no account; owner-only use)
+
+Needs the laptop awake, online and plugged in. The tunnel URL changes every time cloudflared restarts, so after a restart
+set `VOICE_SERVER_URL` again. Quick tunnels have no uptime guarantee. Use PowerShell:
+
+```
+winget install --id Cloudflare.cloudflared -e
+cd voice-server
+$env:VOICE_SHARED_SECRET = "<long random string, kept OUTSIDE the repo>"
+.venv\Scripts\python -m uvicorn app.asgi:app --host 127.0.0.1 --port 8765 --no-access-log --log-level warning
+# second PowerShell window:
+& "C:\Program Files (x86)\cloudflared\cloudflared.exe" tunnel --no-autoupdate --url http://127.0.0.1:8765
+# copy the https://....trycloudflare.com address it prints, then (third window, repo root):
+supabase secrets set VOICE_SERVER_URL=<that address> VOICE_SERVER_KEY=<the same secret> VOICE_ENABLED=true
+supabase functions deploy analyze-scam --no-verify-jwt --use-api
+supabase functions deploy analyze-voice --no-verify-jwt --use-api
+```
+
+Audio stays unlogged: `--no-access-log` stops uvicorn writing request lines, the server never logs bodies, and cloudflared
+logs connection events only, not request contents. Anyone who learns the tunnel address still gets `401` without the secret.
+Stop everything (close the windows) to switch the feature off, or set `VOICE_ENABLED=false`.
 
 ## Rollback
 

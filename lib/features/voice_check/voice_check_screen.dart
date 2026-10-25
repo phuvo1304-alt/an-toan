@@ -40,11 +40,14 @@ class _VoiceCheckScreenState extends ConsumerState<VoiceCheckScreen> {
   AudioClip? _clip;
   bool _recording = false;
   bool _loading = false;
+  bool _waking = false; // the health check is slow: the model server is probably starting up
+  Timer? _wakeTimer;
   String? _errorText;
 
   @override
   void dispose() {
     _timer?.cancel();
+    _wakeTimer?.cancel();
     if (_recording) _capture.cancel(); // never leave the microphone running
     super.dispose();
   }
@@ -126,8 +129,13 @@ class _VoiceCheckScreenState extends ConsumerState<VoiceCheckScreen> {
       _errorText = null;
     });
     // 1. Availability first: a tiny call with NO audio and no user data.
+    _wakeTimer = Timer(const Duration(seconds: 5), () {
+      if (mounted && _loading) setState(() => _waking = true);
+    });
     final available = await _api.isAvailable();
+    _wakeTimer?.cancel();
     if (!mounted) return;
+    setState(() => _waking = false);
     if (!available) {
       setState(() {
         _loading = false;
@@ -268,6 +276,11 @@ class _VoiceCheckScreenState extends ConsumerState<VoiceCheckScreen> {
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: StatusBanner(message: _errorText!),
+          ),
+        if (_waking)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: StatusBanner(message: t.voiceWakingUp, kind: BannerKind.info),
           ),
         FilledButton.icon(
           onPressed: busy || _recording || _clip == null ? null : _analyze,

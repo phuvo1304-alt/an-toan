@@ -58,7 +58,7 @@ class VoiceApi {
     try {
       final resp = await _client
           .get(Uri.parse('$_baseUrl/health'), headers: _auth)
-          .timeout(const Duration(seconds: 8));
+          .timeout(const Duration(seconds: 70)); // covers a cold model server (see HEALTH_TIMEOUT_MS)
       if (resp.statusCode != 200) return false;
       final body = jsonDecode(utf8.decode(resp.bodyBytes));
       return body is Map && body['ok'] == true;

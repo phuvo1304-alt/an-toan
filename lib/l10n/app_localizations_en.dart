@@ -768,6 +768,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get voiceAnalyzing => 'Analyzing...';
 
   @override
+  String get voiceWakingUp =>
+      'Waking up the voice checker. This can take about a minute...';
+
+  @override
   String get voicePrivacyShort =>
       'The audio is only sent when you tap Analyze. It is deleted right after analysis and never saved or logged. Do not send passwords, OTP codes or banking details.';
 

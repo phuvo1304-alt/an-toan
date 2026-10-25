@@ -1364,6 +1364,12 @@ abstract class AppLocalizations {
   /// **'Đang phân tích...'**
   String get voiceAnalyzing;
 
+  /// No description provided for @voiceWakingUp.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang đánh thức bộ kiểm tra giọng nói. Việc này có thể mất khoảng một phút...'**
+  String get voiceWakingUp;
+
   /// No description provided for @voicePrivacyShort.
   ///
   /// In vi, this message translates to:
