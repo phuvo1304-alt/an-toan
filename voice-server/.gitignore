@@ -12,3 +12,6 @@ __pycache__/
 *.flac
 *.webm
 model-asr/
+
+# the shared secret for the local voice server (never commit)
+.voice-secret
